@@ -4,536 +4,207 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Daftar Ulangan</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* CSS STYLE UNTUK ADMIN */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-        
         body {
-            background: #f0f2f5;
-            color: #333;
-            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
+            background-color: #f5f5f5;
         }
         
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        header {
-            background: linear-gradient(135deg, #7209b7, #3a0ca3);
-            color: white;
-            padding: 1rem;
+            background: white;
+            padding: 30px;
             border-radius: 10px;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
         
-        .header-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .logo i {
-            font-size: 1.5rem;
-        }
-        
-        .logo h1 {
-            font-size: 1.3rem;
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .logout-btn {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 15px;
-            width: 100%;
-            justify-content: center;
-        }
-        
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .nav-links a:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-        
-        .nav-links a.active {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .main-title {
+        h1 {
+            color: #2c3e50;
             text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        .main-title h2 {
-            color: #3a0ca3;
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .main-title p {
-            color: #666;
         }
         
         .alert {
             padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            margin: 15px 0;
+            border-radius: 5px;
             display: none;
-            align-items: center;
-            gap: 10px;
         }
         
-        .alert.success {
+        .success {
             background: #d4edda;
             color: #155724;
-            border-left: 4px solid #28a745;
+            border: 1px solid #c3e6cb;
         }
         
-        .alert.error {
+        .error {
             background: #f8d7da;
             color: #721c24;
-            border-left: 4px solid #dc3545;
+            border: 1px solid #f5c6cb;
         }
         
-        .admin-controls {
+        .controls {
             display: flex;
             gap: 10px;
-            margin-bottom: 2rem;
             flex-wrap: wrap;
+            margin: 20px 0;
         }
         
-        .btn {
+        .controls button {
             padding: 12px 20px;
             border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
+            border-radius: 5px;
             cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.3s;
+            font-size: 16px;
         }
         
         .btn-primary {
-            background: #4361ee;
+            background: #3498db;
             color: white;
-        }
-        
-        .btn-primary:hover {
-            background: #3a56d4;
         }
         
         .btn-success {
-            background: #25D366;
+            background: #27ae60;
             color: white;
-        }
-        
-        .btn-success:hover {
-            background: #128C7E;
         }
         
         .btn-warning {
-            background: #f4a261;
+            background: #f39c12;
             color: white;
-        }
-        
-        .btn-warning:hover {
-            background: #e76f51;
         }
         
         .btn-danger {
-            background: #e63946;
+            background: #e74c3c;
             color: white;
         }
         
-        .btn-danger:hover {
-            background: #c1121f;
-        }
-        
-        .stats-container {
+        .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 20px 0;
         }
         
         .stat-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
             text-align: center;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-        }
-        
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            color: white;
-            font-size: 1.2rem;
-        }
-        
-        .stat-icon.total {
-            background: #4361ee;
-        }
-        
-        .stat-icon.mtk {
-            background: #7209b7;
-        }
-        
-        .stat-icon.pkn {
-            background: #f4a261;
-        }
-        
-        .stat-card h3 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
-        }
-        
-        .stat-card p {
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        .table-container {
-            background: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-            margin-bottom: 2rem;
-            overflow-x: auto;
-        }
-        
-        .table-container h3 {
-            color: #3a0ca3;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
         }
         
         th {
-            background: #f8f9fa;
-            color: #3a0ca3;
-            font-weight: bold;
-            text-align: left;
-            padding: 15px;
-            border-bottom: 2px solid #e9ecef;
-        }
-        
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #e9ecef;
-        }
-        
-        tr:hover {
-            background: #f8f9fa;
-        }
-        
-        .mapel-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            margin-right: 5px;
-        }
-        
-        .badge-mtk {
-            background: rgba(67, 97, 238, 0.1);
-            color: #4361ee;
-        }
-        
-        .badge-pkn {
-            background: rgba(114, 9, 183, 0.1);
-            color: #7209b7;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 5px;
+            background: #34495e;
+            color: white;
         }
         
         .action-btn {
             padding: 5px 10px;
             border: none;
-            border-radius: 5px;
-            font-size: 0.8rem;
+            border-radius: 3px;
             cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
+            font-size: 14px;
         }
         
-        .action-btn.delete {
-            background: #e63946;
+        .delete-btn {
+            background: #e74c3c;
             color: white;
-        }
-        
-        .action-btn.delete:hover {
-            background: #c1121f;
-        }
-        
-        .no-data {
-            text-align: center;
-            padding: 3rem;
-            color: #666;
-        }
-        
-        .no-data i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-        
-        .copy-section {
-            background: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-            margin-bottom: 2rem;
-        }
-        
-        .copy-section h3 {
-            color: #3a0ca3;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
         
         .copy-box {
             background: #f8f9fa;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid #25D366;
-        }
-        
-        .copy-box pre {
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #27ae60;
+            font-family: monospace;
             white-space: pre-wrap;
-            word-wrap: break-word;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            line-height: 1.5;
         }
         
-        .copy-buttons {
-            display: flex;
-            gap: 10px;
-        }
-        
-        footer {
+        .nav {
             text-align: center;
-            margin-top: 3rem;
-            color: #666;
-            padding: 1rem 0;
-            border-top: 1px solid #e9ecef;
+            margin-top: 30px;
         }
         
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .user-info {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .admin-controls {
-                flex-direction: column;
-            }
-            
-            .admin-controls .btn {
-                width: 100%;
-            }
-            
-            .copy-buttons {
-                flex-direction: column;
-            }
-            
-            .copy-buttons .btn {
-                width: 100%;
-            }
-            
-            th, td {
-                padding: 10px;
-                font-size: 0.9rem;
-            }
+        .nav a {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 0 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <div class="header-content">
-                <div class="logo">
-                    <i class="fas fa-user-shield"></i>
-                    <h1>Admin Daftar Ulangan</h1>
-                </div>
-                <div class="user-info">
-                    <button id="logoutBtn" class="logout-btn">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                </div>
-                
-                <div class="nav-links">
-                    <a href="siswa.html">
-                        <i class="fas fa-users"></i> Halaman Siswa
-                    </a>
-                    <a href="admin.html" class="active">
-                        <i class="fas fa-user-shield"></i> Halaman Admin
-                    </a>
-                </div>
-            </div>
-        </header>
-
-        <div class="main-title">
-            <h2>Daftar Ulangan - Halaman Admin</h2>
-            <p>Kelola data siswa dan salin hasil untuk WhatsApp</p>
-        </div>
-
+        <h1>Admin - Daftar Ulangan</h1>
+        
         <div id="successAlert" class="alert success">
-            <i class="fas fa-check-circle"></i> 
-            <div>
-                <strong>Berhasil!</strong>
-                <p id="alertMessage"></p>
-            </div>
+            ✅ Operasi berhasil!
         </div>
-
-        <div class="admin-controls">
-            <button id="refreshBtn" class="btn btn-primary">
-                <i class="fas fa-sync-alt"></i> Refresh Data
-            </button>
-            <button id="copyFormatBtn" class="btn btn-success">
-                <i class="fab fa-whatsapp"></i> Salin Format WhatsApp
-            </button>
-            <button id="exportBtn" class="btn btn-warning">
-                <i class="fas fa-file-export"></i> Export Data
-            </button>
-            <button id="clearBtn" class="btn btn-danger">
-                <i class="fas fa-trash-alt"></i> Hapus Semua Data
-            </button>
+        
+        <div class="controls">
+            <button id="refreshBtn" class="btn-primary">🔄 Refresh Data</button>
+            <button id="copyBtn" class="btn-success">📋 Salin ke WhatsApp</button>
+            <button id="exportBtn" class="btn-warning">💾 Export Data</button>
+            <button id="clearBtn" class="btn-danger">🗑 Hapus Semua Data</button>
+            <button id="logoutBtn" class="btn-primary">🚪 Logout</button>
         </div>
-
-        <div class="stats-container">
+        
+        <div class="stats">
             <div class="stat-card">
-                <div class="stat-icon total">
-                    <i class="fas fa-users"></i>
-                </div>
                 <h3 id="totalSiswa">0</h3>
                 <p>Total Siswa</p>
             </div>
-            
             <div class="stat-card">
-                <div class="stat-icon mtk">
-                    <i class="fas fa-calculator"></i>
-                </div>
                 <h3 id="totalMtk">0</h3>
                 <p>Belum MTK</p>
             </div>
-            
             <div class="stat-card">
-                <div class="stat-icon pkn">
-                    <i class="fas fa-landmark"></i>
-                </div>
                 <h3 id="totalPkn">0</h3>
                 <p>Belum PKN</p>
             </div>
         </div>
-
-        <div class="table-container">
-            <h3><i class="fas fa-list"></i> Daftar Siswa yang Belum Mengerjakan</h3>
-            
-            <div id="dataTable">
-                <table>
-                    <thead>
-                        <tr>
-                            <th width="5%">No</th>
-                            <th width="25%">Nama Siswa</th>
-                            <th width="20%">Mapel Belum Dikerjakan</th>
-                            <th width="15%">Kode Mapel</th>
-                            <th width="20%">Waktu Input</th>
-                            <th width="15%">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <!-- Data akan diisi oleh JavaScript -->
-                    </tbody>
-                </table>
-                
-                <div id="noDataMessage" class="no-data">
-                    <i class="fas fa-database"></i>
-                    <h3>Belum ada data</h3>
-                    <p>Data akan muncul setelah siswa mengisi form di halaman input</p>
-                </div>
-            </div>
+        
+        <div id="dataTable">
+            <table id="siswaTable">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Siswa</th>
+                        <th>Mapel</th>
+                        <th>Kode</th>
+                        <th>Waktu</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Data akan diisi oleh JavaScript -->
+                </tbody>
+            </table>
         </div>
-
-        <div class="copy-section">
-            <h3><i class="fas fa-copy"></i> Salin untuk WhatsApp</h3>
-            
-            <div class="copy-box">
-                <pre id="whatsappText">NAMA NAMA YANG BELUM MENGERJAKAN ULANGAN
+        
+        <div id="noDataMessage" style="text-align: center; padding: 40px; color: #7f8c8d; display: none;">
+            <h3>📭 Belum ada data</h3>
+            <p>Data akan muncul setelah siswa mengisi form</p>
+        </div>
+        
+        <div class="copy-box">
+            <pre id="whatsappText">NAMA NAMA YANG BELUM MENGERJAKAN ULANGAN
 
 ===KODE=====
 
@@ -543,201 +214,83 @@ PKN = P
 =======NAMA DAN KODE=====
 
 [Belum ada data]</pre>
-            </div>
-            
-            <div class="copy-buttons">
-                <button id="copyWhatsappBtn" class="btn btn-success">
-                    <i class="fas fa-copy"></i> Salin Teks WhatsApp
-                </button>
-                <button id="openWhatsappBtn" class="btn" style="background: #128C7E; color: white;">
-                    <i class="fab fa-whatsapp"></i> Buka WhatsApp Web
-                </button>
-            </div>
         </div>
-
-        <footer>
-            <p>Sistem Daftar Ulangan &copy; 2023</p>
-        </footer>
+        
+        <div class="nav">
+            <a href="siswa.html">➕ Input Data</a>
+            <a href="admin.html">👨‍💼 Halaman Admin</a>
+        </div>
     </div>
 
     <script>
-        // ================== JAVASCRIPT UNTUK ADMIN ==================
-        
-        console.log('=== SISTEM DAFTAR ULANGAN - ADMIN ===');
-        console.log('JavaScript admin berjalan!');
-        
-        // Pastikan data ada di localStorage
+        // Inisialisasi
         if (!localStorage.getItem('siswaData')) {
             localStorage.setItem('siswaData', JSON.stringify([]));
-            console.log('Data localStorage diinisialisasi');
         }
         
-        // ========== AMBIL SEMUA ELEMEN ==========
+        // Elements
         const refreshBtn = document.getElementById('refreshBtn');
-        const copyFormatBtn = document.getElementById('copyFormatBtn');
+        const copyBtn = document.getElementById('copyBtn');
         const exportBtn = document.getElementById('exportBtn');
         const clearBtn = document.getElementById('clearBtn');
-        const copyWhatsappBtn = document.getElementById('copyWhatsappBtn');
-        const openWhatsappBtn = document.getElementById('openWhatsappBtn');
         const logoutBtn = document.getElementById('logoutBtn');
         const successAlert = document.getElementById('successAlert');
-        const alertMessage = document.getElementById('alertMessage');
-        const totalSiswa = document.getElementById('totalSiswa');
-        const totalMtk = document.getElementById('totalMtk');
-        const totalPkn = document.getElementById('totalPkn');
         const tableBody = document.getElementById('tableBody');
         const noDataMessage = document.getElementById('noDataMessage');
         const whatsappText = document.getElementById('whatsappText');
+        const totalSiswa = document.getElementById('totalSiswa');
+        const totalMtk = document.getElementById('totalMtk');
+        const totalPkn = document.getElementById('totalPkn');
         
-        console.log('Elemen admin ditemukan:', {
-            refreshBtn: !!refreshBtn,
-            copyFormatBtn: !!copyFormatBtn,
-            exportBtn: !!exportBtn,
-            clearBtn: !!clearBtn,
-            copyWhatsappBtn: !!copyWhatsappBtn,
-            logoutBtn: !!logoutBtn,
-            tableBody: !!tableBody
-        });
-        
-        // ========== FUNGSI UNTUK MEMUAT DATA ==========
+        // Fungsi load data
         function loadData() {
-            console.log('=== LOAD DATA DIPANGGIL ===');
+            const siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
             
-            try {
-                // Ambil data dari localStorage
-                const dataStr = localStorage.getItem('siswaData');
-                const siswaData = dataStr ? JSON.parse(dataStr) : [];
+            // Update statistik
+            totalSiswa.textContent = siswaData.length;
+            
+            let mtkCount = 0;
+            let pknCount = 0;
+            
+            siswaData.forEach(siswa => {
+                if (siswa.mapel && siswa.mapel.includes('mtk')) mtkCount++;
+                if (siswa.mapel && siswa.mapel.includes('pkn')) pknCount++;
+            });
+            
+            totalMtk.textContent = mtkCount;
+            totalPkn.textContent = pknCount;
+            
+            // Update tabel
+            if (siswaData.length > 0) {
+                noDataMessage.style.display = 'none';
+                tableBody.innerHTML = '';
                 
-                console.log('Data ditemukan:', siswaData.length, 'siswa');
-                
-                // Update statistik
-                if (totalSiswa) totalSiswa.textContent = siswaData.length;
-                
-                // Hitung jumlah siswa per mapel
-                let mtkCount = 0;
-                let pknCount = 0;
-                
-                siswaData.forEach(siswa => {
-                    if (siswa.mapel && Array.isArray(siswa.mapel)) {
-                        if (siswa.mapel.includes('mtk')) mtkCount++;
-                        if (siswa.mapel.includes('pkn')) pknCount++;
-                    }
-                });
-                
-                if (totalMtk) totalMtk.textContent = mtkCount;
-                if (totalPkn) totalPkn.textContent = pknCount;
-                
-                // Update tabel
-                if (siswaData.length > 0) {
-                    if (noDataMessage) noDataMessage.style.display = 'none';
+                siswaData.forEach((siswa, index) => {
+                    const row = document.createElement('tr');
                     
-                    if (tableBody) {
-                        tableBody.innerHTML = '';
-                        
-                        siswaData.forEach((siswa, index) => {
-                            const row = document.createElement('tr');
-                            
-                            // Buat badge untuk mapel
-                            let mapelHTML = '';
-                            if (siswa.mapel && Array.isArray(siswa.mapel)) {
-                                if (siswa.mapel.includes('mtk')) {
-                                    mapelHTML += '<span class="mapel-badge badge-mtk">Matematika</span> ';
-                                }
-                                if (siswa.mapel.includes('pkn')) {
-                                    mapelHTML += '<span class="mapel-badge badge-pkn">PKN</span>';
-                                }
-                            }
-                            
-                            row.innerHTML = `
-                                <td>${index + 1}</td>
-                                <td><strong>${siswa.nama || 'N/A'}</strong></td>
-                                <td>${mapelHTML || '-'}</td>
-                                <td><code>${siswa.mapelKode || '-'}</code></td>
-                                <td><small>${siswa.tanggal || '-'}</small></td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="action-btn delete" data-id="${siswa.id}">
-                                            <i class="fas fa-trash"></i> Hapus
-                                        </button>
-                                    </div>
-                                </td>
-                            `;
-                            
-                            tableBody.appendChild(row);
-                        });
-                        
-                        // Tambah event listener untuk tombol hapus
-                        setTimeout(() => {
-                            document.querySelectorAll('.action-btn.delete').forEach(btn => {
-                                btn.addEventListener('click', function() {
-                                    const id = parseInt(this.getAttribute('data-id'));
-                                    console.log('Hapus data ID:', id);
-                                    hapusData(id);
-                                });
-                            });
-                        }, 100);
-                    }
-                } else {
-                    if (noDataMessage) noDataMessage.style.display = 'block';
-                    if (tableBody) tableBody.innerHTML = '';
-                }
-                
-                // Update teks WhatsApp
-                generateWhatsappText();
-                
-            } catch (error) {
-                console.error('Error dalam loadData:', error);
-                showAlert('Error memuat data!', 'error');
-            }
-        }
-        
-        // ========== FUNGSI HAPUS DATA ==========
-        function hapusData(id) {
-            console.log('=== HAPUS DATA DIPANGGIL ===');
-            console.log('ID yang akan dihapus:', id);
-            
-            if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) {
-                return;
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${siswa.nama}</td>
+                        <td>${siswa.mapelKode}</td>
+                        <td>${siswa.mapelKode}</td>
+                        <td>${siswa.tanggal}</td>
+                        <td>
+                            <button class="action-btn delete-btn" onclick="deleteData(${siswa.id})">
+                                ❌ Hapus
+                            </button>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+            } else {
+                noDataMessage.style.display = 'block';
+                tableBody.innerHTML = '';
             }
             
-            try {
-                const dataStr = localStorage.getItem('siswaData');
-                const siswaData = dataStr ? JSON.parse(dataStr) : [];
-                
-                // Cari nama siswa untuk pesan
-                const siswaDihapus = siswaData.find(s => s.id === id);
-                
-                // Filter data (hapus data dengan ID tersebut)
-                const updatedData = siswaData.filter(siswa => siswa.id !== id);
-                
-                // Simpan kembali ke localStorage
-                localStorage.setItem('siswaData', JSON.stringify(updatedData));
-                
-                // Tampilkan pesan sukses
-                const nama = siswaDihapus ? siswaDihapus.nama : 'Data';
-                showAlert(Data "${nama}" berhasil dihapus!, 'success');
-                
-                // Reload data
-                loadData();
-                
-            } catch (error) {
-                console.error('Error menghapus data:', error);
-                showAlert('Error menghapus data!', 'error');
-            }
-        }
-        
-        // ========== FUNGSI GENERATE WHATSAPP TEXT ==========
-        function generateWhatsappText() {
-            console.log('=== GENERATE WHATSAPP TEXT ===');
-            
-            try {
-                const dataStr = localStorage.getItem('siswaData');
-                const siswaData = dataStr ? JSON.parse(dataStr) : [];
-                
-                if (!whatsappText) return;
-                
-                if (siswaData.length === 0) {
-                    whatsappText.textContent = `NAMA NAMA YANG BELUM MENGERJAKAN ULANGAN
+            // Update WhatsApp text
+            if (siswaData.length === 0) {
+                whatsappText.textContent = `NAMA NAMA YANG BELUM MENGERJAKAN ULANGAN
 
 ===KODE=====
 
@@ -747,9 +300,7 @@ PKN = P
 =======NAMA DAN KODE=====
 
 [Belum ada data]`;
-                    return;
-                }
-                
+            } else {
                 let text = `NAMA NAMA YANG BELUM MENGERJAKAN ULANGAN
 
 ===KODE=====
@@ -761,196 +312,105 @@ PKN = P
 `;
 
                 siswaData.forEach((siswa, index) => {
-                    text += ${index + 1}. ${siswa.nama || ''} [${siswa.mapelKode || ''}]\n;
+                    text += ${index + 1}. ${siswa.nama} [${siswa.mapelKode}]\n;
                 });
 
                 text += \nTotal: ${siswaData.length} siswa;
                 whatsappText.textContent = text;
-                
-            } catch (error) {
-                console.error('Error generate WhatsApp text:', error);
             }
         }
         
-        // ========== FUNGSI COPY TO CLIPBOARD ==========
-        function copyToClipboard() {
-            console.log('=== COPY TO CLIPBOARD ===');
+        // Fungsi delete data
+        window.deleteData = function(id) {
+            if (!confirm('Hapus data ini?')) return;
             
-            if (!whatsappText) return;
+            const siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
+            const updatedData = siswaData.filter(siswa => siswa.id !== id);
+            localStorage.setItem('siswaData', JSON.stringify(updatedData));
             
-            const text = whatsappText.textContent;
-            
-            // Coba menggunakan Clipboard API modern
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text).then(() => {
-                    showAlert('Teks berhasil disalin ke clipboard!', 'success');
-                }).catch(err => {
-                    console.error('Gagal menyalin:', err);
-                    // Fallback untuk browser lama
-                    copyFallback(text);
-                });
-            } else {
-                // Fallback untuk browser lama
-                copyFallback(text);
-            }
-        }
+            showAlert('Data berhasil dihapus!', 'success');
+            loadData();
+        };
         
-        function copyFallback(text) {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.select();
-            
-            try {
-                document.execCommand('copy');
-                showAlert('Teks berhasil disalin!', 'success');
-            } catch (err) {
-                console.error('Fallback copy gagal:', err);
-                showAlert('Gagal menyalin teks!', 'error');
-            }
-            
-            document.body.removeChild(textarea);
-        }
-        
-        // ========== FUNGSI EXPORT DATA ==========
-        function exportData() {
-            console.log('=== EXPORT DATA ===');
-            
-            try {
-                const dataStr = localStorage.getItem('siswaData');
-                const siswaData = dataStr ? JSON.parse(dataStr) : [];
-                
-                if (siswaData.length === 0) {
-                    showAlert('Tidak ada data untuk diexport!', 'error');
-                    return;
-                }
-                
-                let exportText = DAFTAR ULANGAN\n;
-                exportText += Tanggal: ${new Date().toLocaleDateString('id-ID')}\n;
-                exportText += Total Siswa: ${siswaData.length}\n\n;
-                
-                siswaData.forEach((siswa, index) => {
-                    exportText += ${index + 1}. ${siswa.nama || ''} - ${siswa.mapelKode || ''}\n;
-                });
-                
-                // Buat file dan download
-                const blob = new Blob([exportText], { type: 'text/plain;charset=utf-8' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = daftar-ulangan-${new Date().getTime()}.txt;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-                showAlert('Data berhasil diexport!', 'success');
-                
-            } catch (error) {
-                console.error('Error export data:', error);
-                showAlert('Error mengexport data!', 'error');
-            }
-        }
-        
-        // ========== FUNGSI SHOW ALERT ==========
+        // Fungsi show alert
         function showAlert(message, type) {
-            console.log('Show alert:', message, type);
-            
-            if (!successAlert || !alertMessage) return;
-            
-            alertMessage.textContent = message;
+            successAlert.textContent = message;
             successAlert.className = type === 'success' ? 'alert success' : 'alert error';
-            successAlert.style.display = 'flex';
+            successAlert.style.display = 'block';
             
             setTimeout(() => {
                 successAlert.style.display = 'none';
-            }, 5000);
+            }, 3000);
         }
         
-        // ========== EVENT LISTENERS ==========
+        // Fungsi copy to clipboard
+        function copyToClipboard() {
+            const text = whatsappText.textContent;
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showAlert('Teks berhasil disalin!', 'success');
+                });
+            } else {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showAlert('Teks berhasil disalin!', 'success');
+            }
+        }
         
-        // Refresh Data
-        if (refreshBtn) {
-            refreshBtn.addEventListener('click', function() {
-                console.log('Tombol Refresh diklik');
+        // Fungsi export data
+        function exportData() {
+            const siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
+            
+            if (siswaData.length === 0) {
+                showAlert('Tidak ada data untuk diexport', 'error');
+                return;
+            }
+            
+            let exportText = DAFTAR ULANGAN\n;
+            exportText += Tanggal: ${new Date().toLocaleDateString('id-ID')}\n;
+            exportText += Total: ${siswaData.length} siswa\n\n;
+            
+            siswaData.forEach((siswa, index) => {
+                exportText += ${index + 1}. ${siswa.nama} - ${siswa.mapelKode}\n;
+            });
+            
+            const blob = new Blob([exportText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = daftar-ulangan.txt;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showAlert('Data berhasil diexport!', 'success');
+        }
+        
+        // Event listeners
+        refreshBtn.addEventListener('click', loadData);
+        copyBtn.addEventListener('click', copyToClipboard);
+        exportBtn.addEventListener('click', exportData);
+        clearBtn.addEventListener('click', function() {
+            if (confirm('Hapus SEMUA data?')) {
+                localStorage.removeItem('siswaData');
+                localStorage.setItem('siswaData', JSON.stringify([]));
+                showAlert('Semua data berhasil dihapus!', 'success');
                 loadData();
-            });
-        }
+            }
+        });
+        logoutBtn.addEventListener('click', function() {
+            window.location.href = 'siswa.html';
+        });
         
-        // Copy Format WhatsApp
-        if (copyFormatBtn) {
-            copyFormatBtn.addEventListener('click', function() {
-                console.log('Tombol Copy Format diklik');
-                generateWhatsappText();
-                copyToClipboard();
-            });
-        }
-        
-        // Copy WhatsApp Text
-        if (copyWhatsappBtn) {
-            copyWhatsappBtn.addEventListener('click', function() {
-                console.log('Tombol Copy WhatsApp diklik');
-                copyToClipboard();
-            });
-        }
-        
-        // Open WhatsApp Web
-        if (openWhatsappBtn) {
-            openWhatsappBtn.addEventListener('click', function() {
-                console.log('Tombol Open WhatsApp diklik');
-                window.open('https://web.whatsapp.com', '_blank');
-            });
-        }
-        
-        // Export Data
-        if (exportBtn) {
-            exportBtn.addEventListener('click', function() {
-                console.log('Tombol Export diklik');
-                exportData();
-            });
-        }
-        
-        // Clear All Data
-        if (clearBtn) {
-            clearBtn.addEventListener('click', function() {
-                console.log('Tombol Clear All diklik');
-                if (confirm('Hapus SEMUA data siswa? Tindakan ini tidak dapat dibatalkan!')) {
-                    localStorage.removeItem('siswaData');
-                    localStorage.setItem('siswaData', JSON.stringify([]));
-                    showAlert('Semua data berhasil dihapus!', 'success');
-                    loadData();
-                }
-            });
-        }
-        
-        // Logout
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', function() {
-                console.log('Tombol Logout diklik');
-                window.location.href = 'siswa.html';
-            });
-        }
-        
-        // ========== INISIALISASI ==========
-        
-        // Load data pertama kali
+        // Load data saat halaman dimuat
         loadData();
-        
-        // Auto refresh setiap 30 detik
-        setInterval(loadData, 30000);
-        
-        // Debug functions
-        window.adminDebug = function() {
-            const data = JSON.parse(localStorage.getItem('siswaData')) || [];
-            console.log('=== ADMIN DEBUG ===');
-            console.log('Total data:', data.length);
-            console.table(data);
-            alert(Total data: ${data.length}\nLihat console untuk detail.);
-        };
-        
-        console.log('=== ADMIN INISIALISASI SELESAI ===');
     </script>
 </body>
 </html>
