@@ -25,6 +25,7 @@
             --danger: #e63946;
             --warning: #f4a261;
             --whatsapp: #25D366;
+            --edit: #2a9d8f;
         }
 
         body {
@@ -38,6 +39,132 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .login-box h1 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-box p {
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--light-gray);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 0.5rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+        }
+
+        .login-error {
+            background-color: rgba(230, 57, 70, 0.1);
+            color: var(--danger);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: none;
+            text-align: left;
+            border-left: 4px solid var(--danger);
+        }
+
+        .login-footer {
+            margin-top: 2rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Admin Content - Hidden by default */
+        .admin-content {
+            display: none;
         }
 
         /* Header */
@@ -72,6 +199,37 @@
         .logo h1 {
             font-size: 1.5rem;
             font-weight: 700;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .nav-links {
@@ -178,6 +336,17 @@
             box-shadow: 0 7px 15px rgba(244, 162, 97, 0.3);
         }
 
+        .btn-edit {
+            background-color: var(--edit);
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background-color: #21867a;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(42, 157, 143, 0.3);
+        }
+
         /* Stats Cards */
         .stats-container {
             display: grid;
@@ -281,6 +450,41 @@
             color: var(--accent);
         }
 
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+
+        .action-btn.edit {
+            background-color: var(--edit);
+            color: white;
+        }
+
+        .action-btn.edit:hover {
+            background-color: #21867a;
+        }
+
+        .action-btn.delete {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .action-btn.delete:hover {
+            background-color: #c1121f;
+        }
+
         .no-data {
             text-align: center;
             padding: 3rem;
@@ -333,6 +537,77 @@
             flex-wrap: wrap;
         }
 
+        /* Edit Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .modal-close:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            background-color: var(--light-gray);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
         /* Alert */
         .alert {
             padding: 15px;
@@ -349,6 +624,12 @@
             border-left: 4px solid var(--success);
         }
 
+        .alert-error {
+            background-color: rgba(230, 57, 70, 0.15);
+            color: #c1121f;
+            border-left: 4px solid var(--danger);
+        }
+
         /* Footer */
         footer {
             text-align: center;
@@ -361,9 +642,18 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            .login-box {
+                padding: 2rem;
+            }
+            
             .header-content {
                 flex-direction: column;
                 gap: 15px;
+            }
+            
+            .user-info {
+                width: 100%;
+                justify-content: space-between;
             }
             
             .nav-links {
@@ -391,110 +681,166 @@
                 padding: 10px;
                 font-size: 0.9rem;
             }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <div class="logo">
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-box">
+            <div class="login-icon">
                 <i class="fas fa-user-shield"></i>
-                <h1>Admin Daftar Ulangan</h1>
             </div>
-            <div class="nav-links">
-                <a href="siswa.html">Input Siswa</a>
-                <a href="admin.html" class="active">Halaman Admin</a>
-            </div>
-        </div>
-    </header>
-
-    <div class="container">
-        <div class="main-title">
-            <h2>Daftar Ulangan - Halaman Admin</h2>
-            <p>Kelola data siswa dan salin hasil untuk WhatsApp</p>
-        </div>
-
-        <div id="successAlert" class="alert alert-success">
-            <i class="fas fa-check-circle"></i> 
-            <div>
-                <strong>Berhasil!</strong>
-                <p style="font-size: 0.9rem; margin-top: 3px;">Teks berhasil disalin ke clipboard.</p>
-            </div>
-        </div>
-
-        <div class="admin-controls">
-            <button id="refreshBtn" class="btn btn-primary">
-                <i class="fas fa-sync-alt"></i> Refresh Data
-            </button>
-            <button id="copyFormatBtn" class="btn btn-success">
-                <i class="fab fa-whatsapp"></i> Salin Format WhatsApp
-            </button>
-            <button id="exportBtn" class="btn btn-warning">
-                <i class="fas fa-file-export"></i> Export Data
-            </button>
-            <button id="clearBtn" class="btn btn-danger">
-                <i class="fas fa-trash-alt"></i> Hapus Semua Data
-            </button>
-        </div>
-
-        <div class="stats-container">
-            <div class="stat-card">
-                <div class="stat-icon total">
-                    <i class="fas fa-users"></i>
-                </div>
-                <h3 id="totalSiswa">0</h3>
-                <p>Total Siswa</p>
+            <h1>Admin Login</h1>
+            <p>Masukkan username dan password untuk mengakses halaman admin</p>
+            
+            <div id="loginError" class="login-error">
+                <i class="fas fa-exclamation-circle"></i> Username atau password salah!
             </div>
             
-            <div class="stat-card">
-                <div class="stat-icon mtk">
-                    <i class="fas fa-calculator"></i>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="Masukkan username" required>
                 </div>
-                <h3 id="totalMtk">0</h3>
-                <p>Belum MTK</p>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon pkn">
-                    <i class="fas fa-landmark"></i>
-                </div>
-                <h3 id="totalPkn">0</h3>
-                <p>Belum PKN</p>
-            </div>
-        </div>
-
-        <div class="table-container">
-            <h3 style="color: var(--secondary); margin-bottom: 1rem;"><i class="fas fa-list"></i> Daftar Siswa yang Belum Mengerjakan</h3>
-            
-            <div id="dataTable">
-                <table>
-                    <thead>
-                        <tr>
-                            <th width="5%">No</th>
-                            <th width="30%">Nama Siswa</th>
-                            <th width="20%">Mapel Belum Dikerjakan</th>
-                            <th width="25%">Kode Mapel</th>
-                            <th width="20%">Waktu Input</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <!-- Data akan dimasukkan oleh JavaScript -->
-                    </tbody>
-                </table>
                 
-                <div id="noDataMessage" class="no-data" style="display: none;">
-                    <i class="fas fa-database"></i>
-                    <h3>Belum ada data</h3>
-                    <p>Data akan muncul setelah siswa mengisi form di halaman input</p>
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Password</label>
+                    <div class="password-container">
+                        <input type="password" id="password" class="form-control" placeholder="Masukkan password" required>
+                        <button type="button" id="togglePassword" class="toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
+                
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Masuk
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                <p><strong>Default Login:</strong> admin / password123</p>
+                <p>Hubungi administrator untuk mengubah kredensial</p>
             </div>
         </div>
+    </div>
 
-        <div class="copy-section">
-            <h3><i class="fas fa-copy"></i> Salin untuk WhatsApp</h3>
-            
-            <div class="copy-box">
-                <pre id="whatsappText">NAMA NAMA YANG BELUM MENGERJAKAN ULANGAN
+    <!-- Admin Content (Hidden until login) -->
+    <div id="adminContent" class="admin-content">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-user-shield"></i>
+                    <h1>Admin Daftar Ulangan</h1>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span id="loggedInUser">Admin</span>
+                    <button id="logoutBtn" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="main-title">
+                <h2>Daftar Ulangan - Halaman Admin</h2>
+                <p>Kelola data siswa, edit, hapus, dan salin hasil untuk WhatsApp</p>
+            </div>
+
+            <div id="successAlert" class="alert alert-success">
+                <i class="fas fa-check-circle"></i> 
+                <div>
+                    <strong>Berhasil!</strong>
+                    <p style="font-size: 0.9rem; margin-top: 3px;" id="alertMessage">Teks berhasil disalin ke clipboard.</p>
+                </div>
+            </div>
+
+            <div class="admin-controls">
+                <button id="refreshBtn" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Refresh Data
+                </button>
+                <button id="copyFormatBtn" class="btn btn-success">
+                    <i class="fab fa-whatsapp"></i> Salin Format WhatsApp
+                </button>
+                <button id="exportBtn" class="btn btn-warning">
+                    <i class="fas fa-file-export"></i> Export Data
+                </button>
+                <button id="clearBtn" class="btn btn-danger">
+                    <i class="fas fa-trash-alt"></i> Hapus Semua Data
+                </button>
+                <button id="changePasswordBtn" class="btn btn-edit">
+                    <i class="fas fa-key"></i> Ganti Password
+                </button>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 id="totalSiswa">0</h3>
+                    <p>Total Siswa</p>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon mtk">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3 id="totalMtk">0</h3>
+                    <p>Belum MTK</p>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon pkn">
+                        <i class="fas fa-landmark"></i>
+                    </div>
+                    <h3 id="totalPkn">0</h3>
+                    <p>Belum PKN</p>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <h3 style="color: var(--secondary); margin-bottom: 1rem;"><i class="fas fa-list"></i> Daftar Siswa yang Belum Mengerjakan</h3>
+                
+                <div id="dataTable">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th width="5%">No</th>
+                                <th width="25%">Nama Siswa</th>
+                                <th width="20%">Mapel Belum Dikerjakan</th>
+                                <th width="15%">Kode Mapel</th>
+                                <th width="20%">Waktu Input</th>
+                                <th width="15%">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Data akan dimasukkan oleh JavaScript -->
+                        </tbody>
+                    </table>
+                    
+                    <div id="noDataMessage" class="no-data" style="display: none;">
+                        <i class="fas fa-database"></i>
+                        <h3>Belum ada data</h3>
+                        <p>Data akan muncul setelah siswa mengisi form di halaman input</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="copy-section">
+                <h3><i class="fas fa-copy"></i> Salin untuk WhatsApp</h3>
+                
+                <div class="copy-box">
+                    <pre id="whatsappText">NAMA NAMA YANG BELUM MENGERJAKAN ULANGAN
 
 ===KODE=====
 
@@ -506,26 +852,172 @@ PKN = P
 1. [Contoh] [M & P]
 
 [Data akan muncul di sini setelah siswa mengisi form]</pre>
+                </div>
+                
+                <div class="copy-buttons">
+                    <button id="copyWhatsappBtn" class="btn btn-success">
+                        <i class="fas fa-copy"></i> Salin Teks WhatsApp
+                    </button>
+                    <button id="openWhatsappBtn" class="btn" style="background-color: #128C7E; color: white;">
+                        <i class="fab fa-whatsapp"></i> Buka WhatsApp Web
+                    </button>
+                </div>
             </div>
-            
-            <div class="copy-buttons">
-                <button id="copyWhatsappBtn" class="btn btn-success">
-                    <i class="fas fa-copy"></i> Salin Teks WhatsApp
+
+            <footer>
+                <p>Sistem Daftar Ulangan &copy; 2023 | Halaman Admin | Login sebagai: <span id="footerUser">Admin</span></p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> Edit Data Siswa</h3>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" id="editId" name="id">
+                    
+                    <div class="form-group">
+                        <label for="editNama"><i class="fas fa-user"></i> Nama Lengkap</label>
+                        <input type="text" id="editNama" class="form-control" placeholder="Masukkan nama lengkap" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-book"></i> Mata Pelajaran yang Belum Dikerjakan</label>
+                        <p style="color: var(--gray); margin-bottom: 10px; font-size: 0.9rem;">Pilih mata pelajaran yang belum dikerjakan:</p>
+                        
+                        <div class="mapel-selection">
+                            <div class="mapel-option" id="editMtkOption" data-mapel="mtk">
+                                <div class="mapel-icon mtk-icon">
+                                    <i class="fas fa-calculator"></i>
+                                </div>
+                                <div class="mapel-info">
+                                    <h3>1. Matematika (M)</h3>
+                                    <p>Matematika belum dikerjakan</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mapel-option" id="editPknOption" data-mapel="pkn">
+                                <div class="mapel-icon pkn-icon">
+                                    <i class="fas fa-landmark"></i>
+                                </div>
+                                <div class="mapel-info">
+                                    <h3>2. PKN (P)</h3>
+                                    <p>Pendidikan Kewarganegaraan belum dikerjakan</p>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="editSelectedMapel" name="selectedMapel" value="">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cancelEdit" class="btn" style="background-color: var(--gray); color: white;">
+                    <i class="fas fa-times"></i> Batal
                 </button>
-                <button id="openWhatsappBtn" class="btn" style="background-color: #128C7E; color: white;">
-                    <i class="fab fa-whatsapp"></i> Buka WhatsApp Web
+                <button type="button" id="saveEdit" class="btn btn-edit">
+                    <i class="fas fa-save"></i> Simpan Perubahan
                 </button>
             </div>
         </div>
+    </div>
 
-        <footer>
-            <p>Sistem Daftar Ulangan &copy; 2023 | Halaman Admin</p>
-        </footer>
+    <!-- Change Password Modal -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-key"></i> Ganti Password</h3>
+                <button class="modal-close" id="closePasswordModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="passwordForm">
+                    <div class="form-group">
+                        <label for="currentPassword"><i class="fas fa-lock"></i> Password Saat Ini</label>
+                        <div class="password-container">
+                            <input type="password" id="currentPassword" class="form-control" placeholder="Masukkan password saat ini" required>
+                            <button type="button" class="toggle-password" data-target="currentPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="newPassword"><i class="fas fa-lock"></i> Password Baru</label>
+                        <div class="password-container">
+                            <input type="password" id="newPassword" class="form-control" placeholder="Masukkan password baru" required minlength="6">
+                            <button type="button" class="toggle-password" data-target="newPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword"><i class="fas fa-lock"></i> Konfirmasi Password Baru</label>
+                        <div class="password-container">
+                            <input type="password" id="confirmPassword" class="form-control" placeholder="Konfirmasi password baru" required>
+                            <button type="button" class="toggle-password" data-target="confirmPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="passwordError" class="login-error" style="display: none; margin-top: 1rem;">
+                        <i class="fas fa-exclamation-circle"></i> <span id="passwordErrorMessage"></span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cancelPassword" class="btn" style="background-color: var(--gray); color: white;">
+                    <i class="fas fa-times"></i> Batal
+                </button>
+                <button type="button" id="savePassword" class="btn btn-edit">
+                    <i class="fas fa-save"></i> Simpan Password
+                </button>
+            </div>
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Elements
+            // Default credentials (bisa diubah oleh admin)
+            let adminCredentials = {
+                username: 'admin',
+                password: 'password123'
+            };
+            
+            // Load saved credentials from localStorage
+            const savedCredentials = localStorage.getItem('adminCredentials');
+            if (savedCredentials) {
+                adminCredentials = JSON.parse(savedCredentials);
+            }
+            
+            // Check if user is already logged in
+            const isLoggedIn = localStorage.getItem('isAdminLoggedIn') === 'true';
+            
+            if (isLoggedIn) {
+                showAdminContent();
+            } else {
+                showLoginScreen();
+            }
+            
+            // Login Elements
+            const loginScreen = document.getElementById('loginScreen');
+            const adminContent = document.getElementById('adminContent');
+            const loginForm = document.getElementById('loginForm');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const togglePassword = document.getElementById('togglePassword');
+            const loginError = document.getElementById('loginError');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const loggedInUser = document.getElementById('loggedInUser');
+            const footerUser = document.getElementById('footerUser');
+            const changePasswordBtn = document.getElementById('changePasswordBtn');
+            
+            // Admin Content Elements
             const refreshBtn = document.getElementById('refreshBtn');
             const copyFormatBtn = document.getElementById('copyFormatBtn');
             const exportBtn = document.getElementById('exportBtn');
@@ -535,15 +1027,172 @@ PKN = P
             const tableBody = document.getElementById('tableBody');
             const noDataMessage = document.getElementById('noDataMessage');
             const successAlert = document.getElementById('successAlert');
+            const alertMessage = document.getElementById('alertMessage');
             const totalSiswa = document.getElementById('totalSiswa');
             const totalMtk = document.getElementById('totalMtk');
             const totalPkn = document.getElementById('totalPkn');
             const whatsappText = document.getElementById('whatsappText');
             
-            // Load data saat halaman dimuat
-            loadData();
+            // Edit Modal Elements
+            const editModal = document.getElementById('editModal');
+            const closeModal = document.getElementById('closeModal');
+            const cancelEdit = document.getElementById('cancelEdit');
+            const saveEdit = document.getElementById('saveEdit');
+            const editNama = document.getElementById('editNama');
+            const editId = document.getElementById('editId');
+            const editSelectedMapel = document.getElementById('editSelectedMapel');
+            const editMtkOption = document.getElementById('editMtkOption');
+            const editPknOption = document.getElementById('editPknOption');
             
-            // Event listeners
+            // Password Modal Elements
+            const passwordModal = document.getElementById('passwordModal');
+            const closePasswordModal = document.getElementById('closePasswordModal');
+            const cancelPassword = document.getElementById('cancelPassword');
+            const savePassword = document.getElementById('savePassword');
+            const currentPassword = document.getElementById('currentPassword');
+            const newPassword = document.getElementById('newPassword');
+            const confirmPassword = document.getElementById('confirmPassword');
+            const passwordError = document.getElementById('passwordError');
+            const passwordErrorMessage = document.getElementById('passwordErrorMessage');
+            
+            let currentEditData = null;
+            let selectedMapels = [];
+            
+            // Show/Hide functions
+            function showLoginScreen() {
+                loginScreen.style.display = 'flex';
+                adminContent.style.display = 'none';
+                usernameInput.value = '';
+                passwordInput.value = '';
+                loginError.style.display = 'none';
+            }
+            
+            function showAdminContent() {
+                loginScreen.style.display = 'none';
+                adminContent.style.display = 'block';
+                loadData();
+            }
+            
+            // Login functionality
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value;
+                
+                if (username === adminCredentials.username && password === adminCredentials.password) {
+                    // Successful login
+                    localStorage.setItem('isAdminLoggedIn', 'true');
+                    loggedInUser.textContent = username;
+                    footerUser.textContent = username;
+                    showAdminContent();
+                } else {
+                    // Failed login
+                    loginError.style.display = 'block';
+                    passwordInput.value = '';
+                    
+                    // Shake animation for error
+                    loginError.style.animation = 'none';
+                    setTimeout(() => {
+                        loginError.style.animation = 'shake 0.5s';
+                    }, 10);
+                    
+                    // Auto hide error after 5 seconds
+                    setTimeout(() => {
+                        loginError.style.display = 'none';
+                    }, 5000);
+                }
+            });
+            
+            // Logout functionality
+            logoutBtn.addEventListener('click', function() {
+                if (confirm('Apakah Anda yakin ingin logout?')) {
+                    localStorage.removeItem('isAdminLoggedIn');
+                    showLoginScreen();
+                }
+            });
+            
+            // Toggle password visibility
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+            
+            // Toggle password visibility for all password fields
+            document.querySelectorAll('.toggle-password').forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    if (targetId) {
+                        const targetInput = document.getElementById(targetId);
+                        const type = targetInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                        targetInput.setAttribute('type', type);
+                        this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+                    }
+                });
+            });
+            
+            // Change password functionality
+            changePasswordBtn.addEventListener('click', function() {
+                // Reset form
+                currentPassword.value = '';
+                newPassword.value = '';
+                confirmPassword.value = '';
+                passwordError.style.display = 'none';
+                
+                // Show modal
+                passwordModal.style.display = 'flex';
+            });
+            
+            closePasswordModal.addEventListener('click', closePasswordModalFunc);
+            cancelPassword.addEventListener('click', closePasswordModalFunc);
+            
+            function closePasswordModalFunc() {
+                passwordModal.style.display = 'none';
+            }
+            
+            savePassword.addEventListener('click', function() {
+                const currentPass = currentPassword.value;
+                const newPass = newPassword.value;
+                const confirmPass = confirmPassword.value;
+                
+                // Validation
+                if (currentPass !== adminCredentials.password) {
+                    passwordErrorMessage.textContent = 'Password saat ini salah!';
+                    passwordError.style.display = 'block';
+                    return;
+                }
+                
+                if (newPass.length < 6) {
+                    passwordErrorMessage.textContent = 'Password baru minimal 6 karakter!';
+                    passwordError.style.display = 'block';
+                    return;
+                }
+                
+                if (newPass !== confirmPass) {
+                    passwordErrorMessage.textContent = 'Password baru dan konfirmasi tidak cocok!';
+                    passwordError.style.display = 'block';
+                    return;
+                }
+                
+                if (newPass === currentPass) {
+                    passwordErrorMessage.textContent = 'Password baru harus berbeda dengan password saat ini!';
+                    passwordError.style.display = 'block';
+                    return;
+                }
+                
+                // Save new password
+                adminCredentials.password = newPass;
+                localStorage.setItem('adminCredentials', JSON.stringify(adminCredentials));
+                
+                // Close modal
+                closePasswordModalFunc();
+                
+                // Show success message
+                showAlert('Password berhasil diubah!', 'success');
+            });
+            
+            // Event listeners for admin functions
             refreshBtn.addEventListener('click', loadData);
             
             copyFormatBtn.addEventListener('click', function() {
@@ -564,27 +1213,31 @@ PKN = P
             });
             
             clearBtn.addEventListener('click', function() {
-                if (confirm('Apakah Anda yakin ingin menghapus semua data? Tindakan ini tidak dapat dibatalkan.')) {
+                if (confirm('Apakah Anda yakin ingin menghapus SEMUA data? Tindakan ini tidak dapat dibatalkan.')) {
                     localStorage.removeItem('siswaData');
                     loadData();
                     
-                    // Tampilkan alert
-                    successAlert.innerHTML = `
-                        <i class="fas fa-check-circle"></i> 
-                        <div>
-                            <strong>Data berhasil dihapus!</strong>
-                            <p style="font-size: 0.9rem; margin-top: 3px;">Semua data telah dihapus.</p>
-                        </div>
-                    `;
-                    successAlert.style.display = 'flex';
-                    
-                    setTimeout(() => {
-                        successAlert.style.display = 'none';
-                    }, 5000);
+                    showAlert('Semua data berhasil dihapus!', 'success');
                 }
             });
             
-            // Fungsi untuk memuat data
+            // Modal event listeners for edit
+            closeModal.addEventListener('click', closeEditModal);
+            cancelEdit.addEventListener('click', closeEditModal);
+            
+            editMtkOption.addEventListener('click', function() {
+                toggleMapel('mtk', editMtkOption);
+            });
+            
+            editPknOption.addEventListener('click', function() {
+                toggleMapel('pkn', editPknOption);
+            });
+            
+            saveEdit.addEventListener('click', function() {
+                saveEditedData();
+            });
+            
+            // Function to load data
             function loadData() {
                 const siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
                 
@@ -620,9 +1273,34 @@ PKN = P
                             <td>${mapelBadges.join(' ')}</td>
                             <td><code>${siswa.mapelKode}</code></td>
                             <td><small>${siswa.tanggal}</small></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn edit" data-id="${siswa.id}">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button class="action-btn delete" data-id="${siswa.id}">
+                                        <i class="fas fa-trash"></i> Hapus
+                                    </button>
+                                </div>
+                            </td>
                         `;
                         
                         tableBody.appendChild(row);
+                    });
+                    
+                    // Add event listeners for action buttons
+                    document.querySelectorAll('.action-btn.edit').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const id = parseInt(this.getAttribute('data-id'));
+                            openEditModal(id);
+                        });
+                    });
+                    
+                    document.querySelectorAll('.action-btn.delete').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const id = parseInt(this.getAttribute('data-id'));
+                            deleteData(id);
+                        });
                     });
                 } else {
                     noDataMessage.style.display = 'block';
@@ -633,7 +1311,150 @@ PKN = P
                 generateWhatsappText();
             }
             
-            // Fungsi untuk generate teks WhatsApp
+            // Toggle mapel selection
+            function toggleMapel(mapel, element) {
+                const index = selectedMapels.indexOf(mapel);
+                
+                if (index === -1) {
+                    selectedMapels.push(mapel);
+                    element.classList.add('selected');
+                } else {
+                    selectedMapels.splice(index, 1);
+                    element.classList.remove('selected');
+                }
+                
+                editSelectedMapel.value = selectedMapels.join(',');
+            }
+            
+            // Open edit modal
+            function openEditModal(id) {
+                const siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
+                const siswa = siswaData.find(s => s.id === id);
+                
+                if (!siswa) {
+                    showAlert('Data tidak ditemukan!', 'error');
+                    return;
+                }
+                
+                currentEditData = siswa;
+                
+                // Fill edit form
+                editId.value = siswa.id;
+                editNama.value = siswa.nama;
+                
+                // Reset mapel selection
+                selectedMapels = [...siswa.mapel];
+                editMtkOption.classList.remove('selected');
+                editPknOption.classList.remove('selected');
+                
+                // Set mapel selection
+                if (siswa.mapel.includes('mtk')) {
+                    editMtkOption.classList.add('selected');
+                }
+                if (siswa.mapel.includes('pkn')) {
+                    editPknOption.classList.add('selected');
+                }
+                
+                editSelectedMapel.value = selectedMapels.join(',');
+                
+                // Show modal
+                editModal.style.display = 'flex';
+            }
+            
+            // Close edit modal
+            function closeEditModal() {
+                editModal.style.display = 'none';
+                currentEditData = null;
+                selectedMapels = [];
+                editNama.value = '';
+                editMtkOption.classList.remove('selected');
+                editPknOption.classList.remove('selected');
+                editSelectedMapel.value = '';
+            }
+            
+            // Save edited data
+            function saveEditedData() {
+                const nama = editNama.value.trim();
+                
+                // Validation
+                if (nama === '' || selectedMapels.length === 0) {
+                    showAlert('Harap isi nama dan pilih minimal satu mata pelajaran!', 'error');
+                    return;
+                }
+                
+                const siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
+                
+                // Check for duplicate name (except for current edit)
+                const isDuplicate = siswaData.some(siswa => 
+                    siswa.id !== currentEditData.id && 
+                    siswa.nama.toLowerCase() === nama.toLowerCase()
+                );
+                
+                if (isDuplicate) {
+                    showAlert(Nama "${nama}" sudah ada dalam daftar. Gunakan nama yang berbeda., 'error');
+                    return;
+                }
+                
+                // Format mapel codes
+                const mapelCodes = [];
+                if (selectedMapels.includes('mtk')) mapelCodes.push('M');
+                if (selectedMapels.includes('pkn')) mapelCodes.push('P');
+                
+                // Update data
+                const updatedData = siswaData.map(siswa => {
+                    if (siswa.id === currentEditData.id) {
+                        return {
+                            ...siswa,
+                            nama: nama,
+                            mapel: selectedMapels,
+                            mapelKode: mapelCodes.join(' & '),
+                            tanggal: new Date().toLocaleString('id-ID')
+                        };
+                    }
+                    return siswa;
+                });
+                
+                // Save to localStorage
+                localStorage.setItem('siswaData', JSON.stringify(updatedData));
+                
+                // Close modal
+                closeEditModal();
+                
+                // Refresh data
+                loadData();
+                
+                // Show success message
+                showAlert(Data ${nama} berhasil diperbarui!, 'success');
+            }
+            
+            // Delete data
+            function deleteData(id) {
+                if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                    return;
+                }
+                
+                const siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
+                const siswaToDelete = siswaData.find(s => s.id === id);
+                
+                if (!siswaToDelete) {
+                    showAlert('Data tidak ditemukan!', 'error');
+                    return;
+                }
+                
+                // Delete data
+                const updatedData = siswaData.filter(siswa => siswa.id !== id);
+                
+                // Save to localStorage
+                localStorage.setItem('siswaData', JSON.stringify(updatedData));
+                
+                // Refresh data
+                loadData();
+                
+                // Show success message
+                showAlert(Data ${siswaToDelete.nama} berhasil dihapus!, 'success');
+            }
+            
+            // Generate WhatsApp text
             function generateWhatsappText() {
                 const siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
                 
@@ -663,73 +1484,67 @@ PKN = P
 `;
 
                 siswaData.forEach((siswa, index) => {
-                    text += `${index + 1}. ${siswa.nama} [${siswa.mapelKode}]\n`;
+                    text += ${index + 1}. ${siswa.nama} [${siswa.mapelKode}]\n;
                 });
 
-                text += `\nTotal: ${siswaData.length} siswa`;
+                text += \nTotal: ${siswaData.length} siswa;
                 whatsappText.textContent = text;
             }
             
-            // Fungsi untuk copy ke clipboard
+            // Copy to clipboard
             function copyToClipboard(text) {
                 navigator.clipboard.writeText(text).then(() => {
-                    // Tampilkan alert
-                    successAlert.style.display = 'flex';
-                    
-                    // Auto hide setelah 3 detik
-                    setTimeout(() => {
-                        successAlert.style.display = 'none';
-                    }, 3000);
+                    showAlert('Teks berhasil disalin ke clipboard!', 'success');
                 }).catch(err => {
                     console.error('Gagal menyalin teks: ', err);
-                    alert('Gagal menyalin teks. Silahkan coba lagi.');
+                    showAlert('Gagal menyalin teks. Silahkan coba lagi.', 'error');
                 });
             }
             
-            // Fungsi untuk export data
+            // Export data
             function exportData() {
                 const siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
                 
                 if (siswaData.length === 0) {
-                    alert('Tidak ada data untuk diexport.');
+                    showAlert('Tidak ada data untuk diexport.', 'error');
                     return;
                 }
                 
-                // Format data untuk export
-                let exportText = `DAFTAR ULANGAN - EKSPORT DATA\n`;
-                exportText += `Tanggal: ${new Date().toLocaleDateString('id-ID')}\n`;
-                exportText += `Waktu: ${new Date().toLocaleTimeString('id-ID')}\n`;
-                exportText += `Total Siswa: ${siswaData.length}\n\n`;
-                exportText += `NO | NAMA SISWA | MAPEL BELUM DIKERJAKAN | KODE | WAKTU INPUT\n`;
-                exportText += `---|------------|-----------------------|------|-------------\n`;
+                // Format data for export
+                let exportText = DAFTAR ULANGAN - EKSPORT DATA\n;
+                exportText += Tanggal: ${new Date().toLocaleDateString('id-ID')}\n;
+                exportText += Waktu: ${new Date().toLocaleTimeString('id-ID')}\n;
+                exportText += Total Siswa: ${siswaData.length}\n\n;
+                exportText += NO | NAMA SISWA | MAPEL BELUM DIKERJAKAN | KODE | WAKTU INPUT\n;
+                exportText += ---|------------|-----------------------|------|-------------\n;
                 
                 siswaData.forEach((siswa, index) => {
                     const mapelList = [];
                     if (siswa.mapel.includes('mtk')) mapelList.push('Matematika');
                     if (siswa.mapel.includes('pkn')) mapelList.push('PKN');
                     
-                    exportText += `${index + 1} | ${siswa.nama} | ${mapelList.join(', ')} | ${siswa.mapelKode} | ${siswa.tanggal}\n`;
+                    exportText += ${index + 1} | ${siswa.nama} | ${mapelList.join(', ')} | ${siswa.mapelKode} | ${siswa.tanggal}\n;
                 });
                 
-                // Buat blob dan download
+                // Create blob and download
                 const blob = new Blob([exportText], { type: 'text/plain' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `daftar-ulangan-${new Date().toISOString().split('T')[0]}.txt`;
+                a.download = daftar-ulangan-${new Date().toISOString().split('T')[0]}.txt;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
                 
-                // Tampilkan alert
-                successAlert.innerHTML = `
-                    <i class="fas fa-check-circle"></i> 
-                    <div>
-                        <strong>Data berhasil diexport!</strong>
-                        <p style="font-size: 0.9rem; margin-top: 3px;">File telah didownload.</p>
-                    </div>
-                `;
+                // Show success message
+                showAlert('Data berhasil diexport!', 'success');
+            }
+            
+            // Show alert
+            function showAlert(message, type) {
+                alertMessage.textContent = message;
+                successAlert.className = type === 'success' ? 'alert alert-success' : 'alert alert-error';
                 successAlert.style.display = 'flex';
                 
                 setTimeout(() => {
@@ -737,10 +1552,20 @@ PKN = P
                 }, 5000);
             }
             
-            // Auto refresh data setiap 10 detik
+            // Auto refresh data every 10 seconds
             setInterval(loadData, 10000);
+            
+            // Add shake animation for login error
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                    20%, 40%, 60%, 80% { transform: translateX(5px); }
+                }
+            `;
+            document.head.appendChild(style);
         });
     </script>
 </body>
 </html>
-
