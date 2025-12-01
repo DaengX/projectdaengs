@@ -1,63 +1,61 @@
-// ==================== GLOBAL VARIABLES ====================
+// ========== VARIABLES ==========
 let students = JSON.parse(localStorage.getItem('students')) || [];
 
-// ==================== DOM ELEMENTS ====================
-const elements = {
-    studentName: document.getElementById('studentName'),
-    mathCheckbox: document.getElementById('mathCheckbox'),
-    pknCheckbox: document.getElementById('pknCheckbox'),
-    saveBtn: document.getElementById('saveBtn'),
-    resetBtn: document.getElementById('resetBtn'),
-    studentTableBody: document.getElementById('studentTableBody'),
-    copyTextArea: document.getElementById('copyTextArea'),
-    copyTextBtn: document.getElementById('copyTextBtn'),
-    notification: document.getElementById('notification'),
-    notificationText: document.getElementById('notificationText'),
-    totalStudents: document.getElementById('totalStudents'),
-    mathStudents: document.getElementById('mathStudents'),
-    pknStudents: document.getElementById('pknStudents'),
-    bothStudents: document.getElementById('bothStudents'),
-    formTabBtn: document.getElementById('formTabBtn'),
-    adminTabBtn: document.getElementById('adminTabBtn'),
-    formTab: document.getElementById('formTab'),
-    adminTab: document.getElementById('adminTab')
-};
+// ========== DOM ELEMENTS ==========
+const studentNameInput = document.getElementById('studentName');
+const mathCheckbox = document.getElementById('mathCheckbox');
+const pknCheckbox = document.getElementById('pknCheckbox');
+const saveBtn = document.getElementById('saveBtn');
+const resetBtn = document.getElementById('resetBtn');
+const studentTableBody = document.getElementById('studentTableBody');
+const copyTextArea = document.getElementById('copyTextArea');
+const copyTextBtn = document.getElementById('copyTextBtn');
+const notification = document.getElementById('notification');
+const notificationText = document.getElementById('notificationText');
+const totalStudentsEl = document.getElementById('totalStudents');
+const mathStudentsEl = document.getElementById('mathStudents');
+const pknStudentsEl = document.getElementById('pknStudents');
+const bothStudentsEl = document.getElementById('bothStudents');
+const formTabBtn = document.getElementById('formTabBtn');
+const adminTabBtn = document.getElementById('adminTabBtn');
+const formTab = document.getElementById('formTab');
+const adminTab = document.getElementById('adminTab');
 
-// ==================== NOTIFICATION SYSTEM ====================
+// ========== NOTIFICATION ==========
 function showNotification(message, type = 'success') {
-    elements.notificationText.textContent = message;
+    notificationText.textContent = message;
     
     if (type === 'success') {
-        elements.notification.style.backgroundColor = '#4cc9f0';
+        notification.style.backgroundColor = '#4cc9f0';
     } else if (type === 'error') {
-        elements.notification.style.backgroundColor = '#f72585';
+        notification.style.backgroundColor = '#f72585';
     } else if (type === 'warning') {
-        elements.notification.style.backgroundColor = '#ff9e00';
+        notification.style.backgroundColor = '#ff9e00';
     }
     
-    elements.notification.classList.add('show');
+    notification.classList.add('show');
     
     setTimeout(() => {
-        elements.notification.classList.remove('show');
+        notification.classList.remove('show');
     }, 3000);
 }
 
-// ==================== LOCAL STORAGE ====================
+// ========== LOCAL STORAGE ==========
 function saveToLocalStorage() {
     localStorage.setItem('students', JSON.stringify(students));
 }
 
-// ==================== GENERATE ID ====================
+// ========== GENERATE ID ==========
 function generateId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
-// ==================== RENDER STUDENT TABLE ====================
+// ========== RENDER TABLE ==========
 function renderStudentTable() {
-    elements.studentTableBody.innerHTML = '';
+    studentTableBody.innerHTML = '';
     
     if (students.length === 0) {
-        elements.studentTableBody.innerHTML = `
+        studentTableBody.innerHTML = `
             <tr id="emptyRow">
                 <td colspan="4">
                     <div class="empty-state">
@@ -71,30 +69,32 @@ function renderStudentTable() {
         students.forEach((student, index) => {
             const row = document.createElement('tr');
             
-            let subjectBadges = '';
+            // Determine badges
+            let badges = '';
             if (student.math && student.pkn) {
-                subjectBadges = '<span class="badge-math subject-badge">M</span> <span class="badge-pkn subject-badge">P</span>';
+                badges = '<span class="badge-math subject-badge">M</span> <span class="badge-pkn subject-badge">P</span>';
             } else if (student.math) {
-                subjectBadges = '<span class="badge-math subject-badge">M</span>';
+                badges = '<span class="badge-math subject-badge">M</span>';
             } else if (student.pkn) {
-                subjectBadges = '<span class="badge-pkn subject-badge">P</span>';
+                badges = '<span class="badge-pkn subject-badge">P</span>';
             }
             
-            let subjectText = '';
+            // Determine text
+            let text = '';
             if (student.math && student.pkn) {
-                subjectText = 'Matematika & PKN';
+                text = 'Matematika & PKN';
             } else if (student.math) {
-                subjectText = 'Matematika';
+                text = 'Matematika';
             } else if (student.pkn) {
-                subjectText = 'PKN';
+                text = 'PKN';
             }
             
             row.innerHTML = `
                 <td>${index + 1}</td>
                 <td>${student.name}</td>
                 <td>
-                    ${subjectBadges}
-                    ${subjectText}
+                    ${badges}
+                    ${text}
                 </td>
                 <td>
                     <div class="actions">
@@ -105,7 +105,7 @@ function renderStudentTable() {
                 </td>
             `;
             
-            elements.studentTableBody.appendChild(row);
+            studentTableBody.appendChild(row);
         });
         
         // Add event listeners to delete buttons
@@ -121,20 +121,20 @@ function renderStudentTable() {
     updateCopyText();
 }
 
-// ==================== UPDATE STATISTICS ====================
+// ========== UPDATE STATISTICS ==========
 function updateStatistics() {
     const total = students.length;
     const mathCount = students.filter(s => s.math).length;
     const pknCount = students.filter(s => s.pkn).length;
     const bothCount = students.filter(s => s.math && s.pkn).length;
     
-    elements.totalStudents.textContent = total;
-    elements.mathStudents.textContent = mathCount;
-    elements.pknStudents.textContent = pknCount;
-    elements.bothStudents.textContent = bothCount;
+    totalStudentsEl.textContent = total;
+    mathStudentsEl.textContent = mathCount;
+    pknStudentsEl.textContent = pknCount;
+    bothStudentsEl.textContent = bothCount;
 }
 
-// ==================== UPDATE COPY TEXT ====================
+// ========== UPDATE COPY TEXT ==========
 function updateCopyText() {
     let text = `NAMA NAMA YANG BELUM MENGERJAKAN ULANGAN
 
@@ -159,18 +159,19 @@ PKN = P
         text += "Belum ada data siswa.";
     }
     
-    elements.copyTextArea.value = text;
+    copyTextArea.value = text;
 }
 
-// ==================== ADD STUDENT ====================
+// ========== ADD STUDENT ==========
 function addStudent() {
-    const name = elements.studentName.value.trim();
-    const math = elements.mathCheckbox.checked;
-    const pkn = elements.pknCheckbox.checked;
+    const name = studentNameInput.value.trim();
+    const math = mathCheckbox.checked;
+    const pkn = pknCheckbox.checked;
     
+    // Validation
     if (!name) {
         showNotification('Nama siswa harus diisi!', 'error');
-        elements.studentName.focus();
+        studentNameInput.focus();
         return;
     }
     
@@ -179,6 +180,7 @@ function addStudent() {
         return;
     }
     
+    // Create new student
     const newStudent = {
         id: generateId(),
         name: name,
@@ -186,38 +188,57 @@ function addStudent() {
         pkn: pkn
     };
     
+    // Add to array
     students.push(newStudent);
+    
+    // Save to localStorage
     saveToLocalStorage();
+    
+    // Update UI
     renderStudentTable();
+    
+    // Reset form
     resetForm();
+    
+    // Show notification
     showNotification(Data "${name}" berhasil disimpan!);
+    
+    // Switch to admin tab
     switchToAdminTab();
 }
 
-// ==================== DELETE STUDENT ====================
+// ========== DELETE STUDENT ==========
 function deleteStudent(id) {
     if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+        // Remove from array
         students = students.filter(student => student.id !== id);
+        
+        // Save to localStorage
         saveToLocalStorage();
+        
+        // Update UI
         renderStudentTable();
+        
+        // Show notification
         showNotification('Data siswa berhasil dihapus!', 'warning');
     }
 }
 
-// ==================== RESET FORM ====================
+// ========== RESET FORM ==========
 function resetForm() {
-    elements.studentName.value = '';
-    elements.mathCheckbox.checked = false;
-    elements.pknCheckbox.checked = false;
-    elements.studentName.focus();
+    studentNameInput.value = '';
+    mathCheckbox.checked = false;
+    pknCheckbox.checked = false;
+    studentNameInput.focus();
 }
 
-// ==================== COPY TO CLIPBOARD ====================
+// ========== COPY TO CLIPBOARD ==========
 function copyToClipboard() {
-    elements.copyTextArea.select();
-    elements.copyTextArea.setSelectionRange(0, 99999);
+    copyTextArea.select();
+    copyTextArea.setSelectionRange(0, 99999);
     
-    navigator.clipboard.writeText(elements.copyTextArea.value)
+    // Modern clipboard API
+    navigator.clipboard.writeText(copyTextArea.value)
         .then(() => {
             showNotification('Teks berhasil disalin ke clipboard!');
         })
@@ -227,48 +248,51 @@ function copyToClipboard() {
         });
 }
 
-// ==================== TAB SWITCHING ====================
+// ========== TAB SWITCHING ==========
 function switchToAdminTab() {
-    elements.formTabBtn.classList.remove('active');
-    elements.adminTabBtn.classList.add('active');
-    elements.formTab.classList.remove('active');
-    elements.adminTab.classList.add('active');
+    formTabBtn.classList.remove('active');
+    adminTabBtn.classList.add('active');
+    formTab.classList.remove('active');
+    adminTab.classList.add('active');
 }
 
 function switchToFormTab() {
-    elements.adminTabBtn.classList.remove('active');
-    elements.formTabBtn.classList.add('active');
-    elements.adminTab.classList.remove('active');
-    elements.formTab.classList.add('active');
+    adminTabBtn.classList.remove('active');
+    formTabBtn.classList.add('active');
+    adminTab.classList.remove('active');
+    formTab.classList.add('active');
 }
 
-// ==================== EVENT LISTENERS ====================
+// ========== EVENT LISTENERS ==========
 function setupEventListeners() {
     // Save button
-    elements.saveBtn.addEventListener('click', addStudent);
+    saveBtn.addEventListener('click', addStudent);
     
     // Reset button
-    elements.resetBtn.addEventListener('click', resetForm);
+    resetBtn.addEventListener('click', resetForm);
     
     // Copy text button
-    elements.copyTextBtn.addEventListener('click', copyToClipboard);
+    copyTextBtn.addEventListener('click', copyToClipboard);
     
     // Tab buttons
-    elements.formTabBtn.addEventListener('click', switchToFormTab);
-    elements.adminTabBtn.addEventListener('click', switchToAdminTab);
+    formTabBtn.addEventListener('click', switchToFormTab);
+    adminTabBtn.addEventListener('click', switchToAdminTab);
     
     // Enter key in name input
-    elements.studentName.addEventListener('keypress', (e) => {
+    studentNameInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             addStudent();
         }
     });
 }
 
-// ==================== INITIALIZATION ====================
+// ========== INITIALIZE ==========
 function init() {
+    console.log('Initializing application...');
+    
     // Add sample data if empty
     if (students.length === 0) {
+        console.log('Adding sample data...');
         students = [
             { id: generateId(), name: 'Candra', math: true, pkn: true },
             { id: generateId(), name: 'Daeng', math: true, pkn: false },
@@ -285,9 +309,14 @@ function init() {
     setupEventListeners();
     
     // Focus on name input
-    elements.studentName.focus();
+    studentNameInput.focus();
+    
+    console.log('Application initialized successfully');
 }
 
-// ==================== START APPLICATION ====================
+// ========== START APPLICATION ==========
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', init);
+
+// Make deleteStudent function globally available
+window.deleteStudent = deleteStudent;
