@@ -514,10 +514,10 @@
         </header>
         
         <div class="nav-tabs">
-            <button class="tab-btn active" data-tab="form-tab">
+            <button class="tab-btn active" id="form-tab-btn">
                 <i class="fas fa-user-plus"></i> Tambah Siswa
             </button>
-            <button class="tab-btn" data-tab="admin-tab">
+            <button class="tab-btn" id="admin-tab-btn">
                 <i class="fas fa-chart-bar"></i> Data Admin
             </button>
         </div>
@@ -619,14 +619,6 @@
                             </thead>
                             <tbody id="studentTableBody">
                                 <!-- Data siswa akan dimasukkan di sini oleh JavaScript -->
-                                <tr id="emptyRow">
-                                    <td colspan="4">
-                                        <div class="empty-state">
-                                            <i class="fas fa-user-slash"></i>
-                                            <p>Belum ada data siswa. Tambahkan data melalui form.</p>
-                                        </div>
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -678,8 +670,10 @@ PKN = P
         const mathStudentsEl = document.getElementById('mathStudents');
         const pknStudentsEl = document.getElementById('pknStudents');
         const bothStudentsEl = document.getElementById('bothStudents');
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        const tabContents = document.querySelectorAll('.tab-content');
+        const formTabBtn = document.getElementById('form-tab-btn');
+        const adminTabBtn = document.getElementById('admin-tab-btn');
+        const formTab = document.getElementById('form-tab');
+        const adminTab = document.getElementById('admin-tab');
         
         // Fungsi untuk menampilkan notifikasi
         function showNotification(message, type = 'success') {
@@ -714,8 +708,6 @@ PKN = P
         
         // Fungsi untuk merender tabel siswa
         function renderStudentTable() {
-            const emptyRow = document.getElementById('emptyRow');
-            
             // Kosongkan isi tabel
             studentTableBody.innerHTML = '';
             
@@ -786,8 +778,8 @@ PKN = P
         // Fungsi untuk memperbarui statistik
         function updateStatistics() {
             const total = students.length;
-            const mathCount = students.filter(s => s.math && !s.pkn).length;
-            const pknCount = students.filter(s => !s.math && s.pkn).length;
+            const mathCount = students.filter(s => s.math).length;
+            const pknCount = students.filter(s => s.pkn).length;
             const bothCount = students.filter(s => s.math && s.pkn).length;
             
             totalStudentsEl.textContent = total;
@@ -809,13 +801,17 @@ PKN = P
 
 `;
             
-            students.forEach((student, index) => {
-                let codes = [];
-                if (student.math) codes.push('M');
-                if (student.pkn) codes.push('P');
-                
-                text += ${index + 1}. ${student.name} [${codes.join(' & ')}]\n;
-            });
+            if (students.length > 0) {
+                students.forEach((student, index) => {
+                    let codes = [];
+                    if (student.math) codes.push('M');
+                    if (student.pkn) codes.push('P');
+                    
+                    text += ${index + 1}. ${student.name} [${codes.join(' & ')}]\n;
+                });
+            } else {
+                text += "Belum ada data siswa.";
+            }
             
             copyTextArea.value = text;
         }
@@ -859,14 +855,14 @@ PKN = P
             resetForm();
             
             // Tampilkan notifikasi
-            showNotification(Data ${name} berhasil disimpan!);
+            showNotification(Data "${name}" berhasil disimpan!);
             
             // Otomatis beralih ke tab admin
-            document.querySelector('[data-tab="admin-tab"]').click();
+            switchToAdminTab();
         }
         
         // Fungsi untuk menghapus siswa
-        window.deleteStudent = function(id) {
+        function deleteStudent(id) {
             if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
                 // Hapus siswa dari array
                 students = students.filter(student => student.id !== id);
@@ -880,7 +876,7 @@ PKN = P
                 // Tampilkan notifikasi
                 showNotification('Data siswa berhasil dihapus!', 'warning');
             }
-        };
+        }
         
         // Fungsi untuk mereset form
         function resetForm() {
@@ -896,31 +892,40 @@ PKN = P
             copyTextArea.setSelectionRange(0, 99999); // Untuk perangkat mobile
             
             try {
-                document.execCommand('copy');
-                showNotification('Teks berhasil disalin ke clipboard!');
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showNotification('Teks berhasil disalin ke clipboard!');
+                } else {
+                    showNotification('Gagal menyalin teks', 'error');
+                }
             } catch (err) {
                 console.error('Gagal menyalin teks: ', err);
-                showNotification('Gagal menyalin teks', 'error');
+                
+                // Fallback menggunakan Clipboard API modern
+                navigator.clipboard.writeText(copyTextArea.value)
+                    .then(() => {
+                        showNotification('Teks berhasil disalin ke clipboard!');
+                    })
+                    .catch(() => {
+                        showNotification('Gagal menyalin teks', 'error');
+                    });
             }
         }
         
-        // Fungsi untuk mengelola tab
-        function switchTab(tabId) {
-            // Nonaktifkan semua tab
-            tabContents.forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // Nonaktifkan semua tombol tab
-            tabBtns.forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Aktifkan tab yang dipilih
-            document.getElementById(tabId).classList.add('active');
-            
-            // Aktifkan tombol tab yang dipilih
-            document.querySelector([data-tab="${tabId}"]).classList.add('active');
+        // Fungsi untuk beralih ke tab admin
+        function switchToAdminTab() {
+            formTabBtn.classList.remove('active');
+            adminTabBtn.classList.add('active');
+            formTab.classList.remove('active');
+            adminTab.classList.add('active');
+        }
+        
+        // Fungsi untuk beralih ke tab form
+        function switchToFormTab() {
+            adminTabBtn.classList.remove('active');
+            formTabBtn.classList.add('active');
+            adminTab.classList.remove('active');
+            formTab.classList.add('active');
         }
         
         // Event Listeners
@@ -931,12 +936,8 @@ PKN = P
         copyTextBtn.addEventListener('click', copyToClipboard);
         
         // Event listener untuk tombol tab
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const tabId = btn.getAttribute('data-tab');
-                switchTab(tabId);
-            });
-        });
+        formTabBtn.addEventListener('click', switchToFormTab);
+        adminTabBtn.addEventListener('click', switchToAdminTab);
         
         // Event listener untuk menekan Enter di input nama
         studentNameInput.addEventListener('keypress', (e) => {
@@ -947,20 +948,25 @@ PKN = P
         
         // Inisialisasi saat halaman dimuat
         document.addEventListener('DOMContentLoaded', () => {
-            renderStudentTable();
-            studentNameInput.focus();
-            
-            // Tambahkan beberapa data contoh jika localStorage kosong
+            // Tambahkan data contoh jika localStorage kosong
             if (students.length === 0) {
                 const exampleStudents = [
                     { id: generateId(), name: 'Candra', math: true, pkn: true },
-                    { id: generateId(), name: 'Daeng', math: true, pkn: false }
+                    { id: generateId(), name: 'Daeng', math: true, pkn: false },
+                    { id: generateId(), name: 'Budi', math: false, pkn: true },
+                    { id: generateId(), name: 'Siti', math: true, pkn: false }
                 ];
                 
                 students = exampleStudents;
                 saveToLocalStorage();
-                renderStudentTable();
             }
+            
+            // Render tabel awal
+            renderStudentTable();
+            studentNameInput.focus();
+            
+            // Ekspos fungsi deleteStudent ke scope global
+            window.deleteStudent = deleteStudent;
         });
     </script>
 </body>
