@@ -3,45 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Data Ulangan - Siswa</title>
+    <title>Admin - Daftar Ulangan</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-
-        :root {
-            --primary: #4361ee;
-            --secondary: #3a0ca3;
-            --accent: #7209b7;
-            --success: #4cc9f0;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --gray: #6c757d;
-            --light-gray: #e9ecef;
-            --danger: #e63946;
-            --warning: #f4a261;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: #f5f7fb;
-            color: var(--dark);
+            background-color: #f5f7ff;
+            color: #333;
             line-height: 1.6;
             min-height: 100vh;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
 
         /* Header */
         header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, #7209b7, #3a0ca3);
             color: white;
             padding: 1.5rem 0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -50,12 +37,14 @@
         }
 
         .header-content {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .logo {
@@ -73,18 +62,59 @@
             font-weight: 700;
         }
 
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
         .nav-links {
             display: flex;
             gap: 20px;
+            width: 100%;
+            justify-content: center;
+            margin-top: 10px;
         }
 
         .nav-links a {
             color: white;
             text-decoration: none;
             font-weight: 500;
-            padding: 5px 10px;
+            padding: 8px 16px;
             border-radius: 5px;
             transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .nav-links a:hover {
@@ -99,7 +129,7 @@
         .main-title {
             text-align: center;
             margin-bottom: 2rem;
-            color: var(--secondary);
+            color: #3a0ca3;
         }
 
         .main-title h2 {
@@ -108,104 +138,17 @@
         }
 
         .main-title p {
-            color: var(--gray);
+            color: #666;
         }
 
-        /* Form Container */
-        .form-container {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            margin-bottom: 2rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--secondary);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid var(--light-gray);
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
-        }
-
-        /* Mapel Selection */
-        .mapel-selection {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        /* Admin Controls */
+        .admin-controls {
+            display: flex;
             gap: 15px;
-            margin-top: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
         }
 
-        .mapel-option {
-            border: 2px solid var(--light-gray);
-            border-radius: 10px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .mapel-option:hover {
-            border-color: var(--primary);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .mapel-option.selected {
-            border-color: var(--primary);
-            background-color: rgba(67, 97, 238, 0.05);
-        }
-
-        .mapel-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            color: white;
-        }
-
-        .mtk-icon {
-            background-color: var(--primary);
-        }
-
-        .pkn-icon {
-            background-color: var(--accent);
-        }
-
-        .mapel-info h3 {
-            font-size: 1rem;
-            margin-bottom: 3px;
-        }
-
-        .mapel-info p {
-            font-size: 0.85rem;
-            color: var(--gray);
-        }
-
-        /* Button */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -218,18 +161,241 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            width: 100%;
         }
 
         .btn-primary {
-            background-color: var(--primary);
+            background-color: #4361ee;
             color: white;
         }
 
         .btn-primary:hover {
-            background-color: var(--secondary);
+            background-color: #3a56d4;
             transform: translateY(-3px);
             box-shadow: 0 7px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-success {
+            background-color: #25D366;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #128C7E;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .btn-danger {
+            background-color: #e63946;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c1121f;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(230, 57, 70, 0.3);
+        }
+
+        .btn-warning {
+            background-color: #f4a261;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #e76f51;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(244, 162, 97, 0.3);
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-icon.total {
+            background-color: #4361ee;
+        }
+
+        .stat-icon.mtk {
+            background-color: #7209b7;
+        }
+
+        .stat-icon.pkn {
+            background-color: #f4a261;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .stat-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Data Tables */
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #e9ecef;
+            color: #3a0ca3;
+            font-weight: 600;
+            text-align: left;
+            padding: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        tr:hover {
+            background-color: rgba(67, 97, 238, 0.03);
+        }
+
+        .mapel-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .badge-mtk {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: #4361ee;
+        }
+
+        .badge-pkn {
+            background-color: rgba(114, 9, 183, 0.1);
+            color: #7209b7;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+
+        .action-btn.edit {
+            background-color: #2a9d8f;
+            color: white;
+        }
+
+        .action-btn.edit:hover {
+            background-color: #21867a;
+        }
+
+        .action-btn.delete {
+            background-color: #e63946;
+            color: white;
+        }
+
+        .action-btn.delete:hover {
+            background-color: #c1121f;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .no-data i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Copy Section */
+        .copy-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .copy-section h3 {
+            color: #3a0ca3;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .copy-box {
+            background-color: #e9ecef;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            border-left: 4px solid #25D366;
+        }
+
+        .copy-box pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .copy-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         /* Alert */
@@ -245,39 +411,60 @@
         .alert-success {
             background-color: rgba(76, 201, 240, 0.15);
             color: #0a7c9e;
-            border-left: 4px solid var(--success);
+            border-left: 4px solid #4cc9f0;
         }
 
         .alert-error {
             background-color: rgba(230, 57, 70, 0.15);
             color: #c1121f;
-            border-left: 4px solid var(--danger);
+            border-left: 4px solid #e63946;
         }
 
         /* Footer */
         footer {
             text-align: center;
             margin-top: 3rem;
-            color: var(--gray);
+            color: #666;
             font-size: 0.9rem;
             padding: 1rem 0;
-            border-top: 1px solid var(--light-gray);
+            border-top: 1px solid #e9ecef;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
-                gap: 15px;
+                text-align: center;
             }
             
-            .nav-links {
+            .user-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .admin-controls {
+                flex-direction: column;
+            }
+            
+            .admin-controls .btn {
                 width: 100%;
-                justify-content: center;
             }
             
-            .mapel-selection {
-                grid-template-columns: 1fr;
+            .copy-buttons {
+                flex-direction: column;
+            }
+            
+            .copy-buttons .btn {
+                width: 100%;
+            }
+            
+            th, td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
             }
         }
     </style>
@@ -286,248 +473,450 @@
     <header>
         <div class="header-content">
             <div class="logo">
-                <i class="fas fa-clipboard-check"></i>
-                <h1>Sistem Daftar Ulangan</h1>
+                <i class="fas fa-user-shield"></i>
+                <h1>Admin Daftar Ulangan</h1>
             </div>
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <span id="loggedInUser">Admin</span>
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+            
             <div class="nav-links">
-                <a href="siswa.html" class="active">Input Siswa</a>
-                <a href="login.html">Halaman Admin</a>
+                <a href="siswa.html">
+                    <i class="fas fa-users"></i> Halaman Siswa
+                </a>
+                <a href="admin.html" class="active">
+                    <i class="fas fa-user-shield"></i> Halaman Admin
+                </a>
             </div>
         </div>
     </header>
 
     <div class="container">
         <div class="main-title">
-            <h2>Input Data Ulangan</h2>
-            <p>Isi nama dan pilih mata pelajaran yang belum dikerjakan</p>
+            <h2>Daftar Ulangan - Halaman Admin</h2>
+            <p>Kelola data siswa, edit, hapus, dan salin hasil untuk WhatsApp</p>
         </div>
 
         <div id="successAlert" class="alert alert-success">
             <i class="fas fa-check-circle"></i> 
             <div>
-                <strong>Data berhasil disimpan!</strong>
-                <p style="font-size: 0.9rem; margin-top: 3px;">Data Anda telah tersimpan. Silahkan ke halaman admin untuk melihat hasil.</p>
+                <strong>Berhasil!</strong>
+                <p style="font-size: 0.9rem; margin-top: 3px;" id="alertMessage">Teks berhasil disalin ke clipboard.</p>
             </div>
         </div>
 
-        <div id="errorAlert" class="alert alert-error">
-            <i class="fas fa-exclamation-circle"></i> 
-            <div>
-                <strong>Data belum lengkap!</strong>
-                <p style="font-size: 0.9rem; margin-top: 3px;">Harap isi nama dan pilih minimal satu mata pelajaran!</p>
+        <div class="admin-controls">
+            <button id="refreshBtn" class="btn btn-primary">
+                <i class="fas fa-sync-alt"></i> Refresh Data
+            </button>
+            <button id="copyFormatBtn" class="btn btn-success">
+                <i class="fab fa-whatsapp"></i> Salin Format WhatsApp
+            </button>
+            <button id="exportBtn" class="btn btn-warning">
+                <i class="fas fa-file-export"></i> Export Data
+            </button>
+            <button id="clearBtn" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i> Hapus Semua Data
+            </button>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 id="totalSiswa">0</h3>
+                <p>Total Siswa</p>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon mtk">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <h3 id="totalMtk">0</h3>
+                <p>Belum MTK</p>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon pkn">
+                    <i class="fas fa-landmark"></i>
+                </div>
+                <h3 id="totalPkn">0</h3>
+                <p>Belum PKN</p>
             </div>
         </div>
 
-        <div class="form-container">
-            <form id="siswaForm">
-                <div class="form-group">
-                    <label for="nama"><i class="fas fa-user"></i> Nama Lengkap</label>
-                    <input type="text" id="nama" class="form-control" placeholder="Masukkan nama lengkap Anda" required>
+        <div class="table-container">
+            <h3 style="color: #3a0ca3; margin-bottom: 1rem;"><i class="fas fa-list"></i> Daftar Siswa yang Belum Mengerjakan</h3>
+            
+            <div id="dataTable">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="5%">No</th>
+                            <th width="25%">Nama Siswa</th>
+                            <th width="20%">Mapel Belum Dikerjakan</th>
+                            <th width="15%">Kode Mapel</th>
+                            <th width="20%">Waktu Input</th>
+                            <th width="15%">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Data akan dimasukkan oleh JavaScript -->
+                    </tbody>
+                </table>
+                
+                <div id="noDataMessage" class="no-data" style="display: none;">
+                    <i class="fas fa-database"></i>
+                    <h3>Belum ada data</h3>
+                    <p>Data akan muncul setelah siswa mengisi form di halaman input</p>
                 </div>
+            </div>
+        </div>
 
-                <div class="form-group">
-                    <label><i class="fas fa-book"></i> Mata Pelajaran yang Belum Dikerjakan</label>
-                    <p style="color: var(--gray); margin-bottom: 10px; font-size: 0.9rem;">Pilih mata pelajaran yang belum Anda kerjakan:</p>
-                    
-                    <div class="mapel-selection">
-                        <div class="mapel-option" id="mtkOption" data-mapel="mtk">
-                            <div class="mapel-icon mtk-icon">
-                                <i class="fas fa-calculator"></i>
-                            </div>
-                            <div class="mapel-info">
-                                <h3>1. Matematika (M)</h3>
-                                <p>Matematika belum dikerjakan</p>
-                            </div>
-                        </div>
-                        
-                        <div class="mapel-option" id="pknOption" data-mapel="pkn">
-                            <div class="mapel-icon pkn-icon">
-                                <i class="fas fa-landmark"></i>
-                            </div>
-                            <div class="mapel-info">
-                                <h3>2. PKN (P)</h3>
-                                <p>Pendidikan Kewarganegaraan belum dikerjakan</p>
-                            </div>
-                        </div>
-                    </div>
-                    <input type="hidden" id="selectedMapel" name="selectedMapel" value="">
-                </div>
+        <div class="copy-section">
+            <h3><i class="fas fa-copy"></i> Salin untuk WhatsApp</h3>
+            
+            <div class="copy-box">
+                <pre id="whatsappText">NAMA NAMA YANG BELUM MENGERJAKAN ULANGAN
 
-                <button type="button" id="submitBtn" class="btn btn-primary">
-                    <i class="fas fa-paper-plane"></i> Simpan Data
+===KODE=====
+
+MATEMATIKA = M
+PKN = P
+
+=======NAMA DAN KODE=====
+
+1. [Contoh] [M & P]
+
+[Data akan muncul di sini setelah siswa mengisi form]</pre>
+            </div>
+            
+            <div class="copy-buttons">
+                <button id="copyWhatsappBtn" class="btn btn-success">
+                    <i class="fas fa-copy"></i> Salin Teks WhatsApp
                 </button>
-            </form>
-        </div>
-
-        <div class="form-container">
-            <h3 style="color: var(--secondary); margin-bottom: 1rem;"><i class="fas fa-info-circle"></i> Petunjuk Penggunaan</h3>
-            <ol style="padding-left: 1.5rem; color: var(--gray);">
-                <li>Isi nama lengkap Anda pada kolom yang tersedia</li>
-                <li>Pilih mata pelajaran yang <strong>belum</strong> Anda kerjakan</li>
-                <li>Klik tombol "Simpan Data" untuk menyimpan</li>
-                <li>Data akan otomatis tersimpan dan tidak bisa diubah</li>
-                <li>Untuk melihat hasil, buka halaman admin</li>
-            </ol>
+                <button id="openWhatsappBtn" class="btn" style="background-color: #128C7E; color: white;">
+                    <i class="fab fa-whatsapp"></i> Buka WhatsApp Web
+                </button>
+            </div>
         </div>
 
         <footer>
-            <p>Sistem Daftar Ulangan &copy; 2023 | Halaman Input Siswa</p>
+            <p>Sistem Daftar Ulangan &copy; 2023 | Login sebagai: <span id="footerUser">Admin</span></p>
         </footer>
     </div>
 
     <script>
+        // Cek login status
+        function checkLogin() {
+            const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
+            
+            if (!isLoggedIn || isLoggedIn !== 'true') {
+                // Redirect ke login page jika belum login
+                window.location.href = 'login.html';
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Main function
         document.addEventListener('DOMContentLoaded', function() {
-            // Inisialisasi data jika belum ada
-            if (!localStorage.getItem('siswaData')) {
-                localStorage.setItem('siswaData', JSON.stringify([]));
+            console.log('Admin page loaded');
+            
+            // Cek login
+            if (!checkLogin()) {
+                return;
             }
             
-            const mtkOption = document.getElementById('mtkOption');
-            const pknOption = document.getElementById('pknOption');
-            const selectedMapelInput = document.getElementById('selectedMapel');
-            const submitBtn = document.getElementById('submitBtn');
+            // Set username
+            const adminUsername = localStorage.getItem('adminUsername') || 'Admin';
+            document.getElementById('loggedInUser').textContent = adminUsername;
+            document.getElementById('footerUser').textContent = adminUsername;
+            
+            // Elements
+            const refreshBtn = document.getElementById('refreshBtn');
+            const copyFormatBtn = document.getElementById('copyFormatBtn');
+            const exportBtn = document.getElementById('exportBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const copyWhatsappBtn = document.getElementById('copyWhatsappBtn');
+            const openWhatsappBtn = document.getElementById('openWhatsappBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const tableBody = document.getElementById('tableBody');
+            const noDataMessage = document.getElementById('noDataMessage');
             const successAlert = document.getElementById('successAlert');
-            const errorAlert = document.getElementById('errorAlert');
-            const namaInput = document.getElementById('nama');
+            const alertMessage = document.getElementById('alertMessage');
+            const totalSiswa = document.getElementById('totalSiswa');
+            const totalMtk = document.getElementById('totalMtk');
+            const totalPkn = document.getElementById('totalPkn');
+            const whatsappText = document.getElementById('whatsappText');
             
-            let selectedMapels = [];
+            // Load data pertama kali
+            loadData();
             
-            // Fungsi untuk toggle pilihan mapel
-            function toggleMapel(mapel) {
-                const index = selectedMapels.indexOf(mapel);
-                
-                if (index === -1) {
-                    // Tambah mapel jika belum dipilih
-                    selectedMapels.push(mapel);
-                    
-                    // Update tampilan
-                    if (mapel === 'mtk') {
-                        mtkOption.classList.add('selected');
-                    } else if (mapel === 'pkn') {
-                        pknOption.classList.add('selected');
-                    }
-                } else {
-                    // Hapus mapel jika sudah dipilih
-                    selectedMapels.splice(index, 1);
-                    
-                    // Update tampilan
-                    if (mapel === 'mtk') {
-                        mtkOption.classList.remove('selected');
-                    } else if (mapel === 'pkn') {
-                        pknOption.classList.remove('selected');
-                    }
+            // Event listeners
+            refreshBtn.addEventListener('click', loadData);
+            
+            copyFormatBtn.addEventListener('click', function() {
+                generateWhatsappText();
+                copyToClipboard(whatsappText.textContent);
+            });
+            
+            copyWhatsappBtn.addEventListener('click', function() {
+                copyToClipboard(whatsappText.textContent);
+            });
+            
+            openWhatsappBtn.addEventListener('click', function() {
+                window.open('https://web.whatsapp.com', '_blank');
+            });
+            
+            exportBtn.addEventListener('click', exportData);
+            
+            clearBtn.addEventListener('click', function() {
+                if (confirm('Apakah Anda yakin ingin menghapus SEMUA data siswa? Tindakan ini tidak dapat dibatalkan.')) {
+                    localStorage.removeItem('siswaData');
+                    loadData();
+                    showAlert('Semua data berhasil dihapus!', 'success');
                 }
+            });
+            
+            logoutBtn.addEventListener('click', function() {
+                if (confirm('Apakah Anda yakin ingin logout?')) {
+                    localStorage.removeItem('isAdminLoggedIn');
+                    localStorage.removeItem('adminUsername');
+                    window.location.href = 'login.html';
+                }
+            });
+            
+            // Fungsi untuk memuat data
+            function loadData() {
+                console.log('Loading data...');
                 
-                // Update input hidden
-                selectedMapelInput.value = selectedMapels.join(',');
+                try {
+                    const siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
+                    console.log('Data loaded:', siswaData);
+                    
+                    // Update stats
+                    totalSiswa.textContent = siswaData.length;
+                    
+                    const mtkCount = siswaData.filter(siswa => 
+                        siswa.mapel && siswa.mapel.includes('mtk')
+                    ).length;
+                    
+                    const pknCount = siswaData.filter(siswa => 
+                        siswa.mapel && siswa.mapel.includes('pkn')
+                    ).length;
+                    
+                    totalMtk.textContent = mtkCount;
+                    totalPkn.textContent = pknCount;
+                    
+                    // Update table
+                    if (siswaData.length > 0) {
+                        noDataMessage.style.display = 'none';
+                        tableBody.innerHTML = '';
+                        
+                        siswaData.forEach((siswa, index) => {
+                            const row = document.createElement('tr');
+                            
+                            // Format mapel badges
+                            const mapelBadges = [];
+                            if (siswa.mapel && siswa.mapel.includes('mtk')) {
+                                mapelBadges.push('<span class="mapel-badge badge-mtk">Matematika</span>');
+                            }
+                            if (siswa.mapel && siswa.mapel.includes('pkn')) {
+                                mapelBadges.push('<span class="mapel-badge badge-pkn">PKN</span>');
+                            }
+                            
+                            row.innerHTML = `
+                                <td>${index + 1}</td>
+                                <td><strong>${siswa.nama || ''}</strong></td>
+                                <td>${mapelBadges.join(' ')}</td>
+                                <td><code>${siswa.mapelKode || ''}</code></td>
+                                <td><small>${siswa.tanggal || ''}</small></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn delete" data-id="${siswa.id}">
+                                            <i class="fas fa-trash"></i> Hapus
+                                        </button>
+                                    </div>
+                                </td>
+                            `;
+                            
+                            tableBody.appendChild(row);
+                        });
+                        
+                        // Add event listeners for delete buttons
+                        document.querySelectorAll('.action-btn.delete').forEach(btn => {
+                            btn.addEventListener('click', function() {
+                                const id = parseInt(this.getAttribute('data-id'));
+                                deleteData(id);
+                            });
+                        });
+                    } else {
+                        noDataMessage.style.display = 'block';
+                        tableBody.innerHTML = '';
+                    }
+                    
+                    // Update WhatsApp text
+                    generateWhatsappText();
+                    
+                } catch (error) {
+                    console.error('Error loading data:', error);
+                    showAlert('Error loading data: ' + error.message, 'error');
+                }
             }
             
-            // Event listeners untuk mapel
-            mtkOption.addEventListener('click', function() {
-                toggleMapel('mtk');
-            });
-            
-            pknOption.addEventListener('click', function() {
-                toggleMapel('pkn');
-            });
-            
-            // Event listener untuk submit
-            submitBtn.addEventListener('click', function() {
-                const nama = namaInput.value.trim();
-                
-                // Validasi
-                if (nama === '' || selectedMapels.length === 0) {
-                    errorAlert.style.display = 'flex';
-                    successAlert.style.display = 'none';
-                    
-                    // Auto hide error alert setelah 5 detik
-                    setTimeout(() => {
-                        errorAlert.style.display = 'none';
-                    }, 5000);
-                    
+            // Fungsi untuk menghapus data
+            function deleteData(id) {
+                if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) {
                     return;
                 }
                 
-                // Ambil data yang sudah ada
-                const existingData = JSON.parse(localStorage.getItem('siswaData')) || [];
-                
-                // Cek apakah nama sudah ada
-                const isDuplicate = existingData.some(siswa => 
-                    siswa.nama.toLowerCase() === nama.toLowerCase()
-                );
-                
-                if (isDuplicate) {
-                    errorAlert.innerHTML = `
-                        <i class="fas fa-exclamation-circle"></i> 
-                        <div>
-                            <strong>Nama sudah terdaftar!</strong>
-                            <p style="font-size: 0.9rem; margin-top: 3px;">Nama "${nama}" sudah ada dalam daftar. Gunakan nama lengkap yang berbeda.</p>
-                        </div>
-                    `;
-                    errorAlert.style.display = 'flex';
-                    successAlert.style.display = 'none';
+                try {
+                    const siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
+                    const siswaToDelete = siswaData.find(s => s.id === id);
                     
-                    setTimeout(() => {
-                        errorAlert.style.display = 'none';
-                    }, 5000);
+                    if (!siswaToDelete) {
+                        showAlert('Data tidak ditemukan!', 'error');
+                        return;
+                    }
                     
-                    return;
+                    // Hapus data
+                    const updatedData = siswaData.filter(siswa => siswa.id !== id);
+                    
+                    // Simpan ke localStorage
+                    localStorage.setItem('siswaData', JSON.stringify(updatedData));
+                    
+                    // Refresh data
+                    loadData();
+                    
+                    // Tampilkan pesan sukses
+                    showAlert(Data "${siswaToDelete.nama}" berhasil dihapus!, 'success');
+                    
+                } catch (error) {
+                    console.error('Error deleting data:', error);
+                    showAlert('Error deleting data: ' + error.message, 'error');
                 }
-                
-                // Format mapel untuk disimpan
-                const mapelCodes = [];
-                if (selectedMapels.includes('mtk')) mapelCodes.push('M');
-                if (selectedMapels.includes('pkn')) mapelCodes.push('P');
-                
-                // Buat data siswa baru
-                const newSiswa = {
-                    id: Date.now(), // ID unik berdasarkan timestamp
-                    nama: nama,
-                    mapel: selectedMapels,
-                    mapelKode: mapelCodes.join(' & '),
-                    tanggal: new Date().toLocaleString('id-ID')
-                };
-                
-                // Tambahkan ke data yang ada
-                existingData.push(newSiswa);
-                
-                // Simpan ke localStorage
-                localStorage.setItem('siswaData', JSON.stringify(existingData));
-                
-                // Tampilkan success alert
+            }
+            
+            // Fungsi untuk generate teks WhatsApp
+            function generateWhatsappText() {
+                try {
+                    const siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
+                    
+                    if (siswaData.length === 0) {
+                        whatsappText.textContent = `NAMA NAMA YANG BELUM MENGERJAKAN ULANGAN
+
+===KODE=====
+
+MATEMATIKA = M
+PKN = P
+
+=======NAMA DAN KODE=====
+
+[Belum ada data]`;
+                        return;
+                    }
+                    
+                    let text = `NAMA NAMA YANG BELUM MENGERJAKAN ULANGAN
+
+===KODE=====
+
+MATEMATIKA = M
+PKN = P
+
+=======NAMA DAN KODE=====
+`;
+
+                    siswaData.forEach((siswa, index) => {
+                        text += ${index + 1}. ${siswa.nama} [${siswa.mapelKode}]\n;
+                    });
+
+                    text += \nTotal: ${siswaData.length} siswa;
+                    whatsappText.textContent = text;
+                    
+                } catch (error) {
+                    console.error('Error generating WhatsApp text:', error);
+                }
+            }
+            
+            // Fungsi untuk copy ke clipboard
+            function copyToClipboard(text) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showAlert('Teks berhasil disalin ke clipboard!', 'success');
+                }).catch(err => {
+                    console.error('Gagal menyalin teks: ', err);
+                    showAlert('Gagal menyalin teks. Coba lagi.', 'error');
+                });
+            }
+            
+            // Fungsi untuk export data
+            function exportData() {
+                try {
+                    const siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
+                    
+                    if (siswaData.length === 0) {
+                        showAlert('Tidak ada data untuk diexport.', 'error');
+                        return;
+                    }
+                    
+                    // Format data untuk export
+                    let exportText = DAFTAR ULANGAN - EKSPORT DATA\n;
+                    exportText += Tanggal: ${new Date().toLocaleDateString('id-ID')}\n;
+                    exportText += Waktu: ${new Date().toLocaleTimeString('id-ID')}\n;
+                    exportText += Total Siswa: ${siswaData.length}\n\n;
+                    exportText += NO | NAMA SISWA | MAPEL BELUM DIKERJAKAN | KODE | WAKTU INPUT\n;
+                    exportText += ---|------------|-----------------------|------|-------------\n;
+                    
+                    siswaData.forEach((siswa, index) => {
+                        const mapelList = [];
+                        if (siswa.mapel && siswa.mapel.includes('mtk')) mapelList.push('Matematika');
+                        if (siswa.mapel && siswa.mapel.includes('pkn')) mapelList.push('PKN');
+                        
+                        exportText += ${index + 1} | ${siswa.nama} | ${mapelList.join(', ')} | ${siswa.mapelKode} | ${siswa.tanggal}\n;
+                    });
+                    
+                    // Buat blob dan download
+                    const blob = new Blob([exportText], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = daftar-ulangan-${new Date().toISOString().split('T')[0]}.txt;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    showAlert('Data berhasil diexport!', 'success');
+                    
+                } catch (error) {
+                    console.error('Error exporting data:', error);
+                    showAlert('Error exporting data: ' + error.message, 'error');
+                }
+            }
+            
+            // Fungsi untuk menampilkan alert
+            function showAlert(message, type) {
+                alertMessage.textContent = message;
+                successAlert.className = type === 'success' ? 'alert alert-success' : 'alert alert-error';
                 successAlert.style.display = 'flex';
-                errorAlert.style.display = 'none';
                 
-                // Reset form
-                namaInput.value = '';
-                selectedMapels = [];
-                selectedMapelInput.value = '';
-                mtkOption.classList.remove('selected');
-                pknOption.classList.remove('selected');
-                
-                // Auto hide success alert setelah 5 detik
                 setTimeout(() => {
                     successAlert.style.display = 'none';
                 }, 5000);
-                
-                // Beri feedback visual
-                submitBtn.innerHTML = '<i class="fas fa-check"></i> Data Tersimpan!';
-                submitBtn.style.backgroundColor = 'var(--success)';
-                
-                setTimeout(() => {
-                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Simpan Data';
-                    submitBtn.style.backgroundColor = '';
-                }, 2000);
-            });
+            }
             
-            // Validasi real-time
-            namaInput.addEventListener('input', function() {
-                if (namaInput.value.trim() !== '') {
-                    errorAlert.style.display = 'none';
-                }
-            });
+            // Auto refresh data setiap 30 detik
+            setInterval(loadData, 30000);
+            
         });
     </script>
 </body>
-
 </html>
