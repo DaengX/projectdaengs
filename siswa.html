@@ -308,7 +308,7 @@
         </div>
 
         <div id="successAlert" class="alert alert-success">
-            <i class="fas fa-check-circle"></i> Data berhasil disimpan!
+            <i class="fas fa-check-circle"></i> <span id="successText">Data berhasil disimpan!</span>
         </div>
 
         <div id="errorAlert" class="alert alert-error">
@@ -359,10 +359,18 @@
     </div>
 
     <script>
-        // Inisialisasi data
+        // Debug: Tampilkan pesan di console
+        console.log('Halaman siswa dimuat');
+        
+        // Inisialisasi data jika belum ada
         if (!localStorage.getItem('siswaData')) {
             localStorage.setItem('siswaData', JSON.stringify([]));
+            console.log('LocalStorage diinisialisasi');
         }
+        
+        // Test: Tampilkan data yang ada
+        const testData = JSON.parse(localStorage.getItem('siswaData'));
+        console.log('Data saat ini:', testData);
         
         // Elements
         const mtkOption = document.getElementById('mtkOption');
@@ -370,6 +378,7 @@
         const submitBtn = document.getElementById('submitBtn');
         const successAlert = document.getElementById('successAlert');
         const errorAlert = document.getElementById('errorAlert');
+        const successText = document.getElementById('successText');
         const errorText = document.getElementById('errorText');
         const namaInput = document.getElementById('nama');
         
@@ -382,6 +391,7 @@
             if (index === -1) {
                 // Tambah mapel jika belum dipilih
                 selectedMapels.push(mapel);
+                console.log('Mapel dipilih:', mapel, 'List:', selectedMapels);
                 
                 // Update tampilan
                 if (mapel === 'mtk') {
@@ -392,6 +402,7 @@
             } else {
                 // Hapus mapel jika sudah dipilih
                 selectedMapels.splice(index, 1);
+                console.log('Mapel dihapus:', mapel, 'List:', selectedMapels);
                 
                 // Update tampilan
                 if (mapel === 'mtk') {
@@ -402,21 +413,28 @@
             }
         }
         
-        // Event listeners untuk mapel
+        // Event listeners untuk mapel - PASTIKAN INI ADA
         mtkOption.addEventListener('click', function() {
+            console.log('MTK diklik');
             toggleMapel('mtk');
         });
         
         pknOption.addEventListener('click', function() {
+            console.log('PKN diklik');
             toggleMapel('pkn');
         });
         
-        // Event listener untuk submit
+        // Event listener untuk submit - PASTIKAN INI ADA
         submitBtn.addEventListener('click', function() {
+            console.log('Tombol simpan diklik');
+            console.log('Nama:', namaInput.value);
+            console.log('Mapel terpilih:', selectedMapels);
+            
             const nama = namaInput.value.trim();
             
             // Validasi
             if (nama === '' || selectedMapels.length === 0) {
+                console.log('Validasi gagal');
                 errorText.textContent = 'Harap isi nama dan pilih minimal satu mata pelajaran!';
                 errorAlert.style.display = 'flex';
                 successAlert.style.display = 'none';
@@ -425,6 +443,7 @@
             
             // Ambil data yang sudah ada
             const existingData = JSON.parse(localStorage.getItem('siswaData')) || [];
+            console.log('Data existing:', existingData);
             
             // Cek apakah nama sudah ada
             const isDuplicate = existingData.some(siswa => 
@@ -432,6 +451,7 @@
             );
             
             if (isDuplicate) {
+                console.log('Nama duplikat');
                 errorText.textContent = Nama "${nama}" sudah terdaftar!;
                 errorAlert.style.display = 'flex';
                 successAlert.style.display = 'none';
@@ -452,13 +472,17 @@
                 tanggal: new Date().toLocaleString('id-ID')
             };
             
+            console.log('Data baru:', newSiswa);
+            
             // Tambahkan ke data yang ada
             existingData.push(newSiswa);
             
             // Simpan ke localStorage
             localStorage.setItem('siswaData', JSON.stringify(existingData));
+            console.log('Data disimpan:', existingData);
             
             // Tampilkan success alert
+            successText.textContent = Data ${nama} berhasil disimpan!;
             successAlert.style.display = 'flex';
             errorAlert.style.display = 'none';
             
@@ -474,12 +498,14 @@
             }, 5000);
             
             // Beri feedback
+            const originalText = submitBtn.innerHTML;
+            const originalColor = submitBtn.style.backgroundColor;
             submitBtn.innerHTML = '<i class="fas fa-check"></i> Data Tersimpan!';
-            submitBtn.style.backgroundColor = 'var(--success)';
+            submitBtn.style.backgroundColor = '#28a745';
             
             setTimeout(() => {
-                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Simpan Data';
-                submitBtn.style.backgroundColor = '';
+                submitBtn.innerHTML = originalText;
+                submitBtn.style.backgroundColor = originalColor;
             }, 2000);
         });
         
@@ -489,6 +515,13 @@
                 submitBtn.click();
             }
         });
+        
+        // Fungsi debug
+        window.showData = function() {
+            const data = JSON.parse(localStorage.getItem('siswaData')) || [];
+            console.table(data);
+            alert(Total data: ${data.length}\nLihat di console untuk detail);
+        };
     </script>
 </body>
 </html>
