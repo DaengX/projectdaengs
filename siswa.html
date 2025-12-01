@@ -3,410 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Data Ulangan</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Input Data Ulangan - Siswa</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <style>
-        /* CSS STYLE */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-        
         body {
-            background: #f0f2f5;
-            color: #333;
-            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
             padding: 20px;
+            background-color: #f5f5f5;
         }
         
         .container {
-            max-width: 600px;
-            margin: 0 auto;
             background: white;
-            border-radius: 10px;
             padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #4361ee;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 10px;
-        }
-        
-        .logo i {
-            font-size: 2rem;
-            color: #4361ee;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
         
         h1 {
-            color: #4361ee;
-            font-size: 1.8rem;
-        }
-        
-        .subtitle {
-            color: #666;
-            font-size: 1rem;
+            color: #2c3e50;
+            text-align: center;
         }
         
         .alert {
             padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            margin: 15px 0;
+            border-radius: 5px;
             display: none;
-            align-items: center;
-            gap: 10px;
         }
         
-        .alert.success {
+        .success {
             background: #d4edda;
             color: #155724;
-            border-left: 4px solid #28a745;
+            border: 1px solid #c3e6cb;
         }
         
-        .alert.error {
+        .error {
             background: #f8d7da;
             color: #721c24;
-            border-left: 4px solid #dc3545;
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #4361ee;
+            border: 1px solid #f5c6cb;
         }
         
         input[type="text"] {
             width: 100%;
             padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
             font-size: 16px;
         }
         
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #4361ee;
-        }
-        
-        .mapel-options {
-            display: flex;
-            gap: 15px;
-            margin-top: 10px;
-        }
-        
         .mapel-option {
-            flex: 1;
             border: 2px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
             cursor: pointer;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        
-        .mapel-option:hover {
-            border-color: #4361ee;
-            transform: translateY(-2px);
         }
         
         .mapel-option.selected {
-            border-color: #4361ee;
-            background: #eef2ff;
+            border-color: #3498db;
+            background-color: #e3f2fd;
         }
         
-        .mapel-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            color: #4361ee;
-        }
-        
-        .mapel-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .mapel-code {
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        .btn {
-            width: 100%;
-            padding: 15px;
-            background: #4361ee;
+        button {
+            background: #3498db;
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: background 0.3s;
-        }
-        
-        .btn:hover {
-            background: #3a56d4;
-        }
-        
-        .nav-links {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-        
-        .nav-links a {
-            padding: 10px 20px;
-            background: #28a745;
-            color: white;
-            text-decoration: none;
+            padding: 15px;
+            width: 100%;
             border-radius: 5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
         }
         
-        .nav-links a:hover {
-            background: #218838;
+        button:hover {
+            background: #2980b9;
         }
         
-        footer {
+        .nav {
             text-align: center;
             margin-top: 30px;
-            color: #666;
-            font-size: 14px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
         }
         
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-            
-            .mapel-options {
-                flex-direction: column;
-            }
+        .nav a {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 0 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <div class="logo">
-                <i class="fas fa-clipboard-check"></i>
-                <h1>Sistem Daftar Ulangan</h1>
-            </div>
-            <p class="subtitle">Isi nama dan pilih mata pelajaran yang belum dikerjakan</p>
-        </header>
-
+        <h1>Input Data Ulangan</h1>
+        
         <div id="successAlert" class="alert success">
-            <i class="fas fa-check-circle"></i>
-            <span id="successText">Data berhasil disimpan!</span>
+            ✅ Data berhasil disimpan!
         </div>
-
+        
         <div id="errorAlert" class="alert error">
-            <i class="fas fa-exclamation-circle"></i>
-            <span id="errorText">Harap isi semua data!</span>
+            ❌ Harap isi semua data!
         </div>
-
-        <div class="form-group">
-            <label for="nama"><i class="fas fa-user"></i> Nama Lengkap</label>
-            <input type="text" id="nama" placeholder="Masukkan nama lengkap Anda">
+        
+        <div>
+            <h3>Nama Lengkap:</h3>
+            <input type="text" id="nama" placeholder="Masukkan nama lengkap">
         </div>
-
-        <div class="form-group">
-            <label><i class="fas fa-book"></i> Mata Pelajaran yang Belum Dikerjakan</label>
-            <div class="mapel-options">
-                <div class="mapel-option" id="mtkOption">
-                    <div class="mapel-icon">
-                        <i class="fas fa-calculator"></i>
-                    </div>
-                    <div class="mapel-name">1. Matematika</div>
-                    <div class="mapel-code">Kode: M</div>
-                </div>
-                
-                <div class="mapel-option" id="pknOption">
-                    <div class="mapel-icon">
-                        <i class="fas fa-landmark"></i>
-                    </div>
-                    <div class="mapel-name">2. PKN</div>
-                    <div class="mapel-code">Kode: P</div>
-                </div>
+        
+        <div>
+            <h3>Pilih mata pelajaran yang belum dikerjakan:</h3>
+            
+            <div class="mapel-option" id="mtkOption">
+                <h4>1. Matematika (M)</h4>
+                <p>Matematika belum dikerjakan</p>
+            </div>
+            
+            <div class="mapel-option" id="pknOption">
+                <h4>2. PKN (P)</h4>
+                <p>Pendidikan Kewarganegaraan belum dikerjakan</p>
             </div>
         </div>
-
-        <button class="btn" id="submitBtn">
-            <i class="fas fa-paper-plane"></i> SIMPAN DATA
-        </button>
-
-        <div class="nav-links">
-            <a href="siswa.html">
-                <i class="fas fa-plus-circle"></i> Input Data
-            </a>
-            <a href="admin.html">
-                <i class="fas fa-user-shield"></i> Halaman Admin
-            </a>
+        
+        <button id="submitBtn">💾 SIMPAN DATA</button>
+        
+        <div class="nav">
+            <a href="siswa.html">➕ Input Data</a>
+            <a href="admin.html">👨‍💼 Halaman Admin</a>
         </div>
-
-        <footer>
-            <p>Sistem Daftar Ulangan &copy; 2023</p>
-        </footer>
     </div>
 
     <script>
-        // ================== JAVASCRIPT UNTUK SISWA ==================
-        
-        console.log('=== SISTEM DAFTAR ULANGAN - SISWA ===');
-        console.log('JavaScript berjalan!');
-        
-        // Inisialisasi data di localStorage jika belum ada
+        // Inisialisasi localStorage
         if (!localStorage.getItem('siswaData')) {
             localStorage.setItem('siswaData', JSON.stringify([]));
-            console.log('Data localStorage diinisialisasi');
         }
         
-        // Ambil semua elemen yang dibutuhkan
+        // Element
         const namaInput = document.getElementById('nama');
         const mtkOption = document.getElementById('mtkOption');
         const pknOption = document.getElementById('pknOption');
         const submitBtn = document.getElementById('submitBtn');
         const successAlert = document.getElementById('successAlert');
         const errorAlert = document.getElementById('errorAlert');
-        const successText = document.getElementById('successText');
-        const errorText = document.getElementById('errorText');
         
-        console.log('Elemen ditemukan:', {
-            namaInput: !!namaInput,
-            mtkOption: !!mtkOption,
-            pknOption: !!pknOption,
-            submitBtn: !!submitBtn
-        });
-        
-        // Variabel untuk menyimpan mapel yang dipilih
+        // Data
         let selectedMapels = [];
         
-        // ========== FUNGSI UNTUK MEMILIH MAPEL ==========
-        function toggleMapel(mapel) {
-            console.log('Tombol mapel diklik:', mapel);
-            
-            // Cek apakah mapel sudah dipilih
+        // Fungsi pilih mapel
+        function selectMapel(mapel) {
             const index = selectedMapels.indexOf(mapel);
             
             if (index === -1) {
-                // Tambahkan mapel ke array
                 selectedMapels.push(mapel);
-                console.log('Mapel ditambahkan:', mapel);
-                console.log('Mapel terpilih sekarang:', selectedMapels);
-                
-                // Tambah class 'selected' untuk styling
-                if (mapel === 'mtk' && mtkOption) {
-                    mtkOption.classList.add('selected');
-                } else if (mapel === 'pkn' && pknOption) {
-                    pknOption.classList.add('selected');
-                }
             } else {
-                // Hapus mapel dari array
                 selectedMapels.splice(index, 1);
-                console.log('Mapel dihapus:', mapel);
-                console.log('Mapel terpilih sekarang:', selectedMapels);
-                
-                // Hapus class 'selected'
-                if (mapel === 'mtk' && mtkOption) {
-                    mtkOption.classList.remove('selected');
-                } else if (mapel === 'pkn' && pknOption) {
-                    pknOption.classList.remove('selected');
-                }
             }
-        }
-        
-        // ========== EVENT LISTENER UNTUK MAPEL ==========
-        if (mtkOption) {
-            mtkOption.addEventListener('click', function() {
-                console.log('MTK diklik');
-                toggleMapel('mtk');
-            });
-            console.log('Event listener MTK ditambahkan');
-        }
-        
-        if (pknOption) {
-            pknOption.addEventListener('click', function() {
-                console.log('PKN diklik');
-                toggleMapel('pkn');
-            });
-            console.log('Event listener PKN ditambahkan');
-        }
-        
-        // ========== FUNGSI SIMPAN DATA ==========
-        function simpanData() {
-            console.log('=== FUNGSI SIMPAN DATA DIPANGGIL ===');
             
-            // Ambil nilai dari input
-            const nama = namaInput ? namaInput.value.trim() : '';
-            console.log('Nama:', nama);
+            // Update tampilan
+            if (mapel === 'mtk') {
+                mtkOption.classList.toggle('selected');
+            } else if (mapel === 'pkn') {
+                pknOption.classList.toggle('selected');
+            }
+            
             console.log('Mapel terpilih:', selectedMapels);
+        }
+        
+        // Event listeners untuk mapel
+        mtkOption.addEventListener('click', function() {
+            selectMapel('mtk');
+        });
+        
+        pknOption.addEventListener('click', function() {
+            selectMapel('pkn');
+        });
+        
+        // Fungsi simpan data
+        function saveData() {
+            const nama = namaInput.value.trim();
             
-            // VALIDASI
-            let error = '';
-            
-            if (!nama) {
-                error = 'Harap isi nama lengkap!';
-            } else if (selectedMapels.length === 0) {
-                error = 'Harap pilih minimal satu mata pelajaran!';
-            }
-            
-            if (error) {
-                console.log('Validasi gagal:', error);
-                if (errorText) errorText.textContent = error;
-                if (errorAlert) errorAlert.style.display = 'flex';
-                if (successAlert) successAlert.style.display = 'none';
+            // Validasi
+            if (!nama || selectedMapels.length === 0) {
+                errorAlert.style.display = 'block';
+                successAlert.style.display = 'none';
                 return;
             }
             
-            // Ambil data yang sudah ada
-            let existingData = [];
-            try {
-                const dataStr = localStorage.getItem('siswaData');
-                console.log('Data dari localStorage:', dataStr);
-                existingData = dataStr ? JSON.parse(dataStr) : [];
-                console.log('Data existing:', existingData);
-            } catch (err) {
-                console.error('Error parsing data:', err);
-                existingData = [];
-            }
+            // Ambil data existing
+            const existingData = JSON.parse(localStorage.getItem('siswaData')) || [];
             
-            // Cek apakah nama sudah ada
+            // Cek duplikat
             const isDuplicate = existingData.some(siswa => 
-                siswa.nama && siswa.nama.toLowerCase() === nama.toLowerCase()
+                siswa.nama.toLowerCase() === nama.toLowerCase()
             );
             
             if (isDuplicate) {
-                console.log('Nama duplikat ditemukan:', nama);
-                if (errorText) errorText.textContent = Nama "${nama}" sudah terdaftar!;
-                if (errorAlert) errorAlert.style.display = 'flex';
-                if (successAlert) successAlert.style.display = 'none';
+                errorAlert.textContent = ❌ Nama "${nama}" sudah terdaftar!;
+                errorAlert.style.display = 'block';
+                successAlert.style.display = 'none';
                 return;
             }
             
@@ -415,103 +215,50 @@
             if (selectedMapels.includes('mtk')) mapelCodes.push('M');
             if (selectedMapels.includes('pkn')) mapelCodes.push('P');
             
-            // Buat objek data siswa baru
+            // Buat data baru
             const newSiswa = {
-                id: Date.now(), // ID unik
+                id: Date.now(),
                 nama: nama,
-                mapel: [...selectedMapels], // Copy array
+                mapel: selectedMapels,
                 mapelKode: mapelCodes.join(' & '),
                 tanggal: new Date().toLocaleString('id-ID')
             };
             
-            console.log('Data baru:', newSiswa);
-            
-            // Tambahkan ke data existing
+            // Simpan
             existingData.push(newSiswa);
+            localStorage.setItem('siswaData', JSON.stringify(existingData));
             
-            // Simpan ke localStorage
-            try {
-                localStorage.setItem('siswaData', JSON.stringify(existingData));
-                console.log('Data berhasil disimpan!');
-                
-                // Tampilkan pesan sukses
-                if (successText) successText.textContent = Data ${nama} berhasil disimpan!;
-                if (successAlert) successAlert.style.display = 'flex';
-                if (errorAlert) errorAlert.style.display = 'none';
-                
-            } catch (err) {
-                console.error('Error menyimpan data:', err);
-                if (errorText) errorText.textContent = 'Gagal menyimpan data!';
-                if (errorAlert) errorAlert.style.display = 'flex';
-                if (successAlert) successAlert.style.display = 'none';
-                return;
-            }
+            // Tampilkan sukses
+            successAlert.textContent = ✅ Data ${nama} berhasil disimpan!;
+            successAlert.style.display = 'block';
+            errorAlert.style.display = 'none';
             
-            // RESET FORM
-            if (namaInput) namaInput.value = '';
+            // Reset form
+            namaInput.value = '';
             selectedMapels = [];
+            mtkOption.classList.remove('selected');
+            pknOption.classList.remove('selected');
             
-            if (mtkOption) mtkOption.classList.remove('selected');
-            if (pknOption) pknOption.classList.remove('selected');
-            
-            // Beri feedback pada tombol
-            const originalHTML = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-check"></i> DATA TERSIMPAN!';
-            submitBtn.style.background = '#28a745';
+            // Feedback tombol
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = '✅ DATA TERSIMPAN!';
+            submitBtn.style.background = '#27ae60';
             
             setTimeout(() => {
-                submitBtn.innerHTML = originalHTML;
+                submitBtn.textContent = originalText;
                 submitBtn.style.background = '';
             }, 2000);
-            
-            // Sembunyikan alert setelah 5 detik
-            setTimeout(() => {
-                if (successAlert) successAlert.style.display = 'none';
-            }, 5000);
-            
-            console.log('=== DATA BERHASIL DISIMPAN ===');
         }
         
-        // ========== EVENT LISTENER UNTUK TOMBOL SIMPAN ==========
-        if (submitBtn) {
-            submitBtn.addEventListener('click', function(event) {
-                console.log('=== TOMBOL SIMPAN DIKLIK ===');
-                event.preventDefault(); // Mencegah form submission default
-                simpanData();
-            });
-            console.log('Event listener submitBtn ditambahkan');
-        }
+        // Event listener untuk tombol simpan
+        submitBtn.addEventListener('click', saveData);
         
-        // ========== ENTER KEY UNTUK SUBMIT ==========
-        if (namaInput) {
-            namaInput.addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    console.log('ENTER key ditekan');
-                    event.preventDefault();
-                    simpanData();
-                }
-            });
-        }
-        
-        // ========== FUNGSI DEBUG ==========
-        window.debugShowData = function() {
-            const data = JSON.parse(localStorage.getItem('siswaData')) || [];
-            console.log('=== DEBUG DATA ===');
-            console.log('Total data:', data.length);
-            console.table(data);
-            alert(Total data: ${data.length}\nLihat console untuk detail.);
-        };
-        
-        window.debugClearData = function() {
-            if (confirm('Hapus SEMUA data siswa?')) {
-                localStorage.removeItem('siswaData');
-                localStorage.setItem('siswaData', JSON.stringify([]));
-                console.log('Semua data dihapus');
-                alert('Semua data berhasil dihapus!');
+        // Enter untuk submit
+        namaInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                saveData();
             }
-        };
-        
-        console.log('=== INISIALISASI SELESAI ===');
+        });
     </script>
 </body>
 </html>
