@@ -13,9 +13,23 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #7209b7;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --danger: #e63946;
+            --warning: #f4a261;
+            --whatsapp: #25D366;
+        }
+
         body {
-            background-color: #f5f7ff;
-            color: #333;
+            background-color: #f5f7fb;
+            color: var(--dark);
             line-height: 1.6;
             min-height: 100vh;
         }
@@ -28,7 +42,7 @@
 
         /* Header */
         header {
-            background: linear-gradient(135deg, #7209b7, #3a0ca3);
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
             color: white;
             padding: 1.5rem 0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -129,7 +143,7 @@
         .main-title {
             text-align: center;
             margin-bottom: 2rem;
-            color: #3a0ca3;
+            color: var(--secondary);
         }
 
         .main-title h2 {
@@ -138,7 +152,7 @@
         }
 
         .main-title p {
-            color: #666;
+            color: var(--gray);
         }
 
         /* Admin Controls */
@@ -164,18 +178,18 @@
         }
 
         .btn-primary {
-            background-color: #4361ee;
+            background-color: var(--primary);
             color: white;
         }
 
         .btn-primary:hover {
-            background-color: #3a56d4;
+            background-color: var(--secondary);
             transform: translateY(-3px);
             box-shadow: 0 7px 15px rgba(67, 97, 238, 0.3);
         }
 
         .btn-success {
-            background-color: #25D366;
+            background-color: var(--whatsapp);
             color: white;
         }
 
@@ -186,7 +200,7 @@
         }
 
         .btn-danger {
-            background-color: #e63946;
+            background-color: var(--danger);
             color: white;
         }
 
@@ -197,7 +211,7 @@
         }
 
         .btn-warning {
-            background-color: #f4a261;
+            background-color: var(--warning);
             color: white;
         }
 
@@ -236,25 +250,25 @@
         }
 
         .stat-icon.total {
-            background-color: #4361ee;
+            background-color: var(--primary);
         }
 
         .stat-icon.mtk {
-            background-color: #7209b7;
+            background-color: var(--accent);
         }
 
         .stat-icon.pkn {
-            background-color: #f4a261;
+            background-color: var(--warning);
         }
 
         .stat-card h3 {
             font-size: 2rem;
             margin-bottom: 5px;
-            color: #333;
+            color: var(--dark);
         }
 
         .stat-card p {
-            color: #666;
+            color: var(--gray);
             font-size: 0.9rem;
         }
 
@@ -274,17 +288,17 @@
         }
 
         th {
-            background-color: #e9ecef;
-            color: #3a0ca3;
+            background-color: var(--light-gray);
+            color: var(--secondary);
             font-weight: 600;
             text-align: left;
             padding: 15px;
-            border-bottom: 2px solid #e9ecef;
+            border-bottom: 2px solid var(--light-gray);
         }
 
         td {
             padding: 15px;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid var(--light-gray);
         }
 
         tr:hover {
@@ -302,12 +316,12 @@
 
         .badge-mtk {
             background-color: rgba(67, 97, 238, 0.1);
-            color: #4361ee;
+            color: var(--primary);
         }
 
         .badge-pkn {
             background-color: rgba(114, 9, 183, 0.1);
-            color: #7209b7;
+            color: var(--accent);
         }
 
         .action-buttons {
@@ -327,17 +341,8 @@
             transition: all 0.3s;
         }
 
-        .action-btn.edit {
-            background-color: #2a9d8f;
-            color: white;
-        }
-
-        .action-btn.edit:hover {
-            background-color: #21867a;
-        }
-
         .action-btn.delete {
-            background-color: #e63946;
+            background-color: var(--danger);
             color: white;
         }
 
@@ -348,7 +353,7 @@
         .no-data {
             text-align: center;
             padding: 3rem;
-            color: #666;
+            color: var(--gray);
         }
 
         .no-data i {
@@ -367,7 +372,7 @@
         }
 
         .copy-section h3 {
-            color: #3a0ca3;
+            color: var(--secondary);
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
@@ -375,12 +380,12 @@
         }
 
         .copy-box {
-            background-color: #e9ecef;
+            background-color: var(--light-gray);
             border-radius: 10px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
             position: relative;
-            border-left: 4px solid #25D366;
+            border-left: 4px solid var(--whatsapp);
         }
 
         .copy-box pre {
@@ -411,23 +416,56 @@
         .alert-success {
             background-color: rgba(76, 201, 240, 0.15);
             color: #0a7c9e;
-            border-left: 4px solid #4cc9f0;
+            border-left: 4px solid var(--success);
         }
 
         .alert-error {
             background-color: rgba(230, 57, 70, 0.15);
             color: #c1121f;
-            border-left: 4px solid #e63946;
+            border-left: 4px solid var(--danger);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            padding: 2rem;
+        }
+
+        .modal h3 {
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 2rem;
         }
 
         /* Footer */
         footer {
             text-align: center;
             margin-top: 3rem;
-            color: #666;
+            color: var(--gray);
             font-size: 0.9rem;
             padding: 1rem 0;
-            border-top: 1px solid #e9ecef;
+            border-top: 1px solid var(--light-gray);
         }
 
         /* Responsive */
@@ -500,14 +538,14 @@
     <div class="container">
         <div class="main-title">
             <h2>Daftar Ulangan - Halaman Admin</h2>
-            <p>Kelola data siswa, edit, hapus, dan salin hasil untuk WhatsApp</p>
+            <p>Kelola data siswa dan salin hasil untuk WhatsApp</p>
         </div>
 
         <div id="successAlert" class="alert alert-success">
             <i class="fas fa-check-circle"></i> 
             <div>
                 <strong>Berhasil!</strong>
-                <p style="font-size: 0.9rem; margin-top: 3px;" id="alertMessage">Teks berhasil disalin ke clipboard.</p>
+                <p style="font-size: 0.9rem; margin-top: 3px;" id="alertMessage"></p>
             </div>
         </div>
 
@@ -553,7 +591,7 @@
         </div>
 
         <div class="table-container">
-            <h3 style="color: #3a0ca3; margin-bottom: 1rem;"><i class="fas fa-list"></i> Daftar Siswa yang Belum Mengerjakan</h3>
+            <h3 style="color: var(--secondary); margin-bottom: 1rem;"><i class="fas fa-list"></i> Daftar Siswa yang Belum Mengerjakan</h3>
             
             <div id="dataTable">
                 <table>
@@ -593,9 +631,7 @@ PKN = P
 
 =======NAMA DAN KODE=====
 
-1. [Contoh] [M & P]
-
-[Data akan muncul di sini setelah siswa mengisi form]</pre>
+[Belum ada data]</pre>
             </div>
             
             <div class="copy-buttons">
@@ -613,28 +649,43 @@ PKN = P
         </footer>
     </div>
 
+    <!-- Password Modal -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <h3><i class="fas fa-key"></i> Ganti Password</h3>
+            
+            <div class="form-group">
+                <label>Password Baru (minimal 6 karakter)</label>
+                <input type="password" id="newPassword" class="form-control" placeholder="Masukkan password baru" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 10px;">
+            </div>
+            
+            <div class="form-group">
+                <label>Konfirmasi Password</label>
+                <input type="password" id="confirmPassword" class="form-control" placeholder="Konfirmasi password baru" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            
+            <div id="passwordError" style="color: #e63946; font-size: 0.9rem; margin-top: 10px; display: none;"></div>
+            
+            <div class="modal-actions">
+                <button id="cancelPassword" class="btn" style="background: #6c757d; color: white; flex: 1;">Batal</button>
+                <button id="savePassword" class="btn btn-primary" style="flex: 1;">Simpan</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        console.log('Halaman admin dimuat');
+        
         // Cek login status
-        function checkLogin() {
-            const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
-            
-            if (!isLoggedIn || isLoggedIn !== 'true') {
-                // Redirect ke login page jika belum login
-                window.location.href = 'login.html';
-                return false;
-            }
-            
-            return true;
+        const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
+        if (!isLoggedIn || isLoggedIn !== 'true') {
+            console.log('Belum login, redirect ke login.html');
+            window.location.href = 'login.html';
         }
         
         // Main function
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Admin page loaded');
-            
-            // Cek login
-            if (!checkLogin()) {
-                return;
-            }
+            console.log('DOM loaded, inisialisasi dimulai');
             
             // Set username
             const adminUsername = localStorage.getItem('adminUsername') || 'Admin';
@@ -658,36 +709,56 @@ PKN = P
             const totalPkn = document.getElementById('totalPkn');
             const whatsappText = document.getElementById('whatsappText');
             
+            // Modal elements
+            const passwordModal = document.getElementById('passwordModal');
+            const newPasswordInput = document.getElementById('newPassword');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const passwordError = document.getElementById('passwordError');
+            const cancelPassword = document.getElementById('cancelPassword');
+            const savePassword = document.getElementById('savePassword');
+            
             // Load data pertama kali
             loadData();
+            console.log('Data pertama kali dimuat');
             
-            // Event listeners
-            refreshBtn.addEventListener('click', loadData);
+            // Event listeners - PASTIKAN SEMUA ADA
+            refreshBtn.addEventListener('click', function() {
+                console.log('Refresh diklik');
+                loadData();
+            });
             
             copyFormatBtn.addEventListener('click', function() {
+                console.log('Copy format diklik');
                 generateWhatsappText();
                 copyToClipboard(whatsappText.textContent);
             });
             
             copyWhatsappBtn.addEventListener('click', function() {
+                console.log('Copy WhatsApp diklik');
                 copyToClipboard(whatsappText.textContent);
             });
             
             openWhatsappBtn.addEventListener('click', function() {
+                console.log('Open WhatsApp diklik');
                 window.open('https://web.whatsapp.com', '_blank');
             });
             
-            exportBtn.addEventListener('click', exportData);
+            exportBtn.addEventListener('click', function() {
+                console.log('Export diklik');
+                exportData();
+            });
             
             clearBtn.addEventListener('click', function() {
-                if (confirm('Apakah Anda yakin ingin menghapus SEMUA data siswa? Tindakan ini tidak dapat dibatalkan.')) {
+                console.log('Clear diklik');
+                if (confirm('Hapus SEMUA data siswa? Tindakan ini tidak dapat dibatalkan!')) {
                     localStorage.removeItem('siswaData');
-                    loadData();
                     showAlert('Semua data berhasil dihapus!', 'success');
+                    loadData();
                 }
             });
             
             logoutBtn.addEventListener('click', function() {
+                console.log('Logout diklik');
                 if (confirm('Apakah Anda yakin ingin logout?')) {
                     localStorage.removeItem('isAdminLoggedIn');
                     localStorage.removeItem('adminUsername');
@@ -695,13 +766,62 @@ PKN = P
                 }
             });
             
+            // Modal events
+            cancelPassword.addEventListener('click', function() {
+                passwordModal.style.display = 'none';
+                newPasswordInput.value = '';
+                confirmPasswordInput.value = '';
+                passwordError.style.display = 'none';
+            });
+            
+            savePassword.addEventListener('click', function() {
+                const newPass = newPasswordInput.value;
+                const confirmPass = confirmPasswordInput.value;
+                
+                if (newPass.length < 6) {
+                    passwordError.textContent = 'Password minimal 6 karakter!';
+                    passwordError.style.display = 'block';
+                    return;
+                }
+                
+                if (newPass !== confirmPass) {
+                    passwordError.textContent = 'Password tidak cocok!';
+                    passwordError.style.display = 'block';
+                    return;
+                }
+                
+                // Update password
+                const DEFAULT_USERNAME = 'admin';
+                const DEFAULT_PASSWORD = 'password123';
+                
+                let adminCredentials = {
+                    username: DEFAULT_USERNAME,
+                    password: DEFAULT_PASSWORD
+                };
+                
+                const savedCredentials = localStorage.getItem('adminCredentials');
+                if (savedCredentials) {
+                    adminCredentials = JSON.parse(savedCredentials);
+                }
+                
+                adminCredentials.password = newPass;
+                localStorage.setItem('adminCredentials', JSON.stringify(adminCredentials));
+                
+                passwordModal.style.display = 'none';
+                newPasswordInput.value = '';
+                confirmPasswordInput.value = '';
+                passwordError.style.display = 'none';
+                
+                showAlert('Password berhasil diubah!', 'success');
+            });
+            
             // Fungsi untuk memuat data
             function loadData() {
-                console.log('Loading data...');
+                console.log('Memuat data dari localStorage...');
                 
                 try {
                     const siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
-                    console.log('Data loaded:', siswaData);
+                    console.log('Data ditemukan:', siswaData.length, 'record');
                     
                     // Update stats
                     totalSiswa.textContent = siswaData.length;
@@ -756,12 +876,15 @@ PKN = P
                         document.querySelectorAll('.action-btn.delete').forEach(btn => {
                             btn.addEventListener('click', function() {
                                 const id = parseInt(this.getAttribute('data-id'));
+                                console.log('Hapus data ID:', id);
                                 deleteData(id);
                             });
                         });
+                        
                     } else {
                         noDataMessage.style.display = 'block';
                         tableBody.innerHTML = '';
+                        console.log('Tidak ada data, tampilkan pesan');
                     }
                     
                     // Update WhatsApp text
@@ -769,7 +892,7 @@ PKN = P
                     
                 } catch (error) {
                     console.error('Error loading data:', error);
-                    showAlert('Error loading data: ' + error.message, 'error');
+                    showAlert('Error memuat data: ' + error.message, 'error');
                 }
             }
             
@@ -802,7 +925,7 @@ PKN = P
                     
                 } catch (error) {
                     console.error('Error deleting data:', error);
-                    showAlert('Error deleting data: ' + error.message, 'error');
+                    showAlert('Error menghapus data: ' + error.message, 'error');
                 }
             }
             
@@ -852,7 +975,7 @@ PKN = P
                 navigator.clipboard.writeText(text).then(() => {
                     showAlert('Teks berhasil disalin ke clipboard!', 'success');
                 }).catch(err => {
-                    console.error('Gagal menyalin teks: ', err);
+                    console.error('Gagal menyalin teks:', err);
                     showAlert('Gagal menyalin teks. Coba lagi.', 'error');
                 });
             }
@@ -915,6 +1038,17 @@ PKN = P
             
             // Auto refresh data setiap 30 detik
             setInterval(loadData, 30000);
+            
+            // Debug functions
+            window.showData = function() {
+                const data = JSON.parse(localStorage.getItem('siswaData')) || [];
+                console.table(data);
+                alert(Total data: ${data.length}\nLihat console untuk detail);
+            };
+            
+            window.testPassword = function() {
+                passwordModal.style.display = 'flex';
+            };
             
         });
     </script>
