@@ -10,15 +10,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-
-        :root {
-            --primary: #4361ee;
-            --secondary: #3a0ca3;
-            --accent: #7209b7;
-            --success: #4cc9f0;
-            --danger: #e63946;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
@@ -46,7 +38,7 @@
         .login-icon {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            background: linear-gradient(135deg, #7209b7, #3a0ca3);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -57,7 +49,7 @@
         }
 
         .login-box h1 {
-            color: var(--secondary);
+            color: #3a0ca3;
             margin-bottom: 0.5rem;
             font-size: 1.8rem;
         }
@@ -77,7 +69,7 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
-            color: var(--secondary);
+            color: #3a0ca3;
             font-size: 0.9rem;
         }
 
@@ -90,7 +82,7 @@
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--gray);
+            color: #666;
         }
 
         .form-control {
@@ -105,7 +97,7 @@
 
         .form-control:focus {
             outline: none;
-            border-color: var(--primary);
+            border-color: #4361ee;
             background: white;
             box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
         }
@@ -130,7 +122,7 @@
         .login-btn {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
             color: white;
             border: none;
             border-radius: 10px;
@@ -156,13 +148,13 @@
 
         .login-error {
             background-color: rgba(230, 57, 70, 0.1);
-            color: var(--danger);
+            color: #e63946;
             padding: 12px 15px;
             border-radius: 10px;
             margin-bottom: 1.5rem;
             display: none;
             text-align: left;
-            border-left: 4px solid var(--danger);
+            border-left: 4px solid #e63946;
             font-size: 0.9rem;
         }
 
@@ -179,13 +171,13 @@
         }
 
         .login-footer strong {
-            color: var(--secondary);
+            color: #3a0ca3;
         }
 
         .back-link {
             display: inline-block;
             margin-top: 1rem;
-            color: var(--primary);
+            color: #4361ee;
             text-decoration: none;
             font-size: 0.9rem;
         }
@@ -257,7 +249,6 @@
             </form>
             
             <div class="login-footer">
-        
                 <a href="siswa.html" class="back-link">
                     <i class="fas fa-arrow-left"></i> Kembali ke Halaman Siswa
                 </a>
@@ -311,9 +302,6 @@
                 const username = usernameInput.value.trim();
                 const password = passwordInput.value;
                 
-                console.log('Login attempt:', { username, password });
-                console.log('Expected:', adminCredentials);
-                
                 // Simple validation
                 if (username === '' || password === '') {
                     showError('Username dan password harus diisi!');
@@ -322,10 +310,7 @@
                 
                 // Check credentials
                 if (username === adminCredentials.username && password === adminCredentials.password) {
-                    // Successful login - redirect to admin.html
-                    console.log('Login successful!');
-                    
-                    // Store login session in localStorage
+                    // Successful login
                     localStorage.setItem('isAdminLoggedIn', 'true');
                     localStorage.setItem('adminUsername', username);
                     
@@ -344,7 +329,7 @@
                 errorText.textContent = message;
                 loginError.style.display = 'block';
                 loginError.classList.remove('shake');
-                void loginError.offsetWidth; // Trigger reflow
+                void loginError.offsetWidth;
                 loginError.classList.add('shake');
                 
                 // Auto hide error after 5 seconds
@@ -352,24 +337,6 @@
                     loginError.style.display = 'none';
                 }, 5000);
             }
-            
-            // Enter key to submit form
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    loginForm.dispatchEvent(new Event('submit'));
-                }
-            });
-            
-            // Clear error when user starts typing
-            usernameInput.addEventListener('input', hideError);
-            passwordInput.addEventListener('input', hideError);
-            
-            function hideError() {
-                loginError.style.display = 'none';
-            }
-            
-            // Debug: Log credentials on page load
-            console.log('Admin credentials loaded:', adminCredentials);
         });
     </script>
 </body>
