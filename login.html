@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin - Daftar Ulangan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #7209b7;
+            --success: #4cc9f0;
+            --danger: #e63946;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .login-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .login-box h1 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .login-box p {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(67, 97, 238, 0.3);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-error {
+            background-color: rgba(230, 57, 70, 0.1);
+            color: var(--danger);
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: none;
+            text-align: left;
+            border-left: 4px solid var(--danger);
+            font-size: 0.9rem;
+        }
+
+        .login-error i {
+            margin-right: 8px;
+        }
+
+        .login-footer {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .login-footer strong {
+            color: var(--secondary);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .shake {
+            animation: shake 0.5s;
+        }
+
+        @media (max-width: 480px) {
+            .login-box {
+                padding: 2rem;
+            }
+            
+            .login-box h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-icon">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <h1>Admin Login</h1>
+            <p>Masukkan username dan password untuk mengakses halaman admin</p>
+            
+            <div id="loginError" class="login-error">
+                <i class="fas fa-exclamation-circle"></i> 
+                <span id="errorText">Username atau password salah!</span>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user"></i> Username</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" class="form-control" placeholder="Masukkan username" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Password</label>
+                    <div class="password-container">
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" class="form-control" placeholder="Masukkan password" required>
+                        </div>
+                        <button type="button" id="togglePassword" class="toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Masuk ke Admin Panel
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                <p><strong>Default Login:</strong></p>
+                <p>Username: <strong>admin</strong></p>
+                <p>Password: <strong>password123</strong></p>
+                <a href="siswa.html" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Kembali ke Halaman Siswa
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Default credentials
+            const DEFAULT_USERNAME = 'admin';
+            const DEFAULT_PASSWORD = 'password123';
+            
+            // Load saved credentials from localStorage
+            let adminCredentials = {
+                username: DEFAULT_USERNAME,
+                password: DEFAULT_PASSWORD
+            };
+            
+            const savedCredentials = localStorage.getItem('adminCredentials');
+            if (savedCredentials) {
+                try {
+                    adminCredentials = JSON.parse(savedCredentials);
+                } catch (e) {
+                    console.error('Error parsing credentials:', e);
+                }
+            }
+            
+            // Elements
+            const loginForm = document.getElementById('loginForm');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const togglePassword = document.getElementById('togglePassword');
+            const loginError = document.getElementById('loginError');
+            const errorText = document.getElementById('errorText');
+            
+            // Focus on username input
+            usernameInput.focus();
+            
+            // Toggle password visibility
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+            
+            // Handle form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value;
+                
+                console.log('Login attempt:', { username, password });
+                console.log('Expected:', adminCredentials);
+                
+                // Simple validation
+                if (username === '' || password === '') {
+                    showError('Username dan password harus diisi!');
+                    return;
+                }
+                
+                // Check credentials
+                if (username === adminCredentials.username && password === adminCredentials.password) {
+                    // Successful login - redirect to admin.html
+                    console.log('Login successful!');
+                    
+                    // Store login session in localStorage
+                    localStorage.setItem('isAdminLoggedIn', 'true');
+                    localStorage.setItem('adminUsername', username);
+                    
+                    // Redirect to admin page
+                    window.location.href = 'admin.html';
+                } else {
+                    // Failed login
+                    showError('Username atau password salah!');
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                }
+            });
+            
+            // Function to show error message
+            function showError(message) {
+                errorText.textContent = message;
+                loginError.style.display = 'block';
+                loginError.classList.remove('shake');
+                void loginError.offsetWidth; // Trigger reflow
+                loginError.classList.add('shake');
+                
+                // Auto hide error after 5 seconds
+                setTimeout(() => {
+                    loginError.style.display = 'none';
+                }, 5000);
+            }
+            
+            // Enter key to submit form
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    loginForm.dispatchEvent(new Event('submit'));
+                }
+            });
+            
+            // Clear error when user starts typing
+            usernameInput.addEventListener('input', hideError);
+            passwordInput.addEventListener('input', hideError);
+            
+            function hideError() {
+                loginError.style.display = 'none';
+            }
+            
+            // Debug: Log credentials on page load
+            console.log('Admin credentials loaded:', adminCredentials);
+        });
+    </script>
+</body>
+</html>
