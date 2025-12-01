@@ -1,277 +1,316 @@
-// script.js - PERBAIKAN FUNGSI INPUT SISWA
+// Data siswa (disimpan di localStorage)
+let students = JSON.parse(localStorage.getItem('students')) || [];
 
-console.log('=== SISTEM DAFTAR ULANGAN SISWA ===');
-console.log('File script.js dimuat');
+// Elemen DOM
+const studentNameInput = document.getElementById('studentName');
+const mathCheckbox = document.getElementById('mathCheckbox');
+const pknCheckbox = document.getElementById('pknCheckbox');
+const saveBtn = document.getElementById('saveBtn');
+const resetBtn = document.getElementById('resetBtn');
+const studentTableBody = document.getElementById('studentTableBody');
+const copyTextArea = document.getElementById('copyTextArea');
+const copyTextBtn = document.getElementById('copyTextBtn');
+const notification = document.getElementById('notification');
+const notificationText = document.getElementById('notificationText');
+const totalStudentsEl = document.getElementById('totalStudents');
+const mathStudentsEl = document.getElementById('mathStudents');
+const pknStudentsEl = document.getElementById('pknStudents');
+const bothStudentsEl = document.getElementById('bothStudents');
+const formTabBtn = document.getElementById('form-tab-btn');
+const adminTabBtn = document.getElementById('admin-tab-btn');
+const formTab = document.getElementById('form-tab');
+const adminTab = document.getElementById('admin-tab');
 
-// Inisialisasi data jika belum ada
-function initData() {
-    if (!localStorage.getItem('siswaData')) {
-        localStorage.setItem('siswaData', JSON.stringify([]));
-        console.log('Data diinisialisasi: []');
+// Fungsi untuk menampilkan notifikasi
+function showNotification(message, type = 'success') {
+    notificationText.textContent = message;
+    
+    // Atur warna notifikasi berdasarkan tipe
+    if (type === 'success') {
+        notification.style.backgroundColor = '#4cc9f0';
+    } else if (type === 'error') {
+        notification.style.backgroundColor = '#f72585';
+    } else if (type === 'warning') {
+        notification.style.backgroundColor = '#ff9e00';
     }
-    return JSON.parse(localStorage.getItem('siswaData'));
+    
+    notification.classList.add('show');
+    
+    // Sembunyikan notifikasi setelah 3 detik
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 3000);
 }
 
-// Fungsi utama saat halaman dimuat
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM Content Loaded - Siswa Page');
+// Fungsi untuk menyimpan data ke localStorage
+function saveToLocalStorage() {
+    localStorage.setItem('students', JSON.stringify(students));
+}
+
+// Fungsi untuk menghasilkan ID unik
+function generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+}
+
+// Fungsi untuk merender tabel siswa
+function renderStudentTable() {
+    // Kosongkan isi tabel
+    studentTableBody.innerHTML = '';
     
-    // Inisialisasi data
-    initData();
-    
-    // Elements - Pastikan semua elemen ada
-    const namaInput = document.getElementById('nama');
-    const mtkOption = document.getElementById('mtkOption');
-    const pknOption = document.getElementById('pknOption');
-    const submitBtn = document.getElementById('submitBtn');
-    const successAlert = document.getElementById('successAlert');
-    const errorAlert = document.getElementById('errorAlert');
-    const successText = document.getElementById('successText');
-    const errorText = document.getElementById('errorText');
-    
-    console.log('Elements ditemukan:', {
-        namaInput: !!namaInput,
-        mtkOption: !!mtkOption,
-        pknOption: !!pknOption,
-        submitBtn: !!submitBtn
-    });
-    
-    // Inisialisasi variabel
-    let selectedMapels = [];
-    
-    // 1. FUNGSI UNTUK MEMILIH MAPEL
-    function toggleMapel(mapel) {
-        console.log('Toggle mapel:', mapel);
-        const index = selectedMapels.indexOf(mapel);
-        
-        if (index === -1) {
-            // Tambah mapel
-            selectedMapels.push(mapel);
-            console.log('Mapel ditambahkan:', mapel, 'List sekarang:', selectedMapels);
+    if (students.length === 0) {
+        // Tampilkan pesan jika tidak ada data
+        studentTableBody.innerHTML = `
+            <tr id="emptyRow">
+                <td colspan="4">
+                    <div class="empty-state">
+                        <i class="fas fa-user-slash"></i>
+                        <p>Belum ada data siswa. Tambahkan data melalui form.</p>
+                    </div>
+                </td>
+            </tr>
+        `;
+    } else {
+        // Tampilkan data siswa
+        students.forEach((student, index) => {
+            const row = document.createElement('tr');
             
-            // Update tampilan
-            if (mapel === 'mtk' && mtkOption) {
-                mtkOption.classList.add('selected');
-            } else if (mapel === 'pkn' && pknOption) {
-                pknOption.classList.add('selected');
+            // Tentukan badge mata pelajaran
+            let subjectBadges = '';
+            if (student.math && student.pkn) {
+                subjectBadges = '<span class="badge-math subject-badge">M</span> <span class="badge-pkn subject-badge">P</span>';
+            } else if (student.math) {
+                subjectBadges = '<span class="badge-math subject-badge">M</span>';
+            } else if (student.pkn) {
+                subjectBadges = '<span class="badge-pkn subject-badge">P</span>';
             }
+            
+            // Tentukan teks mata pelajaran
+            let subjectText = '';
+            if (student.math && student.pkn) {
+                subjectText = 'Matematika & PKN';
+            } else if (student.math) {
+                subjectText = 'Matematika';
+            } else if (student.pkn) {
+                subjectText = 'PKN';
+            }
+            
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${student.name}</td>
+                <td>
+                    ${subjectBadges}
+                    ${subjectText}
+                </td>
+                <td>
+                    <div class="actions">
+                        <button class="action-btn delete" onclick="deleteStudent('${student.id}')">
+                            <i class="fas fa-trash-alt"></i> Hapus
+                        </button>
+                    </div>
+                </td>
+            `;
+            
+            studentTableBody.appendChild(row);
+        });
+    }
+    
+    // Update statistik
+    updateStatistics();
+    
+    // Update teks untuk disalin
+    updateCopyText();
+}
+
+// Fungsi untuk memperbarui statistik
+function updateStatistics() {
+    const total = students.length;
+    const mathCount = students.filter(s => s.math).length;
+    const pknCount = students.filter(s => s.pkn).length;
+    const bothCount = students.filter(s => s.math && s.pkn).length;
+    
+    totalStudentsEl.textContent = total;
+    mathStudentsEl.textContent = mathCount;
+    pknStudentsEl.textContent = pknCount;
+    bothStudentsEl.textContent = bothCount;
+}
+
+// Fungsi untuk memperbarui teks untuk disalin
+function updateCopyText() {
+    let text = `NAMA NAMA YANG BELUM MENGERJAKAN ULANGAN
+
+===KODE=====
+
+MATEMATIKA = M
+PKN = P
+
+=======NAMA DAN KODE=====
+
+`;
+    
+    if (students.length > 0) {
+        students.forEach((student, index) => {
+            let codes = [];
+            if (student.math) codes.push('M');
+            if (student.pkn) codes.push('P');
+            
+            text += ${index + 1}. ${student.name} [${codes.join(' & ')}]\n;
+        });
+    } else {
+        text += "Belum ada data siswa.";
+    }
+    
+    copyTextArea.value = text;
+}
+
+// Fungsi untuk menambahkan siswa baru
+function addStudent() {
+    const name = studentNameInput.value.trim();
+    const math = mathCheckbox.checked;
+    const pkn = pknCheckbox.checked;
+    
+    // Validasi input
+    if (!name) {
+        showNotification('Nama siswa harus diisi!', 'error');
+        studentNameInput.focus();
+        return;
+    }
+    
+    if (!math && !pkn) {
+        showNotification('Pilih minimal satu mata pelajaran!', 'error');
+        return;
+    }
+    
+    // Buat objek siswa baru
+    const newStudent = {
+        id: generateId(),
+        name: name,
+        math: math,
+        pkn: pkn
+    };
+    
+    // Tambahkan ke array
+    students.push(newStudent);
+    
+    // Simpan ke localStorage
+    saveToLocalStorage();
+    
+    // Render ulang tabel
+    renderStudentTable();
+    
+    // Reset form
+    resetForm();
+    
+    // Tampilkan notifikasi
+    showNotification(Data "${name}" berhasil disimpan!);
+    
+    // Otomatis beralih ke tab admin
+    switchToAdminTab();
+}
+
+// Fungsi untuk menghapus siswa
+function deleteStudent(id) {
+    if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+        // Hapus siswa dari array
+        students = students.filter(student => student.id !== id);
+        
+        // Simpan ke localStorage
+        saveToLocalStorage();
+        
+        // Render ulang tabel
+        renderStudentTable();
+        
+        // Tampilkan notifikasi
+        showNotification('Data siswa berhasil dihapus!', 'warning');
+    }
+}
+
+// Fungsi untuk mereset form
+function resetForm() {
+    studentNameInput.value = '';
+    mathCheckbox.checked = false;
+    pknCheckbox.checked = false;
+    studentNameInput.focus();
+}
+
+// Fungsi untuk menyalin teks ke clipboard
+function copyToClipboard() {
+    copyTextArea.select();
+    copyTextArea.setSelectionRange(0, 99999); // Untuk perangkat mobile
+    
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            showNotification('Teks berhasil disalin ke clipboard!');
         } else {
-            // Hapus mapel
-            selectedMapels.splice(index, 1);
-            console.log('Mapel dihapus:', mapel, 'List sekarang:', selectedMapels);
-            
-            // Update tampilan
-            if (mapel === 'mtk' && mtkOption) {
-                mtkOption.classList.remove('selected');
-            } else if (mapel === 'pkn' && pknOption) {
-                pknOption.classList.remove('selected');
-            }
+            showNotification('Gagal menyalin teks', 'error');
         }
+    } catch (err) {
+        console.error('Gagal menyalin teks: ', err);
+        
+        // Fallback menggunakan Clipboard API modern
+        navigator.clipboard.writeText(copyTextArea.value)
+            .then(() => {
+                showNotification('Teks berhasil disalin ke clipboard!');
+            })
+            .catch(() => {
+                showNotification('Gagal menyalin teks', 'error');
+            });
+    }
+}
+
+// Fungsi untuk beralih ke tab admin
+function switchToAdminTab() {
+    formTabBtn.classList.remove('active');
+    adminTabBtn.classList.add('active');
+    formTab.classList.remove('active');
+    adminTab.classList.add('active');
+}
+
+// Fungsi untuk beralih ke tab form
+function switchToFormTab() {
+    adminTabBtn.classList.remove('active');
+    formTabBtn.classList.add('active');
+    adminTab.classList.remove('active');
+    formTab.classList.add('active');
+}
+
+// Event Listeners
+saveBtn.addEventListener('click', addStudent);
+
+resetBtn.addEventListener('click', resetForm);
+
+copyTextBtn.addEventListener('click', copyToClipboard);
+
+// Event listener untuk tombol tab
+formTabBtn.addEventListener('click', switchToFormTab);
+adminTabBtn.addEventListener('click', switchToAdminTab);
+
+// Event listener untuk menekan Enter di input nama
+studentNameInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        addStudent();
+    }
+});
+
+// Inisialisasi saat halaman dimuat
+document.addEventListener('DOMContentLoaded', () => {
+    // Tambahkan data contoh jika localStorage kosong
+    if (students.length === 0) {
+        const exampleStudents = [
+            { id: generateId(), name: 'Candra', math: true, pkn: true },
+            { id: generateId(), name: 'Daeng', math: true, pkn: false },
+            { id: generateId(), name: 'Budi', math: false, pkn: true },
+            { id: generateId(), name: 'Siti', math: true, pkn: false }
+        ];
+        
+        students = exampleStudents;
+        saveToLocalStorage();
     }
     
-    // 2. EVENT LISTENER UNTUK MAPEL
-    if (mtkOption) {
-        mtkOption.addEventListener('click', function(e) {
-            console.log('MTK diklik');
-            toggleMapel('mtk');
-        });
-        
-        // Debug: cek event listener
-        console.log('Event listener MTK ditambahkan');
-    }
+    // Render tabel awal
+    renderStudentTable();
+    studentNameInput.focus();
     
-    if (pknOption) {
-        pknOption.addEventListener('click', function(e) {
-            console.log('PKN diklik');
-            toggleMapel('pkn');
-        });
-        
-        console.log('Event listener PKN ditambahkan');
-    }
-    
-    // 3. FUNGSI SIMPAN DATA
-    function saveData() {
-        console.log('=== FUNGSI SAVE DATA DIPANGGIL ===');
-        
-        if (!namaInput) {
-            console.error('Nama input tidak ditemukan!');
-            return;
-        }
-        
-        const nama = namaInput.value.trim();
-        console.log('Nama yang diinput:', nama);
-        console.log('Mapel yang dipilih:', selectedMapels);
-        
-        // VALIDASI
-        if (!nama) {
-            console.log('Validasi gagal: Nama kosong');
-            if (errorText) errorText.textContent = 'Harap isi nama lengkap!';
-            if (errorAlert) errorAlert.style.display = 'flex';
-            if (successAlert) successAlert.style.display = 'none';
-            return;
-        }
-        
-        if (selectedMapels.length === 0) {
-            console.log('Validasi gagal: Tidak ada mapel dipilih');
-            if (errorText) errorText.textContent = 'Harap pilih minimal satu mata pelajaran!';
-            if (errorAlert) errorAlert.style.display = 'flex';
-            if (successAlert) successAlert.style.display = 'none';
-            return;
-        }
-        
-        // AMBIL DATA YANG SUDAH ADA
-        let existingData = [];
-        try {
-            const dataStr = localStorage.getItem('siswaData');
-            console.log('Data dari localStorage:', dataStr);
-            existingData = dataStr ? JSON.parse(dataStr) : [];
-            console.log('Data existing (parsed):', existingData);
-        } catch (error) {
-            console.error('Error parsing data:', error);
-            existingData = [];
-        }
-        
-        // CEK DUPLIKAT NAMA
-        const isDuplicate = existingData.some(siswa => {
-            const namaSiswa = siswa.nama ? siswa.nama.toLowerCase() : '';
-            return namaSiswa === nama.toLowerCase();
-        });
-        
-        if (isDuplicate) {
-            console.log('Duplikat ditemukan untuk nama:', nama);
-            if (errorText) errorText.textContent = Nama "${nama}" sudah terdaftar!;
-            if (errorAlert) errorAlert.style.display = 'flex';
-            if (successAlert) successAlert.style.display = 'none';
-            return;
-        }
-        
-        // FORMAT KODE MAPEL
-        const mapelCodes = [];
-        if (selectedMapels.includes('mtk')) mapelCodes.push('M');
-        if (selectedMapels.includes('pkn')) mapelCodes.push('P');
-        
-        // BUAT DATA BARU
-        const newSiswa = {
-            id: Date.now(), // ID unik
-            nama: nama,
-            mapel: selectedMapels.slice(), // Copy array
-            mapelKode: mapelCodes.join(' & '),
-            tanggal: new Date().toLocaleString('id-ID')
-        };
-        
-        console.log('Data baru dibuat:', newSiswa);
-        
-        // SIMPAN KE LOCALSTORAGE
-        existingData.push(newSiswa);
-        try {
-            localStorage.setItem('siswaData', JSON.stringify(existingData));
-            console.log('Data berhasil disimpan ke localStorage');
-            
-            // Verifikasi penyimpanan
-            const savedData = JSON.parse(localStorage.getItem('siswaData'));
-            console.log('Data setelah disimpan:', savedData);
-            
-        } catch (error) {
-            console.error('Error menyimpan data:', error);
-            if (errorText) errorText.textContent = 'Gagal menyimpan data!';
-            if (errorAlert) errorAlert.style.display = 'flex';
-            if (successAlert) successAlert.style.display = 'none';
-            return;
-        }
-        
-        // TAMPILKAN SUKSES
-        if (successText) successText.textContent = Data ${nama} berhasil disimpan!;
-        if (successAlert) {
-            successAlert.style.display = 'flex';
-            console.log('Alert sukses ditampilkan');
-        }
-        if (errorAlert) errorAlert.style.display = 'none';
-        
-        // RESET FORM
-        if (namaInput) namaInput.value = '';
-        selectedMapels = [];
-        
-        if (mtkOption) mtkOption.classList.remove('selected');
-        if (pknOption) pknOption.classList.remove('selected');
-        
-        // FEEDBACK TOMBOL
-        if (submitBtn) {
-            const originalHTML = submitBtn.innerHTML;
-            const originalBg = submitBtn.style.backgroundColor;
-            
-            submitBtn.innerHTML = '<i class="fas fa-check"></i> DATA TERSIMPAN!';
-            submitBtn.style.backgroundColor = '#28a745';
-            
-            setTimeout(() => {
-                submitBtn.innerHTML = originalHTML;
-                submitBtn.style.backgroundColor = originalBg;
-            }, 2000);
-        }
-        
-        // AUTO HIDE ALERT
-        setTimeout(() => {
-            if (successAlert) successAlert.style.display = 'none';
-        }, 5000);
-        
-        console.log('=== DATA BERHASIL DISIMPAN ===');
-    }
-    
-    // 4. EVENT LISTENER UNTUK TOMBOL SIMPAN
-    if (submitBtn) {
-        submitBtn.addEventListener('click', function(e) {
-            console.log('=== TOMBOL SIMPAN DIKLIK ===');
-            e.preventDefault();
-            saveData();
-        });
-        
-        console.log('Event listener submitBtn ditambahkan');
-    }
-    
-    // 5. ENTER KEY UNTUK SUBMIT
-    if (namaInput) {
-        namaInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                console.log('Enter key ditekan');
-                e.preventDefault();
-                if (submitBtn) submitBtn.click();
-            }
-        });
-    }
-    
-    // 6. FUNGSI DEBUG/TEST
-    window.debugShowData = function() {
-        const data = JSON.parse(localStorage.getItem('siswaData')) || [];
-        console.log('=== DEBUG DATA ===');
-        console.log('Total data:', data.length);
-        console.table(data);
-        alert(Total data: ${data.length}\nLihat console untuk detail.);
-    };
-    
-    window.debugClearData = function() {
-        if (confirm('Hapus SEMUA data siswa?')) {
-            localStorage.removeItem('siswaData');
-            initData();
-            console.log('Semua data dihapus');
-            alert('Semua data berhasil dihapus!');
-        }
-    };
-    
-    window.debugAddTestData = function() {
-        const testData = {
-            id: Date.now(),
-            nama: 'Siswa Contoh',
-            mapel: ['mtk', 'pkn'],
-            mapelKode: 'M & P',
-            tanggal: new Date().toLocaleString('id-ID')
-        };
-        
-        const existingData = JSON.parse(localStorage.getItem('siswaData')) || [];
-        existingData.push(testData);
-        localStorage.setItem('siswaData', JSON.stringify(existingData));
-        
-        console.log('Data test ditambahkan:', testData);
-        alert('Data test berhasil ditambahkan!');
-    };
-    
-    console.log('=== INISIALISASI SELESAI ===');
+    // Ekspos fungsi deleteStudent ke scope global
+    window.deleteStudent = deleteStudent;
 });
