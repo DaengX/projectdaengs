@@ -68,18 +68,20 @@
                 
                 <div class="card">
                     <h2 class="card-title"><i class="fas fa-info-circle"></i> Informasi</h2>
-                    <p>Gunakan form ini untuk mencatat siswa yang belum mengerjakan ulangan:</p>
-                    <ul style="margin-left: 20px; margin-top: 10px;">
-                        <li>Isi nama siswa lengkap</li>
-                        <li>Pilih mata pelajaran yang belum dikerjakan (bisa lebih dari satu)</li>
-                        <li>Klik <strong>Simpan Data</strong> untuk menyimpan</li>
-                        <li>Data akan muncul di halaman <strong>Data Admin</strong></li>
-                        <li>Gunakan tombol <strong>Reset Form</strong> untuk mengosongkan form</li>
-                    </ul>
-                    <div style="margin-top: 20px; padding: 15px; background-color: #f0f8ff; border-radius: 8px; border-left: 4px solid var(--primary);">
-                        <strong>Kode Mata Pelajaran:</strong>
-                        <div>Matematika = <span class="badge-math subject-badge">M</span></div>
-                        <div>PKN = <span class="badge-pkn subject-badge">P</span></div>
+                    <div class="info-content">
+                        <p>Gunakan form ini untuk mencatat siswa yang belum mengerjakan ulangan:</p>
+                        <ul>
+                            <li>Isi nama siswa lengkap</li>
+                            <li>Pilih mata pelajaran yang belum dikerjakan (bisa lebih dari satu)</li>
+                            <li>Klik <strong>Simpan Data</strong> untuk menyimpan</li>
+                            <li>Data akan muncul di halaman <strong>Data Admin</strong></li>
+                            <li>Gunakan tombol <strong>Reset Form</strong> untuk mengosongkan form</li>
+                        </ul>
+                        <div class="code-info">
+                            <strong>Kode Mata Pelajaran:</strong>
+                            <div>Matematika = <span class="badge-math subject-badge">M</span></div>
+                            <div>PKN = <span class="badge-pkn subject-badge">P</span></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -147,6 +149,7 @@
         <span id="notificationText">Data berhasil disimpan!</span>
     </div>
 
+    <!-- Script harus diakhir body -->
     <script src="script.js"></script>
 </body>
 </html>
