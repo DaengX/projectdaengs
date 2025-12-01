@@ -19,17 +19,17 @@
         </header>
         
         <div class="nav-tabs">
-            <button class="tab-btn active" id="form-tab-btn">
+            <button class="tab-btn active" id="formTabBtn">
                 <i class="fas fa-user-plus"></i> Tambah Siswa
             </button>
-            <button class="tab-btn" id="admin-tab-btn">
+            <button class="tab-btn" id="adminTabBtn">
                 <i class="fas fa-chart-bar"></i> Data Admin
             </button>
         </div>
         
         <div class="app-container">
             <!-- Form Tab -->
-            <div id="form-tab" class="tab-content active">
+            <div id="formTab" class="tab-content active">
                 <div class="card">
                     <h2 class="card-title"><i class="fas fa-edit"></i> Form Pendataan Siswa</h2>
                     
@@ -85,7 +85,7 @@
             </div>
             
             <!-- Admin Tab -->
-            <div id="admin-tab" class="tab-content">
+            <div id="adminTab" class="tab-content">
                 <div class="card">
                     <h2 class="card-title"><i class="fas fa-chart-pie"></i> Statistik Data</h2>
                     
@@ -123,7 +123,7 @@
                                 </tr>
                             </thead>
                             <tbody id="studentTableBody">
-                                <!-- Data siswa akan dimasukkan di sini oleh JavaScript -->
+                                <!-- Data akan diisi oleh JavaScript -->
                             </tbody>
                         </table>
                     </div>
@@ -136,16 +136,7 @@
                             <i class="fas fa-copy"></i> Salin Teks
                         </button>
                     </div>
-                    <textarea id="copyTextArea" readonly>NAMA NAMA YANG BELUM MENGERJAKAN ULANGAN
-
-===KODE=====
-
-MATEMATIKA= M
-PKN = P
-
-=======NAMA DAN KODE=====
-
-</textarea>
+                    <textarea id="copyTextArea" readonly></textarea>
                 </div>
             </div>
         </div>
