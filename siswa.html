@@ -3,260 +3,963 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Data Ulangan - Siswa</title>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <title>Sistem Pendataan Ulangan Siswa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --danger: #f72585;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --border: #dee2e6;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f5f5f5;
         }
-        
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        
-        h1 {
-            color: #2c3e50;
+
+        header {
             text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.2);
         }
-        
-        .alert {
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 5px;
-            display: none;
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
         }
-        
-        .success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+
+        header h1 i {
+            font-size: 2.2rem;
         }
-        
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
         }
-        
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 2rem;
+            background: linear-gradient(to right, #ff9e00, #ff0058);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-right: 10px;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .card-title i {
+            color: var(--secondary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
         input[type="text"] {
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
         }
-        
-        .mapel-option {
-            border: 2px solid #ddd;
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .subject-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .subject-option {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .subject-checkbox {
+            display: none;
+        }
+
+        .subject-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
+            background-color: var(--light);
+            border: 2px solid var(--border);
+            border-radius: 8px;
             cursor: pointer;
-        }
-        
-        .mapel-option.selected {
-            border-color: #3498db;
-            background-color: #e3f2fd;
-        }
-        
-        button {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 15px;
-            width: 100%;
-            border-radius: 5px;
-            font-size: 18px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        
-        button:hover {
-            background: #2980b9;
-        }
-        
-        .nav {
+            transition: all 0.3s;
+            font-weight: 600;
             text-align: center;
-            margin-top: 30px;
+            gap: 8px;
         }
-        
-        .nav a {
-            display: inline-block;
-            background: #27ae60;
+
+        .subject-label i {
+            font-size: 1.2rem;
+        }
+
+        .subject-checkbox:checked + .subject-label {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+
+        .subject-label.math {
+            color: #e63946;
+        }
+
+        .subject-label.pkn {
+            color: #2a9d8f;
+        }
+
+        .subject-checkbox:checked + .subject-label.math {
+            border-color: #e63946;
+            background-color: rgba(230, 57, 70, 0.1);
+        }
+
+        .subject-checkbox:checked + .subject-label.pkn {
+            border-color: #2a9d8f;
+            background-color: rgba(42, 157, 143, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--light);
+            color: var(--dark);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: #e9ecef;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #e11571;
+            transform: translateY(-2px);
+        }
+
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            flex: 1;
+            min-width: 150px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .stat-box.total {
+            background: linear-gradient(135deg, #4361ee, #3a56d4);
+        }
+
+        .stat-box.math {
+            background: linear-gradient(135deg, #e63946, #d32f2f);
+        }
+
+        .stat-box.pkn {
+            background: linear-gradient(135deg, #2a9d8f, #21867a);
+        }
+
+        .stat-box.both {
+            background: linear-gradient(135deg, #7209b7, #5a0790);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        thead {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .subject-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .badge-math {
+            background-color: rgba(230, 57, 70, 0.15);
+            color: #e63946;
+        }
+
+        .badge-pkn {
+            background-color: rgba(42, 157, 143, 0.15);
+            color: #2a9d8f;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: var(--light);
+            color: var(--dark);
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: #e9ecef;
+        }
+
+        .action-btn.delete {
+            color: var(--danger);
+        }
+
+        .copy-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .copy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 120px;
+            background-color: white;
+        }
+
+        .copy-btn {
+            background-color: var(--success);
             color: white;
             padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            margin: 0 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .copy-btn:hover {
+            background-color: #3ab0d3;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background-color: var(--success);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(150%);
+            transition: transform 0.4s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 25px;
+        }
+
+        .tab-btn {
+            padding: 15px 30px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .stats {
+                flex-direction: column;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .subject-options {
+                flex-direction: column;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Input Data Ulangan</h1>
+        <header>
+            <div class="logo">
+                <span class="logo-text">XI TBSM B</span>
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1><i class="fas fa-clipboard-list"></i> Sistem Pendataan Ulangan</h1>
+            <p>Catat siswa yang belum mengerjakan ulangan Matematika dan PKN</p>
+        </header>
         
-        <div id="successAlert" class="alert success">
-            ✅ Data berhasil disimpan!
+        <div class="nav-tabs">
+            <button class="tab-btn active" data-tab="form-tab">
+                <i class="fas fa-user-plus"></i> Tambah Siswa
+            </button>
+            <button class="tab-btn" data-tab="admin-tab">
+                <i class="fas fa-chart-bar"></i> Data Admin
+            </button>
         </div>
         
-        <div id="errorAlert" class="alert error">
-            ❌ Harap isi semua data!
-        </div>
-        
-        <div>
-            <h3>Nama Lengkap:</h3>
-            <input type="text" id="nama" placeholder="Masukkan nama lengkap">
-        </div>
-        
-        <div>
-            <h3>Pilih mata pelajaran yang belum dikerjakan:</h3>
-            
-            <div class="mapel-option" id="mtkOption">
-                <h4>1. Matematika (M)</h4>
-                <p>Matematika belum dikerjakan</p>
+        <div class="app-container">
+            <!-- Form Tab -->
+            <div id="form-tab" class="tab-content active">
+                <div class="card">
+                    <h2 class="card-title"><i class="fas fa-edit"></i> Form Pendataan Siswa</h2>
+                    
+                    <div class="form-group">
+                        <label for="studentName"><i class="fas fa-user"></i> Nama Siswa</label>
+                        <input type="text" id="studentName" placeholder="Masukkan nama siswa...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-book"></i> Mata Pelajaran Belum Dikerjakan</label>
+                        <div class="subject-options">
+                            <div class="subject-option">
+                                <input type="checkbox" id="mathCheckbox" class="subject-checkbox">
+                                <label for="mathCheckbox" class="subject-label math">
+                                    <i class="fas fa-calculator"></i> Matematika (M)
+                                </label>
+                            </div>
+                            <div class="subject-option">
+                                <input type="checkbox" id="pknCheckbox" class="subject-checkbox">
+                                <label for="pknCheckbox" class="subject-label pkn">
+                                    <i class="fas fa-landmark"></i> PKN (P)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-primary" id="saveBtn">
+                            <i class="fas fa-save"></i> Simpan Data
+                        </button>
+                        <button class="btn btn-secondary" id="resetBtn">
+                            <i class="fas fa-redo"></i> Reset Form
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2 class="card-title"><i class="fas fa-info-circle"></i> Informasi</h2>
+                    <p>Gunakan form ini untuk mencatat siswa yang belum mengerjakan ulangan:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Isi nama siswa lengkap</li>
+                        <li>Pilih mata pelajaran yang belum dikerjakan (bisa lebih dari satu)</li>
+                        <li>Klik <strong>Simpan Data</strong> untuk menyimpan</li>
+                        <li>Data akan muncul di halaman <strong>Data Admin</strong></li>
+                        <li>Gunakan tombol <strong>Reset Form</strong> untuk mengosongkan form</li>
+                    </ul>
+                    <div style="margin-top: 20px; padding: 15px; background-color: #f0f8ff; border-radius: 8px; border-left: 4px solid var(--primary);">
+                        <strong>Kode Mata Pelajaran:</strong>
+                        <div>Matematika = <span class="badge-math subject-badge">M</span></div>
+                        <div>PKN = <span class="badge-pkn subject-badge">P</span></div>
+                    </div>
+                </div>
             </div>
             
-            <div class="mapel-option" id="pknOption">
-                <h4>2. PKN (P)</h4>
-                <p>Pendidikan Kewarganegaraan belum dikerjakan</p>
+            <!-- Admin Tab -->
+            <div id="admin-tab" class="tab-content">
+                <div class="card">
+                    <h2 class="card-title"><i class="fas fa-chart-pie"></i> Statistik Data</h2>
+                    
+                    <div class="stats">
+                        <div class="stat-box total">
+                            <div class="stat-number" id="totalStudents">0</div>
+                            <div class="stat-label">Total Siswa</div>
+                        </div>
+                        <div class="stat-box math">
+                            <div class="stat-number" id="mathStudents">0</div>
+                            <div class="stat-label">Belum Matematika</div>
+                        </div>
+                        <div class="stat-box pkn">
+                            <div class="stat-number" id="pknStudents">0</div>
+                            <div class="stat-label">Belum PKN</div>
+                        </div>
+                        <div class="stat-box both">
+                            <div class="stat-number" id="bothStudents">0</div>
+                            <div class="stat-label">Belum Keduanya</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2 class="card-title"><i class="fas fa-list-alt"></i> Daftar Siswa Belum Mengerjakan</h2>
+                    
+                    <div id="studentTableContainer">
+                        <table id="studentTable">
+                            <thead>
+                                <tr>
+                                    <th width="5%">No</th>
+                                    <th width="35%">Nama Siswa</th>
+                                    <th width="30%">Mata Pelajaran</th>
+                                    <th width="30%">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentTableBody">
+                                <!-- Data siswa akan dimasukkan di sini oleh JavaScript -->
+                                <tr id="emptyRow">
+                                    <td colspan="4">
+                                        <div class="empty-state">
+                                            <i class="fas fa-user-slash"></i>
+                                            <p>Belum ada data siswa. Tambahkan data melalui form.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="copy-section">
+                    <div class="copy-header">
+                        <h3><i class="fas fa-clipboard"></i> Teks untuk Disalin</h3>
+                        <button class="copy-btn" id="copyTextBtn">
+                            <i class="fas fa-copy"></i> Salin Teks
+                        </button>
+                    </div>
+                    <textarea id="copyTextArea" readonly>NAMA NAMA YANG BELUM MENGERJAKAN ULANGAN
+
+===KODE=====
+
+MATEMATIKA= M
+PKN = P
+
+=======NAMA DAN KODE=====
+
+</textarea>
+                </div>
             </div>
         </div>
-        
-        <button id="submitBtn">💾 SIMPAN DATA</button>
-        
-        <div class="nav">
-            <a href="siswa.html">➕ Input Data</a>
-            <a href="admin.html">👨‍💼 Halaman Admin</a>
-        </div>
+    </div>
+    
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">Data berhasil disimpan!</span>
     </div>
 
     <script>
-        // Inisialisasi localStorage
-        if (!localStorage.getItem('siswaData')) {
-            localStorage.setItem('siswaData', JSON.stringify([]));
+        // Data siswa (disimpan di localStorage)
+        let students = JSON.parse(localStorage.getItem('students')) || [];
+        
+        // Elemen DOM
+        const studentNameInput = document.getElementById('studentName');
+        const mathCheckbox = document.getElementById('mathCheckbox');
+        const pknCheckbox = document.getElementById('pknCheckbox');
+        const saveBtn = document.getElementById('saveBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const studentTableBody = document.getElementById('studentTableBody');
+        const copyTextArea = document.getElementById('copyTextArea');
+        const copyTextBtn = document.getElementById('copyTextBtn');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+        const totalStudentsEl = document.getElementById('totalStudents');
+        const mathStudentsEl = document.getElementById('mathStudents');
+        const pknStudentsEl = document.getElementById('pknStudents');
+        const bothStudentsEl = document.getElementById('bothStudents');
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        // Fungsi untuk menampilkan notifikasi
+        function showNotification(message, type = 'success') {
+            notificationText.textContent = message;
+            
+            // Atur warna notifikasi berdasarkan tipe
+            if (type === 'success') {
+                notification.style.backgroundColor = '#4cc9f0';
+            } else if (type === 'error') {
+                notification.style.backgroundColor = '#f72585';
+            } else if (type === 'warning') {
+                notification.style.backgroundColor = '#ff9e00';
+            }
+            
+            notification.classList.add('show');
+            
+            // Sembunyikan notifikasi setelah 3 detik
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
         }
         
-        // Element
-        const namaInput = document.getElementById('nama');
-        const mtkOption = document.getElementById('mtkOption');
-        const pknOption = document.getElementById('pknOption');
-        const submitBtn = document.getElementById('submitBtn');
-        const successAlert = document.getElementById('successAlert');
-        const errorAlert = document.getElementById('errorAlert');
+        // Fungsi untuk menyimpan data ke localStorage
+        function saveToLocalStorage() {
+            localStorage.setItem('students', JSON.stringify(students));
+        }
         
-        // Data
-        let selectedMapels = [];
+        // Fungsi untuk menghasilkan ID unik
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
         
-        // Fungsi pilih mapel
-        function selectMapel(mapel) {
-            const index = selectedMapels.indexOf(mapel);
+        // Fungsi untuk merender tabel siswa
+        function renderStudentTable() {
+            const emptyRow = document.getElementById('emptyRow');
             
-            if (index === -1) {
-                selectedMapels.push(mapel);
+            // Kosongkan isi tabel
+            studentTableBody.innerHTML = '';
+            
+            if (students.length === 0) {
+                // Tampilkan pesan jika tidak ada data
+                studentTableBody.innerHTML = `
+                    <tr id="emptyRow">
+                        <td colspan="4">
+                            <div class="empty-state">
+                                <i class="fas fa-user-slash"></i>
+                                <p>Belum ada data siswa. Tambahkan data melalui form.</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
             } else {
-                selectedMapels.splice(index, 1);
+                // Tampilkan data siswa
+                students.forEach((student, index) => {
+                    const row = document.createElement('tr');
+                    
+                    // Tentukan badge mata pelajaran
+                    let subjectBadges = '';
+                    if (student.math && student.pkn) {
+                        subjectBadges = '<span class="badge-math subject-badge">M</span> <span class="badge-pkn subject-badge">P</span>';
+                    } else if (student.math) {
+                        subjectBadges = '<span class="badge-math subject-badge">M</span>';
+                    } else if (student.pkn) {
+                        subjectBadges = '<span class="badge-pkn subject-badge">P</span>';
+                    }
+                    
+                    // Tentukan teks mata pelajaran
+                    let subjectText = '';
+                    if (student.math && student.pkn) {
+                        subjectText = 'Matematika & PKN';
+                    } else if (student.math) {
+                        subjectText = 'Matematika';
+                    } else if (student.pkn) {
+                        subjectText = 'PKN';
+                    }
+                    
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${student.name}</td>
+                        <td>
+                            ${subjectBadges}
+                            ${subjectText}
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <button class="action-btn delete" onclick="deleteStudent('${student.id}')">
+                                    <i class="fas fa-trash-alt"></i> Hapus
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    
+                    studentTableBody.appendChild(row);
+                });
             }
             
-            // Update tampilan
-            if (mapel === 'mtk') {
-                mtkOption.classList.toggle('selected');
-            } else if (mapel === 'pkn') {
-                pknOption.classList.toggle('selected');
-            }
+            // Update statistik
+            updateStatistics();
             
-            console.log('Mapel terpilih:', selectedMapels);
+            // Update teks untuk disalin
+            updateCopyText();
         }
         
-        // Event listeners untuk mapel
-        mtkOption.addEventListener('click', function() {
-            selectMapel('mtk');
-        });
-        
-        pknOption.addEventListener('click', function() {
-            selectMapel('pkn');
-        });
-        
-        // Fungsi simpan data
-        function saveData() {
-            const nama = namaInput.value.trim();
+        // Fungsi untuk memperbarui statistik
+        function updateStatistics() {
+            const total = students.length;
+            const mathCount = students.filter(s => s.math && !s.pkn).length;
+            const pknCount = students.filter(s => !s.math && s.pkn).length;
+            const bothCount = students.filter(s => s.math && s.pkn).length;
             
-            // Validasi
-            if (!nama || selectedMapels.length === 0) {
-                errorAlert.style.display = 'block';
-                successAlert.style.display = 'none';
+            totalStudentsEl.textContent = total;
+            mathStudentsEl.textContent = mathCount;
+            pknStudentsEl.textContent = pknCount;
+            bothStudentsEl.textContent = bothCount;
+        }
+        
+        // Fungsi untuk memperbarui teks untuk disalin
+        function updateCopyText() {
+            let text = `NAMA NAMA YANG BELUM MENGERJAKAN ULANGAN
+
+===KODE=====
+
+MATEMATIKA = M
+PKN = P
+
+=======NAMA DAN KODE=====
+
+`;
+            
+            students.forEach((student, index) => {
+                let codes = [];
+                if (student.math) codes.push('M');
+                if (student.pkn) codes.push('P');
+                
+                text += ${index + 1}. ${student.name} [${codes.join(' & ')}]\n;
+            });
+            
+            copyTextArea.value = text;
+        }
+        
+        // Fungsi untuk menambahkan siswa baru
+        function addStudent() {
+            const name = studentNameInput.value.trim();
+            const math = mathCheckbox.checked;
+            const pkn = pknCheckbox.checked;
+            
+            // Validasi input
+            if (!name) {
+                showNotification('Nama siswa harus diisi!', 'error');
+                studentNameInput.focus();
                 return;
             }
             
-            // Ambil data existing
-            const existingData = JSON.parse(localStorage.getItem('siswaData')) || [];
-            
-            // Cek duplikat
-            const isDuplicate = existingData.some(siswa => 
-                siswa.nama.toLowerCase() === nama.toLowerCase()
-            );
-            
-            if (isDuplicate) {
-                errorAlert.textContent = ❌ Nama "${nama}" sudah terdaftar!;
-                errorAlert.style.display = 'block';
-                successAlert.style.display = 'none';
+            if (!math && !pkn) {
+                showNotification('Pilih minimal satu mata pelajaran!', 'error');
                 return;
             }
             
-            // Format kode mapel
-            const mapelCodes = [];
-            if (selectedMapels.includes('mtk')) mapelCodes.push('M');
-            if (selectedMapels.includes('pkn')) mapelCodes.push('P');
-            
-            // Buat data baru
-            const newSiswa = {
-                id: Date.now(),
-                nama: nama,
-                mapel: selectedMapels,
-                mapelKode: mapelCodes.join(' & '),
-                tanggal: new Date().toLocaleString('id-ID')
+            // Buat objek siswa baru
+            const newStudent = {
+                id: generateId(),
+                name: name,
+                math: math,
+                pkn: pkn
             };
             
-            // Simpan
-            existingData.push(newSiswa);
-            localStorage.setItem('siswaData', JSON.stringify(existingData));
+            // Tambahkan ke array
+            students.push(newStudent);
             
-            // Tampilkan sukses
-            successAlert.textContent = ✅ Data ${nama} berhasil disimpan!;
-            successAlert.style.display = 'block';
-            errorAlert.style.display = 'none';
+            // Simpan ke localStorage
+            saveToLocalStorage();
+            
+            // Render ulang tabel
+            renderStudentTable();
             
             // Reset form
-            namaInput.value = '';
-            selectedMapels = [];
-            mtkOption.classList.remove('selected');
-            pknOption.classList.remove('selected');
+            resetForm();
             
-            // Feedback tombol
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = '✅ DATA TERSIMPAN!';
-            submitBtn.style.background = '#27ae60';
+            // Tampilkan notifikasi
+            showNotification(Data ${name} berhasil disimpan!);
             
-            setTimeout(() => {
-                submitBtn.textContent = originalText;
-                submitBtn.style.background = '';
-            }, 2000);
+            // Otomatis beralih ke tab admin
+            document.querySelector('[data-tab="admin-tab"]').click();
         }
         
-        // Event listener untuk tombol simpan
-        submitBtn.addEventListener('click', saveData);
+        // Fungsi untuk menghapus siswa
+        window.deleteStudent = function(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                // Hapus siswa dari array
+                students = students.filter(student => student.id !== id);
+                
+                // Simpan ke localStorage
+                saveToLocalStorage();
+                
+                // Render ulang tabel
+                renderStudentTable();
+                
+                // Tampilkan notifikasi
+                showNotification('Data siswa berhasil dihapus!', 'warning');
+            }
+        };
         
-        // Enter untuk submit
-        namaInput.addEventListener('keypress', function(e) {
+        // Fungsi untuk mereset form
+        function resetForm() {
+            studentNameInput.value = '';
+            mathCheckbox.checked = false;
+            pknCheckbox.checked = false;
+            studentNameInput.focus();
+        }
+        
+        // Fungsi untuk menyalin teks ke clipboard
+        function copyToClipboard() {
+            copyTextArea.select();
+            copyTextArea.setSelectionRange(0, 99999); // Untuk perangkat mobile
+            
+            try {
+                document.execCommand('copy');
+                showNotification('Teks berhasil disalin ke clipboard!');
+            } catch (err) {
+                console.error('Gagal menyalin teks: ', err);
+                showNotification('Gagal menyalin teks', 'error');
+            }
+        }
+        
+        // Fungsi untuk mengelola tab
+        function switchTab(tabId) {
+            // Nonaktifkan semua tab
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Nonaktifkan semua tombol tab
+            tabBtns.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Aktifkan tab yang dipilih
+            document.getElementById(tabId).classList.add('active');
+            
+            // Aktifkan tombol tab yang dipilih
+            document.querySelector([data-tab="${tabId}"]).classList.add('active');
+        }
+        
+        // Event Listeners
+        saveBtn.addEventListener('click', addStudent);
+        
+        resetBtn.addEventListener('click', resetForm);
+        
+        copyTextBtn.addEventListener('click', copyToClipboard);
+        
+        // Event listener untuk tombol tab
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
+                switchTab(tabId);
+            });
+        });
+        
+        // Event listener untuk menekan Enter di input nama
+        studentNameInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                saveData();
+                addStudent();
+            }
+        });
+        
+        // Inisialisasi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            renderStudentTable();
+            studentNameInput.focus();
+            
+            // Tambahkan beberapa data contoh jika localStorage kosong
+            if (students.length === 0) {
+                const exampleStudents = [
+                    { id: generateId(), name: 'Candra', math: true, pkn: true },
+                    { id: generateId(), name: 'Daeng', math: true, pkn: false }
+                ];
+                
+                students = exampleStudents;
+                saveToLocalStorage();
+                renderStudentTable();
             }
         });
     </script>
