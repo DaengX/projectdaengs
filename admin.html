@@ -758,10 +758,28 @@ PKN = P
             
             // Untuk sekarang, kita load data dulu
             loadData();
-            
-            function loadData() {
-                const siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
-                
+            // Di dalam function loadData() di admin.html:
+function loadData() {
+    // Ambil data dari localStorage
+    const siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
+    console.log('Data loaded in admin:', siswaData);
+    
+    // Jika tidak ada data, tampilkan pesan
+    if (siswaData.length === 0) {
+        console.log('No data found in localStorage');
+        document.getElementById('noDataMessage').style.display = 'block';
+        document.getElementById('tableBody').innerHTML = '';
+        
+        // Update stats
+        document.getElementById('totalSiswa').textContent = '0';
+        document.getElementById('totalMtk').textContent = '0';
+        document.getElementById('totalPkn').textContent = '0';
+        
+        return;
+    }
+    
+    console.log(Found ${siswaData.length} records);
+    
                 // Update stats
                 document.getElementById('totalSiswa').textContent = siswaData.length;
                 
@@ -963,3 +981,4 @@ PKN = P
     </script>
 </body>
 </html>
+
