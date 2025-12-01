@@ -1,4 +1,4 @@
-
+/* RESET & BASIC STYLES */
 * {
     margin: 0;
     padding: 0;
@@ -31,6 +31,7 @@ body {
     padding: 20px;
 }
 
+/* HEADER STYLES */
 header {
     text-align: center;
     margin-bottom: 30px;
@@ -76,12 +77,14 @@ header p {
     margin-right: 10px;
 }
 
+/* APP CONTAINER */
 .app-container {
     display: flex;
     flex-direction: column;
     gap: 30px;
 }
 
+/* CARD STYLES */
 .card {
     background-color: white;
     border-radius: 12px;
@@ -109,6 +112,7 @@ header p {
     color: var(--secondary);
 }
 
+/* FORM STYLES */
 .form-group {
     margin-bottom: 20px;
 }
@@ -194,6 +198,7 @@ input[type="text"]:focus {
     background-color: rgba(42, 157, 143, 0.1);
 }
 
+/* BUTTON STYLES */
 .button-group {
     display: flex;
     gap: 15px;
@@ -242,8 +247,10 @@ input[type="text"]:focus {
 
 .btn-danger:hover {
     background-color: #e11571;
+    transform: translateY(-2px);
 }
 
+/* STATS STYLES */
 .stats {
     display: flex;
     flex-wrap: wrap;
@@ -287,6 +294,7 @@ input[type="text"]:focus {
     opacity: 0.9;
 }
 
+/* TABLE STYLES */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -312,6 +320,7 @@ tr:hover {
     background-color: rgba(67, 97, 238, 0.05);
 }
 
+/* BADGE STYLES */
 .subject-badge {
     padding: 6px 12px;
     border-radius: 20px;
@@ -331,6 +340,7 @@ tr:hover {
     color: #2a9d8f;
 }
 
+/* ACTION BUTTONS */
 .actions {
     display: flex;
     gap: 8px;
@@ -355,6 +365,7 @@ tr:hover {
     color: var(--danger);
 }
 
+/* COPY SECTION */
 .copy-section {
     margin-top: 30px;
     padding: 20px;
@@ -400,6 +411,7 @@ textarea {
     background-color: #3ab0d3;
 }
 
+/* NOTIFICATION */
 .notification {
     position: fixed;
     top: 20px;
@@ -422,6 +434,7 @@ textarea {
     transform: translateX(0);
 }
 
+/* EMPTY STATE */
 .empty-state {
     text-align: center;
     padding: 40px 20px;
@@ -438,6 +451,7 @@ textarea {
     font-size: 1.1rem;
 }
 
+/* TAB STYLES */
 .nav-tabs {
     display: flex;
     border-bottom: 2px solid var(--border);
@@ -480,6 +494,30 @@ textarea {
     to { opacity: 1; }
 }
 
+/* INFO CONTENT */
+.info-content ul {
+    margin-left: 20px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.info-content li {
+    margin-bottom: 8px;
+}
+
+.code-info {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f0f8ff;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary);
+}
+
+.code-info div {
+    margin-top: 8px;
+}
+
+/* RESPONSIVE */
 @media (max-width: 768px) {
     .stats {
         flex-direction: column;
