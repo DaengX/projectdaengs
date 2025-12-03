@@ -3,152 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <!-- PERBAIKI LINK CSS -->
+    <title>Admin - Pendataan XI TSM B</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Login Screen -->
-    <div id="loginScreen" class="login-screen">
-        <div class="login-container">
-            <div class="login-card">
-                <h1><i class="fas fa-lock"></i> Admin Login</h1>
-                <p class="login-subtitle">Masukkan password untuk mengakses dashboard</p>
-                
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <div class="password-input">
-                            <input type="password" id="password" placeholder="Masukkan password" required>
-                            <button type="button" id="togglePassword" class="toggle-password">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                        <p class="form-hint">Password default: admin123</p>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary btn-full">
-                        <i class="fas fa-sign-in-alt"></i> Masuk
-                    </button>
-                </form>
-                
-                <div class="login-footer">
-                    <a href="../index.html" class="back-link">
-                        <i class="fas fa-arrow-left"></i> Kembali ke Beranda
-                    </a>
-                </div>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-user-shield"></i>
+                <h1>Admin Panel</h1>
             </div>
+            <p class="subtitle">Sistem Pendataan Ulangan XI TSM B</p>
         </div>
-    </div>
-    
-    <!-- Dashboard (Hidden by default) -->
-    <div id="dashboard" class="dashboard" style="display: none;">
-        <div class="container">
-            <header class="header">
-                <div class="header-content">
-                    <div>
-                        <h1>Dashboard Admin</h1>
-                        <p class="subtitle">Manajemen Data Siswa</p>
-                    </div>
-                    <button id="logoutBtn" class="btn btn-secondary">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                </div>
-            </header>
-            
-            <!-- Stats Cards -->
+
+        <div class="card admin-login" id="loginSection">
+            <div class="card-header">
+                <h2><i class="fas fa-lock"></i> Autentikasi Admin</h2>
+                <p>Masukkan Admin Key untuk mengakses data</p>
+            </div>
+
+            <div class="form-group">
+                <label for="adminKey"><i class="fas fa-key"></i> Admin Key</label>
+                <input type="password" id="adminKey" placeholder="Masukkan kode akses admin">
+                <small>Default: admin123 (ganti setelah deploy)</small>
+            </div>
+
+            <button class="btn btn-primary" onclick="loginAdmin()">
+                <i class="fas fa-sign-in-alt"></i> Masuk ke Admin Panel
+            </button>
+        </div>
+
+        <div id="adminPanel" class="admin-panel" style="display: none;">
+            <div class="admin-header">
+                <h2><i class="fas fa-tachometer-alt"></i> Dashboard Admin</h2>
+                <button class="btn btn-secondary" onclick="logoutAdmin()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+
             <div class="stats-container">
                 <div class="stat-card">
                     <div class="stat-icon">
                         <i class="fas fa-users"></i>
                     </div>
-                    <div class="stat-content">
+                    <div class="stat-info">
                         <h3 id="totalSiswa">0</h3>
                         <p>Total Siswa</p>
                     </div>
                 </div>
-                
                 <div class="stat-card">
                     <div class="stat-icon">
                         <i class="fas fa-book"></i>
                     </div>
-                    <div class="stat-content">
+                    <div class="stat-info">
                         <h3 id="totalMapel">0</h3>
-                        <p>Total Pelaporan</p>
+                        <p>Pelaporan Mapel</p>
                     </div>
                 </div>
             </div>
-            
-            <!-- Action Bar -->
-            <div class="action-bar">
-                <div class="filter-group">
-                    <label for="filterKelas">Filter Kelas:</label>
-                    <select id="filterKelas">
-                        <option value="semua">Semua Kelas</option>
-                        <option value="XI TSM B">XI TSM B</option>
-                        <!-- Additional classes can be added here -->
-                    </select>
-                </div>
-                
-                <div class="action-buttons">
-                    <button id="refreshBtn" class="btn btn-secondary">
+
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-table"></i> Data Siswa</h3>
+                    <button class="btn btn-small" onclick="refreshData()">
                         <i class="fas fa-sync-alt"></i> Refresh Data
                     </button>
-                    <button id="copyBtn" class="btn btn-primary">
-                        <i class="fas fa-copy"></i> Salin Semua Data
-                    </button>
-                    <button id="deleteBtn" class="btn btn-danger">
-                        <i class="fas fa-trash"></i> Hapus Semua Data
-                    </button>
                 </div>
-            </div>
-            
-            <!-- Data Table -->
-            <div class="card">
-                <div class="table-header">
-                    <h3><i class="fas fa-table"></i> Data Siswa</h3>
-                    <p id="tableInfo">Memuat data...</p>
-                </div>
-                
                 <div class="table-container">
                     <table id="dataTable">
                         <thead>
                             <tr>
-                                <th width="50">No</th>
-                                <th>Nama</th>
-                                <th width="150">Kelas</th>
+                                <th>No</th>
+                                <th>Nama Siswa</th>
                                 <th>Mapel Belum Dikerjakan</th>
+                                <th>Waktu Submit</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="tableBody">
-                            <!-- Data will be populated by JavaScript -->
+                            <!-- Data akan diisi oleh JavaScript -->
                         </tbody>
                     </table>
-                    
-                    <!-- Empty state -->
-                    <div id="emptyState" class="empty-state" style="display: none;">
-                        <div class="empty-icon">
-                            <i class="fas fa-database"></i>
-                        </div>
-                        <h3>Belum ada data masuk.</h3>
-                        <p>Data akan muncul setelah siswa mengisi form pendataan.</p>
-                    </div>
                 </div>
             </div>
-            
-            <!-- Copy Text Preview (Hidden) -->
-            <div id="copyPreview" class="copy-preview" style="display: none;"></div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-file-export"></i> Generator Laporan</h3>
+                    <button class="btn btn-primary" onclick="generateLaporan()">
+                        <i class="fas fa-magic"></i> Generate Laporan Otomatis
+                    </button>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-edit"></i> Format Laporan</label>
+                    <select id="formatLaporan" onchange="generateLaporan()">
+                        <option value="1">Format 1: Nama — Mapel</option>
+                        <option value="2">Format 2: Nama: [Nama] Belum mengerjakan: [Mapel]</option>
+                        <option value="3">Format 3: Berurutan dengan angka</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-clipboard"></i> Hasil Laporan (Siap Copy)</label>
+                    <textarea id="hasilLaporan" rows="8" placeholder="Hasil laporan akan muncul di sini..." readonly></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-success" onclick="copyLaporan()">
+                        <i class="fas fa-copy"></i> Copy ke Clipboard
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearLaporan()">
+                        <i class="fas fa-trash"></i> Hapus Laporan
+                    </button>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p><i class="fas fa-database"></i> Data tersimpan di Google Spreadsheet</p>
+                <p><i class="fas fa-exclamation-triangle"></i> Jangan bagikan Admin Key kepada siswa</p>
+            </div>
         </div>
     </div>
-    
-    <!-- Toast Notification -->
-    <div id="toast" class="toast"></div>
-    
+
     <script src="script.js"></script>
 </body>
 </html>
-
