@@ -1,7 +1,7 @@
 // Konfigurasi
 const CONFIG = {
     ADMIN_KEY: "admin123", // Ganti setelah deploy!
-    GOOGLE_SCRIPT_URL: "https://docs.google.com/spreadsheets/d/1ndTBgyOQErFcle4Bhiz0IhKJSyj80v0QshDc1wrQJBo/edit?gid=0#gid=0" // Diisi setelah membuat Google Apps Script
+    GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzjzPCjkgat76dZ9nc6IUg9-7GszEb0CfxeJ9GG2dzlNHqScc0PV5wZHan0GglLEAK7og/exec" // Diisi setelah membuat Google Apps Script
 };
 
 // State aplikasi
