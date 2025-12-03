@@ -3,90 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Pendataan Siswa</title>
-    <!-- PERBAIKI LINK CSS -->
+    <title>Pendataan Ulangan XI TSM B</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <!-- PERBAIKI LINK KEMBALI -->
-            <a href="index.html" class="back-btn">
-                <i class="fas fa-arrow-left"></i> Kembali
-            </a>
-            <h1>Form Pendataan Siswa</h1>
-            <p class="subtitle">Laporkan mata pelajaran yang belum dikerjakan</p>
-        </header>
-        
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-user-graduate"></i>
+                <h1>XI TSM B</h1>
+            </div>
+            <p class="subtitle">Pendataan Ulangan yang Belum Dikerjakan</p>
+        </div>
+
         <div class="card">
-            <form id="siswaForm">
+            <div class="card-header">
+                <h2><i class="fas fa-edit"></i> Form Pendataan Siswa</h2>
+                <p>Isi data diri dan pilih mata pelajaran yang belum dikerjakan</p>
+            </div>
+
+            <form id="formSiswa">
                 <div class="form-group">
-                    <label for="nama">Nama Lengkap</label>
+                    <label for="nama"><i class="fas fa-user"></i> Nama Lengkap</label>
                     <input type="text" id="nama" placeholder="Masukkan nama lengkap" required>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="kelas">Kelas</label>
-                    <input type="text" id="kelas" value="XI TSM B" readonly class="readonly-input">
-                </div>
-                
-                <div class="form-group">
-                    <label>Mata Pelajaran yang Belum Dikerjakan</label>
-                    <p class="form-hint">Pilih minimal satu mata pelajaran</p>
+                    <label><i class="fas fa-book"></i> Mata Pelajaran yang Belum Dikerjakan</label>
+                    <p class="form-info">Pilih semua yang belum dikerjakan:</p>
                     
-                    <div class="checkbox-group">
+                    <div class="checkbox-grid">
                         <div class="checkbox-item">
-                            <input type="checkbox" id="matematika" value="Matematika">
-                            <label for="matematika">Matematika (MTK)</label>
+                            <input type="checkbox" id="mtk" value="MTK">
+                            <label for="mtk">
+                                <div class="checkbox-box">
+                                    <i class="fas fa-calculator"></i>
+                                    <span>Matematika</span>
+                                </div>
+                            </label>
                         </div>
                         
                         <div class="checkbox-item">
                             <input type="checkbox" id="pkn" value="PKN">
-                            <label for="pkn">PKN</label>
+                            <label for="pkn">
+                                <div class="checkbox-box">
+                                    <i class="fas fa-landmark"></i>
+                                    <span>Pendidikan Kewarganegaraan</span>
+                                </div>
+                            </label>
                         </div>
                         
                         <div class="checkbox-item">
                             <input type="checkbox" id="islam" value="Agama Islam">
-                            <label for="islam">Agama Islam</label>
+                            <label for="islam">
+                                <div class="checkbox-box">
+                                    <i class="fas fa-mosque"></i>
+                                    <span>Agama Islam</span>
+                                </div>
+                            </label>
                         </div>
                         
                         <div class="checkbox-item">
                             <input type="checkbox" id="kristen" value="Agama Kristen">
-                            <label for="kristen">Agama Kristen</label>
+                            <label for="kristen">
+                                <div class="checkbox-box">
+                                    <i class="fas fa-church"></i>
+                                    <span>Agama Kristen</span>
+                                </div>
+                            </label>
                         </div>
                         
                         <div class="checkbox-item">
                             <input type="checkbox" id="katolik" value="Agama Katolik">
-                            <label for="katolik">Agama Katolik</label>
+                            <label for="katolik">
+                                <div class="checkbox-box">
+                                    <i class="fas fa-cross"></i>
+                                    <span>Agama Katolik</span>
+                                </div>
+                            </label>
                         </div>
                     </div>
                 </div>
-                
-                <button type="submit" class="btn btn-primary btn-full">
-                    <i class="fas fa-paper-plane"></i> KIRIM DATA
-                </button>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Kirim Data
+                    </button>
+                    <button type="reset" class="btn btn-secondary">
+                        <i class="fas fa-redo"></i> Reset Form
+                    </button>
+                </div>
             </form>
+
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Mengirim data...</p>
+            </div>
+
+            <div id="successMessage" class="success-message">
+                <i class="fas fa-check-circle"></i>
+                <h3>Data Berhasil Dikirim!</h3>
+                <p>Terima kasih telah mengisi form pendataan.</p>
+            </div>
         </div>
-        
-        <div class="info-box">
-            <h3><i class="fas fa-info-circle"></i> Informasi Penting</h3>
-            <ul>
-                <li>Data yang dikirim akan disimpan ke server</li>
-                <li>Pastikan nama diisi dengan benar</li>
-                <li>Pilih semua mata pelajaran yang belum dikerjakan</li>
-                <li>Data dapat diakses oleh admin melalui dashboard</li>
-            </ul>
+
+        <div class="footer">
+            <p>Sistem Pendataan Ulangan &copy; 2024 XI TSM B</p>
+            <p class="admin-link">
+                <i class="fas fa-lock"></i> 
+                <a href="admin.html" id="adminLink">Akses Halaman Admin</a>
+            </p>
         </div>
     </div>
-    
-    <!-- Toast Notification -->
-    <div id="toast" class="toast"></div>
-    
-    <!-- PERBAIKI LINK JAVASCRIPT -->
+
     <script src="script.js"></script>
 </body>
 </html>
