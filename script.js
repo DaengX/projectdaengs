@@ -1,20 +1,29 @@
-// Konfigurasi
+// ========== KONFIGURASI ==========
 const CONFIG = {
-    ADMIN_KEY: "admin123", 
-    GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycby7gjIDlyJwVC_fsHSUVE_e8VwFybWABTSSAUGBjNgZM-Jgm5-OZO82_8Tuve3skzEYxQ/exec"
+    ADMIN_KEY: "admin123", // GANTI DENGAN PASSWORD YANG AMAN!
+    GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzLlty7XX7fx87xibzaoWCYpY6oe9-UKWafPIpPqDGPO1iTjMO5Ca7dUS145T_e5caowQ/exec"
 };
 
-// ========== FUNGSI UTAMA ==========
+// ========== VARIABEL GLOBAL ==========
+let adminAuthenticated = false;
+let siswaData = [];
 
-// 1. Fungsi untuk kirim data (METODE 1 - menggunakan fetch dengan error handling)
+// ========== DOM ELEMENTS ==========
+const siswaForm = document.getElementById('formSiswa');
+const loadingElement = document.getElementById('loading');
+const successElement = document.getElementById('successMessage');
+
+// ========== FUNGSI UTAMA SISWA ==========
+
+// 1. Fungsi untuk kirim data ke Google Sheets (Metode 1 - Fetch)
 async function kirimDataKeSheets(data) {
     console.log('Mengirim data:', data);
     
     try {
-        // Method 1: Fetch dengan mode 'no-cors' (paling kompatibel)
+        // Method 1: Fetch dengan mode 'no-cors'
         const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
             method: 'POST',
-            mode: 'no-cors', // Mode ini tidak memerlukan CORS
+            mode: 'no-cors',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
@@ -27,12 +36,12 @@ async function kirimDataKeSheets(data) {
     } catch (error) {
         console.warn('Error dengan fetch, coba metode alternatif:', error);
         
-        // Method 2: Gunakan Google Forms style (100% working)
+        // Method 2: Gunakan Google Forms style
         return await kirimDataMetodeAlternatif(data);
     }
 }
 
-// 2. Metode Alternatif (Google Forms Style - PASTI BISA)
+// 2. Metode Alternatif (Google Forms Style)
 function kirimDataMetodeAlternatif(data) {
     return new Promise((resolve) => {
         // Buat form hidden
@@ -75,7 +84,10 @@ function kirimDataMetodeAlternatif(data) {
         // Submit form
         document.body.appendChild(form);
         form.submit();
-        document.body.removeChild(form);
+        setTimeout(() => {
+            document.body.removeChild(form);
+            resolve({ success: true });
+        }, 1000);
         
         // Juga simpan ke localStorage sebagai backup
         simpanKeLocalStorage(data);
@@ -109,8 +121,12 @@ function simpanKeLocalStorage(data) {
 // 4. Ambil data dari Google Sheets
 async function ambilDataDariSheets() {
     try {
-        // Method 1: Fetch biasa untuk GET (biasanya work untuk GET)
-        const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL);
+        console.log('Mengambil data dari Google Sheets...');
+        
+        // Tambahkan timestamp untuk menghindari cache
+        const url = CONFIG.GOOGLE_SCRIPT_URL + '?t=' + Date.now();
+        
+        const response = await fetch(url);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -122,7 +138,7 @@ async function ambilDataDariSheets() {
             console.log('Data dari Google Sheets:', result.data.length, 'records');
             return result.data;
         } else {
-            throw new Error(result.error || 'Unknown error');
+            throw new Error(result.error || 'Unknown error from server');
         }
         
     } catch (error) {
@@ -135,7 +151,335 @@ async function ambilDataDariSheets() {
     }
 }
 
-// ========== EVENT HANDLERS ==========
+// ========== FUNGSI ADMIN ==========
+
+// 1. Fungsi Login Admin
+function loginAdmin() {
+    const adminKeyInput = document.getElementById('adminKey');
+    if (!adminKeyInput) {
+        console.error('Admin key input not found!');
+        return false;
+    }
+    
+    const enteredKey = adminKeyInput.value.trim();
+    
+    console.log('Login attempt with key:', enteredKey);
+    console.log('Expected key:', CONFIG.ADMIN_KEY);
+    
+    if (enteredKey === CONFIG.ADMIN_KEY) {
+        adminAuthenticated = true;
+        localStorage.setItem('adminAuthenticated', 'true');
+        localStorage.setItem('adminLoginTime', Date.now().toString());
+        
+        // Update UI
+        const loginSection = document.getElementById('loginSection');
+        const adminPanel = document.getElementById('adminPanel');
+        
+        if (loginSection) loginSection.style.display = 'none';
+        if (adminPanel) adminPanel.style.display = 'block';
+        
+        // Load data
+        loadSiswaData();
+        
+        console.log('Login successful!');
+        return true;
+    } else {
+        alert('❌ Admin Key salah! Silakan coba lagi.');
+        adminKeyInput.focus();
+        adminKeyInput.select();
+        return false;
+    }
+}
+
+// 2. Fungsi Logout Admin
+function logoutAdmin() {
+    if (!confirm('Apakah Anda yakin ingin logout?')) return;
+    
+    adminAuthenticated = false;
+    localStorage.removeItem('adminAuthenticated');
+    localStorage.removeItem('adminLoginTime');
+    
+    // Update UI
+    const loginSection = document.getElementById('loginSection');
+    const adminPanel = document.getElementById('adminPanel');
+    
+    if (loginSection) {
+        loginSection.style.display = 'block';
+    }
+    if (adminPanel) {
+        adminPanel.style.display = 'none';
+    }
+    
+    // Clear input
+    const adminKeyInput = document.getElementById('adminKey');
+    if (adminKeyInput) {
+        adminKeyInput.value = '';
+    }
+    
+    console.log('Logged out');
+}
+
+// 3. Cek autentikasi saat halaman load
+function checkAdminAuth() {
+    const isAuthenticated = localStorage.getItem('adminAuthenticated') === 'true';
+    const loginTime = parseInt(localStorage.getItem('adminLoginTime') || '0');
+    const currentTime = Date.now();
+    const sessionTimeout = 8 * 60 * 60 * 1000; // 8 jam
+    
+    // Cek jika session expired
+    if (isAuthenticated && (currentTime - loginTime < sessionTimeout)) {
+        adminAuthenticated = true;
+        
+        // Update UI
+        const loginSection = document.getElementById('loginSection');
+        const adminPanel = document.getElementById('adminPanel');
+        
+        if (loginSection) loginSection.style.display = 'none';
+        if (adminPanel) adminPanel.style.display = 'block';
+        
+        // Load data
+        loadSiswaData();
+        console.log('Auto-login from session');
+        return true;
+    } else if (isAuthenticated) {
+        // Session expired
+        localStorage.removeItem('adminAuthenticated');
+        localStorage.removeItem('adminLoginTime');
+        console.log('Session expired');
+    }
+    
+    return false;
+}
+
+// 4. Update fungsi loadSiswaData untuk admin
+async function loadSiswaData() {
+    try {
+        console.log('Loading siswa data...');
+        
+        const data = await ambilDataDariSheets();
+        siswaData = data;
+        
+        // Update stats
+        const totalSiswaEl = document.getElementById('totalSiswa');
+        const totalMapelEl = document.getElementById('totalMapel');
+        
+        if (totalSiswaEl) {
+            totalSiswaEl.textContent = data.length;
+        }
+        
+        if (totalMapelEl) {
+            const totalMapel = data.reduce((total, siswa) => {
+                return total + (siswa.mapel ? siswa.mapel.length : 0);
+            }, 0);
+            totalMapelEl.textContent = totalMapel;
+        }
+        
+        // Render tabel
+        renderTabel(data);
+        console.log('Data loaded:', data.length, 'records');
+        
+    } catch (error) {
+        console.error('Error loading data:', error);
+        
+        // Fallback ke localStorage
+        const localData = JSON.parse(localStorage.getItem('siswaData')) || [];
+        siswaData = localData;
+        
+        // Update UI dengan data lokal
+        const totalSiswaEl = document.getElementById('totalSiswa');
+        const totalMapelEl = document.getElementById('totalMapel');
+        
+        if (totalSiswaEl) totalSiswaEl.textContent = localData.length;
+        if (totalMapelEl) {
+            const totalMapel = localData.reduce((total, siswa) => {
+                return total + (siswa.mapel ? siswa.mapel.length : 0);
+            }, 0);
+            totalMapelEl.textContent = totalMapel;
+        }
+        
+        renderTabel(localData);
+        console.log('Using local data:', localData.length, 'records');
+    }
+}
+
+// 5. Render tabel
+function renderTabel(data) {
+    const tableBody = document.getElementById('tableBody');
+    if (!tableBody) return;
+    
+    tableBody.innerHTML = '';
+    
+    if (!data || data.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 40px; color: #666;">
+                    <i class="fas fa-database" style="font-size: 3rem; margin-bottom: 15px; display: block; color: #ddd;"></i>
+                    <h3 style="margin-bottom: 10px;">Belum ada data siswa</h3>
+                    <p>Data akan muncul di sini setelah siswa mengisi form</p>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    data.forEach((siswa, index) => {
+        const row = document.createElement('tr');
+        
+        // Format mapel tags
+        let mapelTags = '';
+        if (siswa.mapel && Array.isArray(siswa.mapel)) {
+            mapelTags = siswa.mapel.map(m => `<span class="mapel-tag">${m}</span>`).join('');
+        } else if (siswa.mapelText) {
+            const mapelArray = siswa.mapelText.split(',').map(m => m.trim());
+            mapelTags = mapelArray.map(m => `<span class="mapel-tag">${m}</span>`).join('');
+        } else {
+            mapelTags = '<span class="mapel-tag">Tidak ada data</span>';
+        }
+        
+        // Format waktu
+        let waktu = '-';
+        if (siswa.timestamp) {
+            try {
+                const date = new Date(siswa.timestamp);
+                waktu = date.toLocaleString('id-ID');
+            } catch (e) {
+                waktu = siswa.timestamp;
+            }
+        }
+        
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td><strong>${siswa.nama || 'Tidak diketahui'}</strong></td>
+            <td>
+                <div class="mapel-tags">
+                    ${mapelTags}
+                </div>
+            </td>
+            <td>${waktu}</td>
+            <td>
+                <button class="btn btn-small" onclick="hapusData(${siswa.id || index})" title="Hapus data" style="background: #ff4757; color: white;">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        `;
+        
+        tableBody.appendChild(row);
+    });
+}
+
+// 6. Hapus data siswa
+function hapusData(id) {
+    if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) return;
+    
+    // Hapus dari array
+    const newData = siswaData.filter(siswa => siswa.id !== id);
+    siswaData = newData;
+    
+    // Update localStorage
+    localStorage.setItem('siswaData', JSON.stringify(newData));
+    
+    // Re-render tabel
+    renderTabel(newData);
+    
+    // Update stats
+    const totalSiswaEl = document.getElementById('totalSiswa');
+    const totalMapelEl = document.getElementById('totalMapel');
+    
+    if (totalSiswaEl) totalSiswaEl.textContent = newData.length;
+    if (totalMapelEl) {
+        const totalMapel = newData.reduce((total, siswa) => {
+            return total + (siswa.mapel ? siswa.mapel.length : 0);
+        }, 0);
+        totalMapelEl.textContent = totalMapel;
+    }
+    
+    // Regenerate laporan jika ada
+    if (document.getElementById('hasilLaporan') && document.getElementById('hasilLaporan').value) {
+        generateLaporan();
+    }
+    
+    alert('Data berhasil dihapus!');
+}
+
+// 7. Refresh data
+function refreshData() {
+    console.log('Refreshing data...');
+    loadSiswaData();
+    alert('Data berhasil direfresh!');
+}
+
+// 8. Generate laporan otomatis
+function generateLaporan() {
+    if (!siswaData || siswaData.length === 0) {
+        document.getElementById('hasilLaporan').value = "⚠️ Belum ada data siswa.";
+        return;
+    }
+    
+    const format = document.getElementById('formatLaporan') ? document.getElementById('formatLaporan').value : '1';
+    let laporan = '';
+    
+    switch(format) {
+        case '1': // Format: Nama — Mapel
+            siswaData.forEach((siswa) => {
+                laporan += `${siswa.nama} — ${siswa.mapelText || siswa.mapel?.join(', ') || 'Tidak ada data'}\n`;
+            });
+            break;
+            
+        case '2': // Format: Nama: [Nama] Belum mengerjakan: [Mapel]
+            siswaData.forEach(siswa => {
+                laporan += `Nama: ${siswa.nama}\n`;
+                laporan += `Belum mengerjakan: ${siswa.mapelText || siswa.mapel?.join(', ') || 'Tidak ada'}\n\n`;
+            });
+            break;
+            
+        case '3': // Format: Berurutan dengan angka
+            siswaData.forEach((siswa, index) => {
+                laporan += `${index + 1}. ${siswa.nama} — ${siswa.mapelText || siswa.mapel?.join(', ') || 'Tidak ada data'}\n`;
+            });
+            break;
+    }
+    
+    document.getElementById('hasilLaporan').value = laporan;
+}
+
+// 9. Copy laporan ke clipboard
+function copyLaporan() {
+    const textarea = document.getElementById('hasilLaporan');
+    
+    if (!textarea || !textarea.value.trim()) {
+        alert('⚠️ Tidak ada laporan untuk disalin!');
+        return;
+    }
+    
+    textarea.select();
+    textarea.setSelectionRange(0, 99999);
+    
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            alert('✅ Laporan berhasil disalin ke clipboard!');
+        } else {
+            // Fallback untuk browser modern
+            navigator.clipboard.writeText(textarea.value)
+                .then(() => alert('✅ Laporan berhasil disalin ke clipboard!'))
+                .catch(() => alert('❌ Gagal menyalin laporan. Silakan copy manual.'));
+        }
+    } catch (err) {
+        navigator.clipboard.writeText(textarea.value)
+            .then(() => alert('✅ Laporan berhasil disalin ke clipboard!'))
+            .catch(() => alert('❌ Gagal menyalin laporan. Silakan copy manual.'));
+    }
+}
+
+// 10. Hapus laporan
+function clearLaporan() {
+    const textarea = document.getElementById('hasilLaporan');
+    if (textarea) {
+        textarea.value = '';
+    }
+}
+
+// ========== EVENT HANDLERS SISWA ==========
 
 // Submit form siswa
 if (siswaForm) {
@@ -148,12 +492,12 @@ if (siswaForm) {
         
         // Validasi
         if (!nama) {
-            alert('Mohon isi nama lengkap!');
+            alert('❌ Mohon isi nama lengkap!');
             return;
         }
         
         if (checkboxes.length === 0) {
-            alert('Pilih minimal satu mata pelajaran yang belum dikerjakan!');
+            alert('❌ Pilih minimal satu mata pelajaran yang belum dikerjakan!');
             return;
         }
         
@@ -182,69 +526,88 @@ if (siswaForm) {
             
         } catch (error) {
             loadingElement.style.display = 'none';
-            alert('Data berhasil disimpan (cache lokal). Ada masalah koneksi ke server.');
+            alert('✅ Data berhasil disimpan (cache lokal). Ada masalah koneksi ke server.');
             console.error('Error:', error);
         }
     });
 }
 
-// Load data untuk admin
-async function loadSiswaData() {
-    try {
-        const data = await ambilDataDariSheets();
-        siswaData = data;
-        
-        // Update stats
-        document.getElementById('totalSiswa').textContent = data.length;
-        const totalMapel = data.reduce((total, siswa) => total + siswa.mapel.length, 0);
-        document.getElementById('totalMapel').textContent = totalMapel;
-        
-        // Render tabel
-        renderTabel(data);
-        
-    } catch (error) {
-        console.error('Error load data:', error);
-        alert('Gagal memuat data. Cek koneksi internet.');
-    }
-}
+// ========== INISIALISASI ==========
 
-// ========== TEST FUNCTION ==========
-
-// Fungsi untuk testing langsung
-function testKirimData() {
-    const testData = {
-        nama: "SISWA TEST",
-        mapel: ["MTK", "Agama Islam"]
-    };
-    
-    console.log('Testing pengiriman data...');
-    kirimDataKeSheets(testData)
-        .then(result => {
-            console.log('Test result:', result);
-            alert('Test data berhasil dikirim! Cek spreadsheet.');
-        })
-        .catch(error => {
-            console.error('Test error:', error);
-            alert('Test gagal: ' + error.message);
-        });
-}
-
-// Tambahkan tombol test di halaman siswa (opsional)
 document.addEventListener('DOMContentLoaded', function() {
-    // Jika di halaman siswa, tambahkan tombol test
-    if (siswaForm && window.location.href.includes('siswa')) {
+    console.log('System initialized');
+    
+    // Tambahkan styles untuk mapel tags
+    const style = document.createElement('style');
+    style.textContent = `
+        .mapel-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            max-width: 300px;
+        }
+        
+        .mapel-tag {
+            background: #e8f4ff;
+            color: #4361ee;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid #c3d9ff;
+            white-space: nowrap;
+        }
+        
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            min-width: 40px;
+        }
+        
+        #hiddenFrame {
+            display: none;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Cek jika di halaman admin
+    if (document.getElementById('adminPanel')) {
+        console.log('Admin page detected');
+        checkAdminAuth();
+    }
+    
+    // Tambahkan tombol test di halaman siswa (opsional)
+    if (siswaForm) {
         const testBtn = document.createElement('button');
         testBtn.type = 'button';
         testBtn.className = 'btn btn-secondary';
         testBtn.innerHTML = '<i class="fas fa-vial"></i> Test Connection';
         testBtn.onclick = testKirimData;
         testBtn.style.marginTop = '10px';
+        testBtn.title = 'Test koneksi ke Google Sheets';
         
         document.querySelector('.form-actions').appendChild(testBtn);
     }
-    
-    // Jika di halaman admin
-    if (document.getElementById('adminPanel')) {
-        checkAdminAuth();
-    }
 });
+
+// ========== TEST FUNCTION ==========
+
+// Fungsi untuk testing langsung
+function testKirimData() {
+    const testData = {
+        nama: "SISWA TEST " + Date.now(),
+        mapel: ["MTK", "PKN"]
+    };
+    
+    console.log('Testing pengiriman data...', testData);
+    
+    kirimDataKeSheets(testData)
+        .then(result => {
+            console.log('Test result:', result);
+            alert('✅ Test data berhasil dikirim! Cek spreadsheet Anda.');
+        })
+        .catch(error => {
+            console.error('Test error:', error);
+            alert('❌ Test gagal: ' + error.message);
+        });
+}
