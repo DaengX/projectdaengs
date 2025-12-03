@@ -1,694 +1,307 @@
-// =============================================
-// GLOBAL VARIABLES & CONSTANTS
-// =============================================
-const STORAGE_KEY = 'dataSiswa';
-const ADMIN_PASSWORD = 'admin123';
+// Konfigurasi
+const CONFIG = {
+    ADMIN_KEY: "admin123", // Ganti setelah deploy!
+    GOOGLE_SCRIPT_URL: "https://docs.google.com/spreadsheets/d/1ndTBgyOQErFcle4Bhiz0IhKJSyj80v0QshDc1wrQJBo/edit?gid=0#gid=0" // Diisi setelah membuat Google Apps Script
+};
 
-// 🔗 GANTI URL INI DENGAN LINK API ANDA
-const API_URL = 'https://projectdaengs.vercel.app/api.php'; // Jika file di folder yang sama
-// const API_URL = 'https://sekolahanda.com/api.php'; // Jika di hosting
+// State aplikasi
+let adminAuthenticated = false;
+let siswaData = [];
 
-let dataSiswa = [];
+// DOM Elements
+const siswaForm = document.getElementById('formSiswa');
+const loadingElement = document.getElementById('loading');
+const successElement = document.getElementById('successMessage');
+const adminLink = document.getElementById('adminLink');
 
-// =============================================
-// UTILITY FUNCTIONS
-// =============================================
-
-/**
- * Show toast notification
- * @param {string} message - Message to display
- * @param {string} type - Type of toast (success, error, warning)
- */
-function showToast(message, type = 'success') {
-    const toast = document.getElementById('toast');
-    if (!toast) return;
-    
-    toast.textContent = message;
-    toast.className = 'toast';
-    toast.classList.add(type);
-    toast.classList.add('show');
-    
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 3000);
-}
-
-/**
- * Copy text to clipboard
- * @param {string} text - Text to copy
- */
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text)
-        .then(() => {
-            showToast('✔ Data berhasil disalin ke clipboard!');
-        })
-        .catch(err => {
-            console.error('Failed to copy: ', err);
-            showToast('❌ Gagal menyalin data', 'error');
-        });
-}
-
-/**
- * Format date to readable string
- * @param {string} isoString - ISO date string
- * @returns {string} Formatted date
- */
-function formatDate(isoString) {
-    const date = new Date(isoString);
+// Format waktu
+function formatWaktu(timestamp) {
+    if (!timestamp) return '-';
+    const date = new Date(timestamp);
     return date.toLocaleDateString('id-ID', {
-        weekday: 'long',
+        day: '2-digit',
+        month: '2-digit',
         year: 'numeric',
-        month: 'long',
-        day: 'numeric',
         hour: '2-digit',
         minute: '2-digit'
     });
 }
 
-/**
- * Get unique classes from data
- * @returns {Array} Array of unique classes
- */
-function getUniqueClasses() {
-    const classes = dataSiswa.map(item => item.kelas);
-    return [...new Set(classes)];
-}
-
-// =============================================
-// SERVER API FUNCTIONS
-// =============================================
-
-/**
- * Save data to server API
- * @param {object} data - Data to save
- * @returns {Promise} Promise with result
- */
-async function saveToServer(data) {
-    try {
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const result = await response.json();
-        return result;
-        
-    } catch (error) {
-        console.error('Error saving to server:', error);
-        // Fallback to localStorage
-        return saveToLocalStorage(data);
-    }
-}
-
-/**
- * Load data from server API
- * @returns {Promise} Promise with data array
- */
-async function loadFromServer() {
-    try {
-        const response = await fetch(API_URL);
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        return data;
-        
-    } catch (error) {
-        console.error('Error loading from server:', error);
-        // Fallback to localStorage
-        return loadFromLocalStorage();
-    }
-}
-
-/**
- * Delete all data from server
- * @returns {Promise} Promise with result
- */
-async function deleteFromServer() {
-    try {
-        const response = await fetch(API_URL, {
-            method: 'DELETE'
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const result = await response.json();
-        return result;
-        
-    } catch (error) {
-        console.error('Error deleting from server:', error);
-        return { success: false, message: 'Gagal menghapus dari server' };
-    }
-}
-
-// =============================================
-// LOCALSTORAGE FALLBACK FUNCTIONS
-// =============================================
-
-/**
- * Save data to localStorage (fallback)
- * @param {object} data - Data to save
- * @returns {object} Result object
- */
-function saveToLocalStorage(data) {
-    try {
-        const storedData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-        
-        const newData = {
-            id: Date.now(),
-            nama: data.nama,
-            kelas: data.kelas,
-            mapel: data.mapel,
-            waktu: new Date().toISOString()
-        };
-        
-        storedData.push(newData);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(storedData));
-        
-        return { 
-            success: true, 
-            message: 'Data disimpan ke penyimpanan lokal' 
-        };
-        
-    } catch (error) {
-        console.error('Error saving to localStorage:', error);
-        return { 
-            success: false, 
-            message: 'Gagal menyimpan data' 
-        };
-    }
-}
-
-/**
- * Load data from localStorage (fallback)
- * @returns {Array} Data array
- */
-function loadFromLocalStorage() {
-    try {
-        const storedData = localStorage.getItem(STORAGE_KEY);
-        return storedData ? JSON.parse(storedData) : [];
-    } catch (error) {
-        console.error('Error loading from localStorage:', error);
-        return [];
-    }
-}
-
-/**
- * Delete all data from localStorage (fallback)
- */
-function deleteFromLocalStorage() {
-    try {
-        localStorage.removeItem(STORAGE_KEY);
-        return { success: true, message: 'Data lokal dihapus' };
-    } catch (error) {
-        console.error('Error deleting from localStorage:', error);
-        return { success: false, message: 'Gagal menghapus data lokal' };
-    }
-}
-
-// =============================================
-// SISWA PAGE FUNCTIONS
-// =============================================
-
-/**
- * Initialize siswa page
- */
-function initSiswaPage() {
-    const form = document.getElementById('siswaForm');
-    if (!form) return;
+// Validasi Admin Key (simpan di localStorage untuk sementara)
+function loginAdmin() {
+    const adminKeyInput = document.getElementById('adminKey');
+    const enteredKey = adminKeyInput.value.trim();
     
-    form.addEventListener('submit', handleSiswaSubmit);
+    if (enteredKey === CONFIG.ADMIN_KEY) {
+        adminAuthenticated = true;
+        localStorage.setItem('adminAuthenticated', 'true');
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+        
+        // Load data dari localStorage atau Google Sheets
+        loadSiswaData();
+    } else {
+        alert('Admin Key salah!');
+        adminKeyInput.focus();
+    }
 }
 
-/**
- * Handle siswa form submission
- * @param {Event} e - Form submit event
- */
-async function handleSiswaSubmit(e) {
-    e.preventDefault();
-    
-    // Get form values
-    const nama = document.getElementById('nama').value.trim();
-    const kelas = document.getElementById('kelas').value;
-    
-    // Get selected mapel
-    const mapelCheckboxes = document.querySelectorAll('.checkbox-item input[type="checkbox"]:checked');
-    const mapel = Array.from(mapelCheckboxes).map(cb => cb.value);
-    
-    // Validation
-    if (!nama) {
-        showToast('❌ Nama harus diisi!', 'error');
-        document.getElementById('nama').focus();
-        return;
+// Logout admin
+function logoutAdmin() {
+    adminAuthenticated = false;
+    localStorage.removeItem('adminAuthenticated');
+    document.getElementById('loginSection').style.display = 'block';
+    document.getElementById('adminPanel').style.display = 'none';
+    document.getElementById('adminKey').value = '';
+}
+
+// Cek autentikasi saat load halaman admin
+function checkAdminAuth() {
+    if (localStorage.getItem('adminAuthenticated') === 'true') {
+        adminAuthenticated = true;
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+        loadSiswaData();
     }
+}
+
+// Simpan data siswa ke localStorage (sementara)
+function simpanDataSiswa(data) {
+    // Ambil data yang sudah ada
+    let existingData = JSON.parse(localStorage.getItem('siswaData')) || [];
     
-    if (mapel.length === 0) {
-        showToast('❌ Pilih minimal satu mata pelajaran!', 'error');
-        return;
-    }
-    
-    // Create data object
-    const data = {
-        nama: nama,
-        kelas: kelas,
-        mapel: mapel
+    // Tambah data baru
+    const newData = {
+        id: Date.now(),
+        timestamp: new Date().toISOString(),
+        nama: data.nama,
+        mapel: data.mapel,
+        mapelText: data.mapel.join(', ')
     };
     
-    // Disable submit button during processing
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
-    submitBtn.disabled = true;
+    existingData.unshift(newData);
+    localStorage.setItem('siswaData', JSON.stringify(existingData));
     
-    try {
-        // Save to server (with localStorage fallback)
-        const result = await saveToServer(data);
-        
-        if (result.success) {
-            showToast('✔ ' + result.message);
-            
-            // Reset form
-            e.target.reset();
-            document.getElementById('kelas').value = 'XI TSM B';
-        } else {
-            showToast('❌ ' + result.message, 'error');
-        }
-    } catch (error) {
-        showToast('❌ Terjadi kesalahan saat mengirim data', 'error');
-    } finally {
-        // Re-enable submit button
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-    }
+    return newData;
 }
 
-// =============================================
-// ADMIN PAGE FUNCTIONS
-// =============================================
-
-/**
- * Initialize admin page
- */
-function initAdminPage() {
-    // Check if user is already logged in
-    const isLoggedIn = sessionStorage.getItem('adminLoggedIn') === 'true';
+// Load data siswa dari localStorage
+function loadSiswaData() {
+    const data = JSON.parse(localStorage.getItem('siswaData')) || [];
+    siswaData = data;
     
-    if (isLoggedIn) {
-        showDashboard();
-    } else {
-        initLogin();
-    }
+    // Update stats
+    document.getElementById('totalSiswa').textContent = data.length;
+    
+    const totalMapel = data.reduce((total, siswa) => total + siswa.mapel.length, 0);
+    document.getElementById('totalMapel').textContent = totalMapel;
+    
+    // Render tabel
+    renderTabel(data);
 }
 
-/**
- * Initialize login functionality
- */
-function initLogin() {
-    const loginForm = document.getElementById('loginForm');
-    const togglePasswordBtn = document.getElementById('togglePassword');
-    const passwordInput = document.getElementById('password');
-    
-    if (!loginForm) return;
-    
-    // Toggle password visibility
-    if (togglePasswordBtn && passwordInput) {
-        togglePasswordBtn.addEventListener('click', function() {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            this.innerHTML = type === 'password' ? 
-                '<i class="fas fa-eye"></i>' : 
-                '<i class="fas fa-eye-slash"></i>';
-        });
-    }
-    
-    // Handle login form submission
-    loginForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const password = passwordInput.value.trim();
-        
-        if (password === ADMIN_PASSWORD) {
-            sessionStorage.setItem('adminLoggedIn', 'true');
-            showDashboard();
-        } else {
-            showToast('❌ Password salah!', 'error');
-            passwordInput.value = '';
-            passwordInput.focus();
-        }
-    });
-}
-
-/**
- * Show dashboard and hide login
- */
-function showDashboard() {
-    const loginScreen = document.getElementById('loginScreen');
-    const dashboard = document.getElementById('dashboard');
-    
-    if (loginScreen) loginScreen.style.display = 'none';
-    if (dashboard) {
-        dashboard.style.display = 'block';
-        initDashboard();
-    }
-}
-
-/**
- * Initialize dashboard functionality
- */
-function initDashboard() {
-    // Initialize event listeners
-    document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
-    document.getElementById('refreshBtn')?.addEventListener('click', refreshData);
-    document.getElementById('copyBtn')?.addEventListener('click', copyAllData);
-    document.getElementById('deleteBtn')?.addEventListener('click', deleteAllData);
-    document.getElementById('filterKelas')?.addEventListener('change', filterKelas);
-    
-    // Load initial data
-    refreshData();
-    populateClassFilter();
-}
-
-/**
- * Handle logout
- */
-function handleLogout() {
-    sessionStorage.removeItem('adminLoggedIn');
-    window.location.reload();
-}
-
-/**
- * Refresh data from server
- */
-async function refreshData() {
-    const refreshBtn = document.getElementById('refreshBtn');
-    const originalText = refreshBtn?.innerHTML;
-    
-    if (refreshBtn) {
-        refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memuat...';
-        refreshBtn.disabled = true;
-    }
-    
-    try {
-        // Load from server
-        dataSiswa = await loadFromServer();
-        
-        // Update UI
-        renderTable();
-        updateStats();
-        
-        showToast('✔ Data berhasil dimuat dari server');
-    } catch (error) {
-        showToast('❌ Gagal memuat data dari server', 'error');
-    } finally {
-        if (refreshBtn) {
-            refreshBtn.innerHTML = originalText;
-            refreshBtn.disabled = false;
-        }
-    }
-}
-
-/**
- * Copy all data to clipboard
- */
-async function copyAllData() {
-    if (dataSiswa.length === 0) {
-        showToast('❌ Tidak ada data untuk disalin!', 'warning');
-        return;
-    }
-    
-    const filterKelas = document.getElementById('filterKelas')?.value;
-    let filteredData = dataSiswa;
-    
-    if (filterKelas && filterKelas !== 'semua') {
-        filteredData = dataSiswa.filter(item => item.kelas === filterKelas);
-    }
-    
-    if (filteredData.length === 0) {
-        showToast('❌ Tidak ada data untuk kelas ini!', 'warning');
-        return;
-    }
-    
-    const kelas = filterKelas === 'semua' ? 'Semua Kelas' : filterKelas;
-    let text = `Daftar siswa yang belum mengerjakan ulangan (${kelas}):\n\n`;
-    
-    filteredData.forEach((item, index) => {
-        text += `${index + 1}. ${item.nama} - ${item.mapel.join(', ')}\n`;
-    });
-    
-    text += `\nTotal: ${filteredData.length} siswa\n`;
-    text += `Diakses pada: ${new Date().toLocaleDateString('id-ID', { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    })}`;
-    
-    copyToClipboard(text);
-}
-
-/**
- * Delete all data from server
- */
-async function deleteAllData() {
-    if (dataSiswa.length === 0) {
-        showToast('❌ Tidak ada data untuk dihapus!', 'warning');
-        return;
-    }
-    
-    if (!confirm('Apakah Anda yakin ingin menghapus semua data?\nTindakan ini tidak dapat dibatalkan!')) {
-        return;
-    }
-    
-    const deleteBtn = document.getElementById('deleteBtn');
-    const originalText = deleteBtn?.innerHTML;
-    
-    if (deleteBtn) {
-        deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menghapus...';
-        deleteBtn.disabled = true;
-    }
-    
-    try {
-        // Try to delete from server first
-        const serverResult = await deleteFromServer();
-        
-        // Also delete from localStorage as backup
-        const localResult = deleteFromLocalStorage();
-        
-        // Clear local data
-        dataSiswa = [];
-        
-        // Update UI
-        renderTable();
-        updateStats();
-        
-        if (serverResult.success) {
-            showToast('✔ ' + serverResult.message);
-        } else {
-            showToast('✔ ' + localResult.message);
-        }
-    } catch (error) {
-        showToast('❌ Gagal menghapus data', 'error');
-    } finally {
-        if (deleteBtn) {
-            deleteBtn.innerHTML = originalText;
-            deleteBtn.disabled = false;
-        }
-    }
-}
-
-/**
- * Filter data by class
- */
-function filterKelas() {
-    renderTable();
-    updateStats();
-}
-
-/**
- * Render data table
- */
-function renderTable() {
+// Render tabel data
+function renderTabel(data) {
     const tableBody = document.getElementById('tableBody');
-    const emptyState = document.getElementById('emptyState');
-    const tableInfo = document.getElementById('tableInfo');
-    const filterKelas = document.getElementById('filterKelas')?.value;
-    
-    if (!tableBody || !emptyState) return;
-    
-    // Clear table
     tableBody.innerHTML = '';
     
-    // Filter data
-    let filteredData = dataSiswa;
-    if (filterKelas && filterKelas !== 'semua') {
-        filteredData = dataSiswa.filter(item => item.kelas === filterKelas);
-    }
-    
-    // Show empty state if no data
-    if (filteredData.length === 0) {
-        tableBody.style.display = 'none';
-        emptyState.style.display = 'block';
-        
-        const kelasText = filterKelas === 'semua' ? '' : ` untuk kelas ${filterKelas}`;
-        if (tableInfo) {
-            tableInfo.textContent = `0 data ditemukan${kelasText}`;
-        }
+    if (data.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 40px;">
+                    <i class="fas fa-database" style="font-size: 2rem; color: #ccc; margin-bottom: 15px; display: block;"></i>
+                    <p style="color: #666;">Belum ada data siswa</p>
+                </td>
+            </tr>
+        `;
         return;
     }
     
-    // Hide empty state and show table
-    emptyState.style.display = 'none';
-    tableBody.style.display = 'table-row-group';
-    
-    // Populate table
-    filteredData.forEach((item, index) => {
+    data.forEach((siswa, index) => {
         const row = document.createElement('tr');
-        
-        // Format mapel as tags
-        const mapelTags = item.mapel.map(mapel => 
-            `<span class="mapel-tag">${mapel}</span>`
-        ).join('');
         
         row.innerHTML = `
             <td>${index + 1}</td>
+            <td><strong>${siswa.nama}</strong></td>
             <td>
-                <strong>${item.nama}</strong>
-                <div class="form-hint">${formatDate(item.waktu)}</div>
+                <div class="mapel-tags">
+                    ${siswa.mapel.map(m => `<span class="mapel-tag">${m}</span>`).join('')}
+                </div>
             </td>
-            <td>${item.kelas}</td>
-            <td>${mapelTags}</td>
+            <td>${formatWaktu(siswa.timestamp)}</td>
+            <td>
+                <button class="btn btn-small" onclick="hapusData(${siswa.id})" title="Hapus data">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
         `;
         
         tableBody.appendChild(row);
     });
-    
-    // Update table info
-    if (tableInfo) {
-        const kelasText = filterKelas === 'semua' ? '' : ` untuk kelas ${filterKelas}`;
-        tableInfo.textContent = `${filteredData.length} data ditemukan${kelasText}`;
-    }
 }
 
-/**
- * Update statistics
- */
-function updateStats() {
-    const totalSiswa = document.getElementById('totalSiswa');
-    const totalMapel = document.getElementById('totalMapel');
-    const filterKelas = document.getElementById('filterKelas')?.value;
-    
-    // Filter data for stats
-    let filteredData = dataSiswa;
-    if (filterKelas && filterKelas !== 'semua') {
-        filteredData = dataSiswa.filter(item => item.kelas === filterKelas);
+// Generate laporan otomatis
+function generateLaporan() {
+    if (siswaData.length === 0) {
+        document.getElementById('hasilLaporan').value = "Belum ada data siswa.";
+        return;
     }
     
-    if (totalSiswa) {
-        totalSiswa.textContent = filteredData.length;
+    const format = document.getElementById('formatLaporan').value;
+    let laporan = '';
+    
+    switch(format) {
+        case '1': // Format: Nama — Mapel
+            siswaData.forEach((siswa, index) => {
+                laporan += `${siswa.nama} — ${siswa.mapelText}\n`;
+            });
+            break;
+            
+        case '2': // Format: Nama: [Nama] Belum mengerjakan: [Mapel]
+            siswaData.forEach(siswa => {
+                laporan += `Nama: ${siswa.nama}\n`;
+                laporan += `Belum mengerjakan: ${siswa.mapelText}\n\n`;
+            });
+            break;
+            
+        case '3': // Format: Berurutan dengan angka
+            siswaData.forEach((siswa, index) => {
+                laporan += `${index + 1}. ${siswa.nama} — ${siswa.mapelText}\n`;
+            });
+            break;
     }
     
-    if (totalMapel) {
-        const total = filteredData.reduce((sum, item) => sum + item.mapel.length, 0);
-        totalMapel.textContent = total;
-    }
+    document.getElementById('hasilLaporan').value = laporan;
 }
 
-/**
- * Populate class filter dropdown
- */
-function populateClassFilter() {
-    const filterSelect = document.getElementById('filterKelas');
-    if (!filterSelect) return;
+// Copy laporan ke clipboard
+function copyLaporan() {
+    const textarea = document.getElementById('hasilLaporan');
     
-    // Keep the existing options (Semua Kelas and XI TSM B)
-    const currentOptions = Array.from(filterSelect.options).map(opt => opt.value);
+    if (!textarea.value.trim()) {
+        alert('Tidak ada laporan untuk disalin!');
+        return;
+    }
     
-    // Add unique classes from data
-    const uniqueClasses = getUniqueClasses();
-    uniqueClasses.forEach(className => {
-        if (!currentOptions.includes(className)) {
-            const option = document.createElement('option');
-            option.value = className;
-            option.textContent = className;
-            filterSelect.appendChild(option);
+    textarea.select();
+    textarea.setSelectionRange(0, 99999); // Untuk mobile
+    
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            alert('Laporan berhasil disalin ke clipboard!');
+        } else {
+            alert('Gagal menyalin laporan. Silakan coba manual.');
         }
+    } catch (err) {
+        // Fallback untuk browser modern
+        navigator.clipboard.writeText(textarea.value)
+            .then(() => alert('Laporan berhasil disalin ke clipboard!'))
+            .catch(() => alert('Gagal menyalin laporan. Silakan coba manual.'));
+    }
+}
+
+// Hapus data siswa
+function hapusData(id) {
+    if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) return;
+    
+    const newData = siswaData.filter(siswa => siswa.id !== id);
+    localStorage.setItem('siswaData', JSON.stringify(newData));
+    loadSiswaData();
+    
+    // Regenerate laporan jika ada
+    if (document.getElementById('hasilLaporan').value) {
+        generateLaporan();
+    }
+}
+
+// Hapus laporan
+function clearLaporan() {
+    document.getElementById('hasilLaporan').value = '';
+}
+
+// Refresh data
+function refreshData() {
+    loadSiswaData();
+}
+
+// Submit form siswa
+if (siswaForm) {
+    siswaForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Ambil data dari form
+        const nama = document.getElementById('nama').value.trim();
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+        
+        // Validasi
+        if (!nama) {
+            alert('Mohon isi nama lengkap!');
+            return;
+        }
+        
+        if (checkboxes.length === 0) {
+            alert('Pilih minimal satu mata pelajaran yang belum dikerjakan!');
+            return;
+        }
+        
+        // Ambil nilai checkbox yang dipilih
+        const mapel = Array.from(checkboxes).map(cb => cb.value);
+        
+        // Tampilkan loading
+        loadingElement.style.display = 'block';
+        successElement.style.display = 'none';
+        
+        // Simpan data (sementara ke localStorage)
+        setTimeout(() => {
+            const data = {
+                nama: nama,
+                mapel: mapel
+            };
+            
+            simpanDataSiswa(data);
+            
+            // Reset form
+            siswaForm.reset();
+            
+            // Tampilkan success message
+            loadingElement.style.display = 'none';
+            successElement.style.display = 'block';
+            
+            // Sembunyikan success message setelah 3 detik
+            setTimeout(() => {
+                successElement.style.display = 'none';
+            }, 3000);
+            
+        }, 1000); // Simulasi delay pengiriman
     });
 }
 
-// =============================================
-// PAGE INITIALIZATION
-// =============================================
-
-/**
- * Initialize the page based on current URL
- */
-function initPage() {
-    const currentPage = window.location.pathname;
-    
-    // Initialize based on page
-    if (currentPage.includes('siswa.html') || currentPage.endsWith('/')) {
-        initSiswaPage();
-    } else if (currentPage.includes('admin.html')) {
-        initAdminPage();
+// Inisialisasi
+document.addEventListener('DOMContentLoaded', function() {
+    // Cek jika di halaman admin
+    if (document.getElementById('adminPanel')) {
+        checkAdminAuth();
     }
     
-    // Add styles for mapel tags
+    // Tambahkan styles untuk tags mapel
     const style = document.createElement('style');
     style.textContent = `
+        .mapel-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
         .mapel-tag {
-            display: inline-block;
-            background-color: #EFF6FF;
-            color: #3B82F6;
-            padding: 0.25rem 0.75rem;
-            border-radius: 50px;
-            font-size: 0.875rem;
-            margin: 0.25rem;
+            background: #e8f4ff;
+            color: #4361ee;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
             font-weight: 500;
-        }
-        
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-        
-        .fa-spinner {
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            border: 1px solid #c3d9ff;
         }
     `;
     document.head.appendChild(style);
-}
-
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', initPage);
-
-// Export functions for testing
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        saveToServer,
-        loadFromServer,
-        saveToLocalStorage,
-        loadFromLocalStorage,
-        showToast,
-        copyToClipboard,
-        formatDate
-    };
-}
+});
