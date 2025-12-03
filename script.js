@@ -1,7 +1,7 @@
 // Konfigurasi
 const CONFIG = {
     ADMIN_KEY: "admin123", 
-    GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbxiNCBShKsnL-JmQYN2qnzWhMYFAE21hx4jKuXZeAFfNvt2SMNnpXChKrzaly2b59T_KA/exec"
+    GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycby7gjIDlyJwVC_fsHSUVE_e8VwFybWABTSSAUGBjNgZM-Jgm5-OZO82_8Tuve3skzEYxQ/exec"
 };
 
 // ========== FUNGSI UTAMA ==========
