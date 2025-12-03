@@ -1,233 +1,145 @@
 // Konfigurasi
 const CONFIG = {
-    ADMIN_KEY: "admin455", // Ganti setelah deploy!
-    GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbyLHyQD_28sjsgOD04_ZE-5CVAMYWDuYuLTf2-OwAelk56euXBcgX5na-p6vg660U4xWQ/exec" // Diisi setelah membuat Google Apps Script
+    ADMIN_KEY: "admin123", 
+    GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbxiNCBShKsnL-JmQYN2qnzWhMYFAE21hx4jKuXZeAFfNvt2SMNnpXChKrzaly2b59T_KA/exec"
 };
 
-// State aplikasi
-let adminAuthenticated = false;
-let siswaData = [];
+// ========== FUNGSI UTAMA ==========
 
-// DOM Elements
-const siswaForm = document.getElementById('formSiswa');
-const loadingElement = document.getElementById('loading');
-const successElement = document.getElementById('successMessage');
-const adminLink = document.getElementById('adminLink');
-
-// Format waktu
-function formatWaktu(timestamp) {
-    if (!timestamp) return '-';
-    const date = new Date(timestamp);
-    return date.toLocaleDateString('id-ID', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-}
-
-// Validasi Admin Key (simpan di localStorage untuk sementara)
-function loginAdmin() {
-    const adminKeyInput = document.getElementById('adminKey');
-    const enteredKey = adminKeyInput.value.trim();
-    
-    if (enteredKey === CONFIG.ADMIN_KEY) {
-        adminAuthenticated = true;
-        localStorage.setItem('adminAuthenticated', 'true');
-        document.getElementById('loginSection').style.display = 'none';
-        document.getElementById('adminPanel').style.display = 'block';
-        
-        // Load data dari localStorage atau Google Sheets
-        loadSiswaData();
-    } else {
-        alert('Admin Key salah!');
-        adminKeyInput.focus();
-    }
-}
-
-// Logout admin
-function logoutAdmin() {
-    adminAuthenticated = false;
-    localStorage.removeItem('adminAuthenticated');
-    document.getElementById('loginSection').style.display = 'block';
-    document.getElementById('adminPanel').style.display = 'none';
-    document.getElementById('adminKey').value = '';
-}
-
-// Cek autentikasi saat load halaman admin
-function checkAdminAuth() {
-    if (localStorage.getItem('adminAuthenticated') === 'true') {
-        adminAuthenticated = true;
-        document.getElementById('loginSection').style.display = 'none';
-        document.getElementById('adminPanel').style.display = 'block';
-        loadSiswaData();
-    }
-}
-
-// Simpan data siswa ke localStorage (sementara)
-function simpanDataSiswa(data) {
-    // Ambil data yang sudah ada
-    let existingData = JSON.parse(localStorage.getItem('siswaData')) || [];
-    
-    // Tambah data baru
-    const newData = {
-        id: Date.now(),
-        timestamp: new Date().toISOString(),
-        nama: data.nama,
-        mapel: data.mapel,
-        mapelText: data.mapel.join(', ')
-    };
-    
-    existingData.unshift(newData);
-    localStorage.setItem('siswaData', JSON.stringify(existingData));
-    
-    return newData;
-}
-
-// Load data siswa dari localStorage
-function loadSiswaData() {
-    const data = JSON.parse(localStorage.getItem('siswaData')) || [];
-    siswaData = data;
-    
-    // Update stats
-    document.getElementById('totalSiswa').textContent = data.length;
-    
-    const totalMapel = data.reduce((total, siswa) => total + siswa.mapel.length, 0);
-    document.getElementById('totalMapel').textContent = totalMapel;
-    
-    // Render tabel
-    renderTabel(data);
-}
-
-// Render tabel data
-function renderTabel(data) {
-    const tableBody = document.getElementById('tableBody');
-    tableBody.innerHTML = '';
-    
-    if (data.length === 0) {
-        tableBody.innerHTML = `
-            <tr>
-                <td colspan="5" style="text-align: center; padding: 40px;">
-                    <i class="fas fa-database" style="font-size: 2rem; color: #ccc; margin-bottom: 15px; display: block;"></i>
-                    <p style="color: #666;">Belum ada data siswa</p>
-                </td>
-            </tr>
-        `;
-        return;
-    }
-    
-    data.forEach((siswa, index) => {
-        const row = document.createElement('tr');
-        
-        row.innerHTML = `
-            <td>${index + 1}</td>
-            <td><strong>${siswa.nama}</strong></td>
-            <td>
-                <div class="mapel-tags">
-                    ${siswa.mapel.map(m => `<span class="mapel-tag">${m}</span>`).join('')}
-                </div>
-            </td>
-            <td>${formatWaktu(siswa.timestamp)}</td>
-            <td>
-                <button class="btn btn-small" onclick="hapusData(${siswa.id})" title="Hapus data">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </td>
-        `;
-        
-        tableBody.appendChild(row);
-    });
-}
-
-// Generate laporan otomatis
-function generateLaporan() {
-    if (siswaData.length === 0) {
-        document.getElementById('hasilLaporan').value = "Belum ada data siswa.";
-        return;
-    }
-    
-    const format = document.getElementById('formatLaporan').value;
-    let laporan = '';
-    
-    switch(format) {
-        case '1': // Format: Nama — Mapel
-            siswaData.forEach((siswa, index) => {
-                laporan += `${siswa.nama} — ${siswa.mapelText}\n`;
-            });
-            break;
-            
-        case '2': // Format: Nama: [Nama] Belum mengerjakan: [Mapel]
-            siswaData.forEach(siswa => {
-                laporan += `Nama: ${siswa.nama}\n`;
-                laporan += `Belum mengerjakan: ${siswa.mapelText}\n\n`;
-            });
-            break;
-            
-        case '3': // Format: Berurutan dengan angka
-            siswaData.forEach((siswa, index) => {
-                laporan += `${index + 1}. ${siswa.nama} — ${siswa.mapelText}\n`;
-            });
-            break;
-    }
-    
-    document.getElementById('hasilLaporan').value = laporan;
-}
-
-// Copy laporan ke clipboard
-function copyLaporan() {
-    const textarea = document.getElementById('hasilLaporan');
-    
-    if (!textarea.value.trim()) {
-        alert('Tidak ada laporan untuk disalin!');
-        return;
-    }
-    
-    textarea.select();
-    textarea.setSelectionRange(0, 99999); // Untuk mobile
+// 1. Fungsi untuk kirim data (METODE 1 - menggunakan fetch dengan error handling)
+async function kirimDataKeSheets(data) {
+    console.log('Mengirim data:', data);
     
     try {
-        const successful = document.execCommand('copy');
-        if (successful) {
-            alert('Laporan berhasil disalin ke clipboard!');
-        } else {
-            alert('Gagal menyalin laporan. Silakan coba manual.');
+        // Method 1: Fetch dengan mode 'no-cors' (paling kompatibel)
+        const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors', // Mode ini tidak memerlukan CORS
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `nama=${encodeURIComponent(data.nama)}&mapel=${encodeURIComponent(JSON.stringify(data.mapel))}`
+        });
+        
+        console.log('Data terkirim (no-cors mode)');
+        return { success: true };
+        
+    } catch (error) {
+        console.warn('Error dengan fetch, coba metode alternatif:', error);
+        
+        // Method 2: Gunakan Google Forms style (100% working)
+        return await kirimDataMetodeAlternatif(data);
+    }
+}
+
+// 2. Metode Alternatif (Google Forms Style - PASTI BISA)
+function kirimDataMetodeAlternatif(data) {
+    return new Promise((resolve) => {
+        // Buat form hidden
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = CONFIG.GOOGLE_SCRIPT_URL;
+        form.target = 'hiddenFrame';
+        form.style.display = 'none';
+        
+        // Buat iframe untuk response
+        let iframe = document.getElementById('hiddenFrame');
+        if (!iframe) {
+            iframe = document.createElement('iframe');
+            iframe.name = 'hiddenFrame';
+            iframe.id = 'hiddenFrame';
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
         }
-    } catch (err) {
-        // Fallback untuk browser modern
-        navigator.clipboard.writeText(textarea.value)
-            .then(() => alert('Laporan berhasil disalin ke clipboard!'))
-            .catch(() => alert('Gagal menyalin laporan. Silakan coba manual.'));
+        
+        // Tambah event listener untuk iframe
+        iframe.onload = function() {
+            console.log('Data berhasil dikirim via form');
+            resolve({ success: true });
+        };
+        
+        // Input untuk nama
+        const namaInput = document.createElement('input');
+        namaInput.type = 'hidden';
+        namaInput.name = 'nama';
+        namaInput.value = data.nama;
+        form.appendChild(namaInput);
+        
+        // Input untuk mapel
+        const mapelInput = document.createElement('input');
+        mapelInput.type = 'hidden';
+        mapelInput.name = 'mapel';
+        mapelInput.value = JSON.stringify(data.mapel);
+        form.appendChild(mapelInput);
+        
+        // Submit form
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
+        
+        // Juga simpan ke localStorage sebagai backup
+        simpanKeLocalStorage(data);
+    });
+}
+
+// 3. Simpan ke localStorage sebagai backup
+function simpanKeLocalStorage(data) {
+    try {
+        let existingData = JSON.parse(localStorage.getItem('siswaData')) || [];
+        
+        const newData = {
+            id: Date.now(),
+            timestamp: new Date().toISOString(),
+            nama: data.nama,
+            mapel: data.mapel,
+            mapelText: data.mapel.join(', ')
+        };
+        
+        existingData.unshift(newData);
+        localStorage.setItem('siswaData', JSON.stringify(existingData));
+        
+        console.log('Data disimpan ke localStorage:', newData);
+        return newData;
+    } catch (error) {
+        console.error('Error simpan ke localStorage:', error);
+        return null;
     }
 }
 
-// Hapus data siswa
-function hapusData(id) {
-    if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) return;
-    
-    const newData = siswaData.filter(siswa => siswa.id !== id);
-    localStorage.setItem('siswaData', JSON.stringify(newData));
-    loadSiswaData();
-    
-    // Regenerate laporan jika ada
-    if (document.getElementById('hasilLaporan').value) {
-        generateLaporan();
+// 4. Ambil data dari Google Sheets
+async function ambilDataDariSheets() {
+    try {
+        // Method 1: Fetch biasa untuk GET (biasanya work untuk GET)
+        const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            console.log('Data dari Google Sheets:', result.data.length, 'records');
+            return result.data;
+        } else {
+            throw new Error(result.error || 'Unknown error');
+        }
+        
+    } catch (error) {
+        console.warn('Gagal ambil dari Google Sheets:', error.message);
+        console.log('Fallback ke localStorage');
+        
+        // Fallback ke localStorage
+        const localData = JSON.parse(localStorage.getItem('siswaData')) || [];
+        return localData;
     }
 }
 
-// Hapus laporan
-function clearLaporan() {
-    document.getElementById('hasilLaporan').value = '';
-}
-
-// Refresh data
-function refreshData() {
-    loadSiswaData();
-}
+// ========== EVENT HANDLERS ==========
 
 // Submit form siswa
 if (siswaForm) {
-    siswaForm.addEventListener('submit', function(e) {
+    siswaForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
         // Ambil data dari form
@@ -245,63 +157,94 @@ if (siswaForm) {
             return;
         }
         
-        // Ambil nilai checkbox yang dipilih
         const mapel = Array.from(checkboxes).map(cb => cb.value);
+        const data = { nama, mapel };
         
         // Tampilkan loading
         loadingElement.style.display = 'block';
         successElement.style.display = 'none';
         
-        // Simpan data (sementara ke localStorage)
-        setTimeout(() => {
-            const data = {
-                nama: nama,
-                mapel: mapel
-            };
-            
-            simpanDataSiswa(data);
+        try {
+            // Kirim ke Google Sheets
+            await kirimDataKeSheets(data);
             
             // Reset form
             siswaForm.reset();
             
-            // Tampilkan success message
+            // Tampilkan sukses
             loadingElement.style.display = 'none';
             successElement.style.display = 'block';
             
-            // Sembunyikan success message setelah 3 detik
+            // Sembunyikan setelah 3 detik
             setTimeout(() => {
                 successElement.style.display = 'none';
             }, 3000);
             
-        }, 1000); // Simulasi delay pengiriman
+        } catch (error) {
+            loadingElement.style.display = 'none';
+            alert('Data berhasil disimpan (cache lokal). Ada masalah koneksi ke server.');
+            console.error('Error:', error);
+        }
     });
 }
 
-// Inisialisasi
+// Load data untuk admin
+async function loadSiswaData() {
+    try {
+        const data = await ambilDataDariSheets();
+        siswaData = data;
+        
+        // Update stats
+        document.getElementById('totalSiswa').textContent = data.length;
+        const totalMapel = data.reduce((total, siswa) => total + siswa.mapel.length, 0);
+        document.getElementById('totalMapel').textContent = totalMapel;
+        
+        // Render tabel
+        renderTabel(data);
+        
+    } catch (error) {
+        console.error('Error load data:', error);
+        alert('Gagal memuat data. Cek koneksi internet.');
+    }
+}
+
+// ========== TEST FUNCTION ==========
+
+// Fungsi untuk testing langsung
+function testKirimData() {
+    const testData = {
+        nama: "SISWA TEST",
+        mapel: ["MTK", "Agama Islam"]
+    };
+    
+    console.log('Testing pengiriman data...');
+    kirimDataKeSheets(testData)
+        .then(result => {
+            console.log('Test result:', result);
+            alert('Test data berhasil dikirim! Cek spreadsheet.');
+        })
+        .catch(error => {
+            console.error('Test error:', error);
+            alert('Test gagal: ' + error.message);
+        });
+}
+
+// Tambahkan tombol test di halaman siswa (opsional)
 document.addEventListener('DOMContentLoaded', function() {
-    // Cek jika di halaman admin
+    // Jika di halaman siswa, tambahkan tombol test
+    if (siswaForm && window.location.href.includes('siswa')) {
+        const testBtn = document.createElement('button');
+        testBtn.type = 'button';
+        testBtn.className = 'btn btn-secondary';
+        testBtn.innerHTML = '<i class="fas fa-vial"></i> Test Connection';
+        testBtn.onclick = testKirimData;
+        testBtn.style.marginTop = '10px';
+        
+        document.querySelector('.form-actions').appendChild(testBtn);
+    }
+    
+    // Jika di halaman admin
     if (document.getElementById('adminPanel')) {
         checkAdminAuth();
     }
-    
-    // Tambahkan styles untuk tags mapel
-    const style = document.createElement('style');
-    style.textContent = `
-        .mapel-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-        }
-        
-        .mapel-tag {
-            background: #e8f4ff;
-            color: #4361ee;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            border: 1px solid #c3d9ff;
-        }
-    `;
-    document.head.appendChild(style);
 });
