@@ -3,153 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Pendataan Ulangan Siswa</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Sistem Pendataan Siswa</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <header>
-            <div class="logo">
-                <span class="logo-text">XI TBSM B</span>
-                <i class="fas fa-graduation-cap"></i>
-            </div>
-            <h1><i class="fas fa-clipboard-list"></i> Sistem Pendataan Ulangan</h1>
-            <p>Catat siswa yang belum mengerjakan ulangan Matematika dan PKN</p>
-        </header>
-        
-        <div class="nav-tabs">
-            <button class="tab-btn active" id="formTabBtn">
-                <i class="fas fa-user-plus"></i> Tambah Siswa
-            </button>
-            <button class="tab-btn" id="adminTabBtn">
-                <i class="fas fa-chart-bar"></i> Data Admin
-            </button>
-        </div>
-        
-        <div class="app-container">
-            <!-- Form Tab -->
-            <div id="formTab" class="tab-content active">
-                <div class="card">
-                    <h2 class="card-title"><i class="fas fa-edit"></i> Form Pendataan Siswa</h2>
-                    
-                    <div class="form-group">
-                        <label for="studentName"><i class="fas fa-user"></i> Nama Siswa</label>
-                        <input type="text" id="studentName" placeholder="Masukkan nama siswa...">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label><i class="fas fa-book"></i> Mata Pelajaran Belum Dikerjakan</label>
-                        <div class="subject-options">
-                            <div class="subject-option">
-                                <input type="checkbox" id="mathCheckbox" class="subject-checkbox">
-                                <label for="mathCheckbox" class="subject-label math">
-                                    <i class="fas fa-calculator"></i> Matematika (M)
-                                </label>
-                            </div>
-                            <div class="subject-option">
-                                <input type="checkbox" id="pknCheckbox" class="subject-checkbox">
-                                <label for="pknCheckbox" class="subject-label pkn">
-                                    <i class="fas fa-landmark"></i> PKN (P)
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="button-group">
-                        <button class="btn btn-primary" id="saveBtn">
-                            <i class="fas fa-save"></i> Simpan Data
-                        </button>
-                        <button class="btn btn-secondary" id="resetBtn">
-                            <i class="fas fa-redo"></i> Reset Form
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <h2 class="card-title"><i class="fas fa-info-circle"></i> Informasi</h2>
-                    <div class="info-content">
-                        <p>Gunakan form ini untuk mencatat siswa yang belum mengerjakan ulangan:</p>
-                        <ul>
-                            <li>Isi nama siswa lengkap</li>
-                            <li>Pilih mata pelajaran yang belum dikerjakan (bisa lebih dari satu)</li>
-                            <li>Klik <strong>Simpan Data</strong> untuk menyimpan</li>
-                            <li>Data akan muncul di halaman <strong>Data Admin</strong></li>
-                            <li>Gunakan tombol <strong>Reset Form</strong> untuk mengosongkan form</li>
-                        </ul>
-                        <div class="code-info">
-                            <strong>Kode Mata Pelajaran:</strong>
-                            <div>Matematika = <span class="badge-math subject-badge">M</span></div>
-                            <div>PKN = <span class="badge-pkn subject-badge">P</span></div>
-                        </div>
-                    </div>
-                </div>
+        <div class="card welcome-card">
+            <h1>Sistem Pendataan Siswa</h1>
+            <p class="subtitle">Laporkan mata pelajaran yang belum dikerjakan</p>
+            
+            <div class="menu-options">
+                <a href="siswa.html" class="btn btn-primary btn-large">
+                    👨‍🎓 Halaman Siswa
+                </a>
+                <a href="admin.html" class="btn btn-secondary btn-large">
+                    🔐 Halaman Admin
+                </a>
             </div>
             
-            <!-- Admin Tab -->
-            <div id="adminTab" class="tab-content">
-                <div class="card">
-                    <h2 class="card-title"><i class="fas fa-chart-pie"></i> Statistik Data</h2>
-                    
-                    <div class="stats">
-                        <div class="stat-box total">
-                            <div class="stat-number" id="totalStudents">0</div>
-                            <div class="stat-label">Total Siswa</div>
-                        </div>
-                        <div class="stat-box math">
-                            <div class="stat-number" id="mathStudents">0</div>
-                            <div class="stat-label">Belum Matematika</div>
-                        </div>
-                        <div class="stat-box pkn">
-                            <div class="stat-number" id="pknStudents">0</div>
-                            <div class="stat-label">Belum PKN</div>
-                        </div>
-                        <div class="stat-box both">
-                            <div class="stat-number" id="bothStudents">0</div>
-                            <div class="stat-label">Belum Keduanya</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <h2 class="card-title"><i class="fas fa-list-alt"></i> Daftar Siswa Belum Mengerjakan</h2>
-                    
-                    <div id="studentTableContainer">
-                        <table id="studentTable">
-                            <thead>
-                                <tr>
-                                    <th width="5%">No</th>
-                                    <th width="35%">Nama Siswa</th>
-                                    <th width="30%">Mata Pelajaran</th>
-                                    <th width="30%">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="studentTableBody">
-                                <!-- Data akan diisi oleh JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <div class="copy-section">
-                    <div class="copy-header">
-                        <h3><i class="fas fa-clipboard"></i> Teks untuk Disalin</h3>
-                        <button class="copy-btn" id="copyTextBtn">
-                            <i class="fas fa-copy"></i> Salin Teks
-                        </button>
-                    </div>
-                    <textarea id="copyTextArea" readonly></textarea>
-                </div>
+            <div class="info-box">
+                <h3>📋 Panduan Singkat</h3>
+                <ul>
+                    <li><strong>Siswa:</strong> Gunakan halaman siswa untuk melaporkan tugas yang belum dikerjakan</li>
+                    <li><strong>Admin:</strong> Akses dashboard admin dengan password "admin123"</li>
+                    <li>Data tersimpan secara lokal di browser</li>
+                </ul>
             </div>
         </div>
     </div>
     
-    <div id="notification" class="notification">
-        <i class="fas fa-check-circle"></i>
-        <span id="notificationText">Data berhasil disimpan!</span>
-    </div>
-
-    <!-- Script harus diakhir body -->
     <script src="script.js"></script>
 </body>
 </html>
