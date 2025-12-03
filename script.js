@@ -1,322 +1,427 @@
-// ========== VARIABLES ==========
-let students = JSON.parse(localStorage.getItem('students')) || [];
+// =============================================
+// GLOBAL VARIABLES & CONSTANTS
+// =============================================
+const STORAGE_KEY = 'dataSiswa';
+const ADMIN_PASSWORD = 'admin123';
+let dataSiswa = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
-// ========== DOM ELEMENTS ==========
-const studentNameInput = document.getElementById('studentName');
-const mathCheckbox = document.getElementById('mathCheckbox');
-const pknCheckbox = document.getElementById('pknCheckbox');
-const saveBtn = document.getElementById('saveBtn');
-const resetBtn = document.getElementById('resetBtn');
-const studentTableBody = document.getElementById('studentTableBody');
-const copyTextArea = document.getElementById('copyTextArea');
-const copyTextBtn = document.getElementById('copyTextBtn');
-const notification = document.getElementById('notification');
-const notificationText = document.getElementById('notificationText');
-const totalStudentsEl = document.getElementById('totalStudents');
-const mathStudentsEl = document.getElementById('mathStudents');
-const pknStudentsEl = document.getElementById('pknStudents');
-const bothStudentsEl = document.getElementById('bothStudents');
-const formTabBtn = document.getElementById('formTabBtn');
-const adminTabBtn = document.getElementById('adminTabBtn');
-const formTab = document.getElementById('formTab');
-const adminTab = document.getElementById('adminTab');
+// =============================================
+// UTILITY FUNCTIONS
+// =============================================
 
-// ========== NOTIFICATION ==========
-function showNotification(message, type = 'success') {
-    notificationText.textContent = message;
+/**
+ * Show toast notification
+ * @param {string} message - Message to display
+ * @param {string} type - Type of toast (success, error, warning)
+ */
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    if (!toast) return;
     
-    if (type === 'success') {
-        notification.style.backgroundColor = '#4cc9f0';
-    } else if (type === 'error') {
-        notification.style.backgroundColor = '#f72585';
-    } else if (type === 'warning') {
-        notification.style.backgroundColor = '#ff9e00';
-    }
-    
-    notification.classList.add('show');
+    toast.textContent = message;
+    toast.className = 'toast';
+    toast.classList.add(type);
+    toast.classList.add('show');
     
     setTimeout(() => {
-        notification.classList.remove('show');
+        toast.classList.remove('show');
     }, 3000);
 }
 
-// ========== LOCAL STORAGE ==========
-function saveToLocalStorage() {
-    localStorage.setItem('students', JSON.stringify(students));
-}
-
-// ========== GENERATE ID ==========
-function generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2);
-}
-
-// ========== RENDER TABLE ==========
-function renderStudentTable() {
-    studentTableBody.innerHTML = '';
-    
-    if (students.length === 0) {
-        studentTableBody.innerHTML = `
-            <tr id="emptyRow">
-                <td colspan="4">
-                    <div class="empty-state">
-                        <i class="fas fa-user-slash"></i>
-                        <p>Belum ada data siswa. Tambahkan data melalui form.</p>
-                    </div>
-                </td>
-            </tr>
-        `;
-    } else {
-        students.forEach((student, index) => {
-            const row = document.createElement('tr');
-            
-            // Determine badges
-            let badges = '';
-            if (student.math && student.pkn) {
-                badges = '<span class="badge-math subject-badge">M</span> <span class="badge-pkn subject-badge">P</span>';
-            } else if (student.math) {
-                badges = '<span class="badge-math subject-badge">M</span>';
-            } else if (student.pkn) {
-                badges = '<span class="badge-pkn subject-badge">P</span>';
-            }
-            
-            // Determine text
-            let text = '';
-            if (student.math && student.pkn) {
-                text = 'Matematika & PKN';
-            } else if (student.math) {
-                text = 'Matematika';
-            } else if (student.pkn) {
-                text = 'PKN';
-            }
-            
-            row.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${student.name}</td>
-                <td>
-                    ${badges}
-                    ${text}
-                </td>
-                <td>
-                    <div class="actions">
-                        <button class="action-btn delete" data-id="${student.id}">
-                            <i class="fas fa-trash-alt"></i> Hapus
-                        </button>
-                    </div>
-                </td>
-            `;
-            
-            studentTableBody.appendChild(row);
-        });
-        
-        // Add event listeners to delete buttons
-        document.querySelectorAll('.action-btn.delete').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const id = this.getAttribute('data-id');
-                deleteStudent(id);
-            });
-        });
-    }
-    
-    updateStatistics();
-    updateCopyText();
-}
-
-// ========== UPDATE STATISTICS ==========
-function updateStatistics() {
-    const total = students.length;
-    const mathCount = students.filter(s => s.math).length;
-    const pknCount = students.filter(s => s.pkn).length;
-    const bothCount = students.filter(s => s.math && s.pkn).length;
-    
-    totalStudentsEl.textContent = total;
-    mathStudentsEl.textContent = mathCount;
-    pknStudentsEl.textContent = pknCount;
-    bothStudentsEl.textContent = bothCount;
-}
-
-// ========== UPDATE COPY TEXT ==========
-function updateCopyText() {
-    let text = `NAMA NAMA YANG BELUM MENGERJAKAN ULANGAN
-
-===KODE=====
-
-MATEMATIKA = M
-PKN = P
-
-=======NAMA DAN KODE=====
-
-`;
-    
-    if (students.length > 0) {
-        students.forEach((student, index) => {
-            let codes = [];
-            if (student.math) codes.push('M');
-            if (student.pkn) codes.push('P');
-            
-            text += ${index + 1}. ${student.name} [${codes.join(' & ')}]\n;
-        });
-    } else {
-        text += "Belum ada data siswa.";
-    }
-    
-    copyTextArea.value = text;
-}
-
-// ========== ADD STUDENT ==========
-function addStudent() {
-    const name = studentNameInput.value.trim();
-    const math = mathCheckbox.checked;
-    const pkn = pknCheckbox.checked;
-    
-    // Validation
-    if (!name) {
-        showNotification('Nama siswa harus diisi!', 'error');
-        studentNameInput.focus();
-        return;
-    }
-    
-    if (!math && !pkn) {
-        showNotification('Pilih minimal satu mata pelajaran!', 'error');
-        return;
-    }
-    
-    // Create new student
-    const newStudent = {
-        id: generateId(),
-        name: name,
-        math: math,
-        pkn: pkn
-    };
-    
-    // Add to array
-    students.push(newStudent);
-    
-    // Save to localStorage
-    saveToLocalStorage();
-    
-    // Update UI
-    renderStudentTable();
-    
-    // Reset form
-    resetForm();
-    
-    // Show notification
-    showNotification(Data "${name}" berhasil disimpan!);
-    
-    // Switch to admin tab
-    switchToAdminTab();
-}
-
-// ========== DELETE STUDENT ==========
-function deleteStudent(id) {
-    if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
-        // Remove from array
-        students = students.filter(student => student.id !== id);
-        
-        // Save to localStorage
-        saveToLocalStorage();
-        
-        // Update UI
-        renderStudentTable();
-        
-        // Show notification
-        showNotification('Data siswa berhasil dihapus!', 'warning');
-    }
-}
-
-// ========== RESET FORM ==========
-function resetForm() {
-    studentNameInput.value = '';
-    mathCheckbox.checked = false;
-    pknCheckbox.checked = false;
-    studentNameInput.focus();
-}
-
-// ========== COPY TO CLIPBOARD ==========
-function copyToClipboard() {
-    copyTextArea.select();
-    copyTextArea.setSelectionRange(0, 99999);
-    
-    // Modern clipboard API
-    navigator.clipboard.writeText(copyTextArea.value)
+/**
+ * Copy text to clipboard
+ * @param {string} text - Text to copy
+ */
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text)
         .then(() => {
-            showNotification('Teks berhasil disalin ke clipboard!');
+            showToast('✔ Data berhasil disalin ke clipboard!');
         })
         .catch(err => {
-            console.error('Gagal menyalin teks: ', err);
-            showNotification('Gagal menyalin teks', 'error');
+            console.error('Failed to copy: ', err);
+            showToast('❌ Gagal menyalin data', 'error');
         });
 }
 
-// ========== TAB SWITCHING ==========
-function switchToAdminTab() {
-    formTabBtn.classList.remove('active');
-    adminTabBtn.classList.add('active');
-    formTab.classList.remove('active');
-    adminTab.classList.add('active');
+/**
+ * Format date to readable string
+ * @param {string} isoString - ISO date string
+ * @returns {string} Formatted date
+ */
+function formatDate(isoString) {
+    const date = new Date(isoString);
+    return date.toLocaleDateString('id-ID', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
 }
 
-function switchToFormTab() {
-    adminTabBtn.classList.remove('active');
-    formTabBtn.classList.add('active');
-    adminTab.classList.remove('active');
-    formTab.classList.add('active');
+/**
+ * Get unique classes from data
+ * @returns {Array} Array of unique classes
+ */
+function getUniqueClasses() {
+    const classes = dataSiswa.map(item => item.kelas);
+    return [...new Set(classes)];
 }
 
-// ========== EVENT LISTENERS ==========
-function setupEventListeners() {
-    // Save button
-    saveBtn.addEventListener('click', addStudent);
+// =============================================
+// SISWA PAGE FUNCTIONS
+// =============================================
+
+/**
+ * Initialize siswa page
+ */
+function initSiswaPage() {
+    const form = document.getElementById('siswaForm');
+    if (!form) return;
     
-    // Reset button
-    resetBtn.addEventListener('click', resetForm);
+    form.addEventListener('submit', handleSiswaSubmit);
+}
+
+/**
+ * Handle siswa form submission
+ * @param {Event} e - Form submit event
+ */
+function handleSiswaSubmit(e) {
+    e.preventDefault();
     
-    // Copy text button
-    copyTextBtn.addEventListener('click', copyToClipboard);
+    // Get form values
+    const nama = document.getElementById('nama').value.trim();
+    const kelas = document.getElementById('kelas').value;
     
-    // Tab buttons
-    formTabBtn.addEventListener('click', switchToFormTab);
-    adminTabBtn.addEventListener('click', switchToAdminTab);
+    // Get selected mapel
+    const mapelCheckboxes = document.querySelectorAll('.checkbox-item input[type="checkbox"]:checked');
+    const mapel = Array.from(mapelCheckboxes).map(cb => cb.value);
     
-    // Enter key in name input
-    studentNameInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            addStudent();
+    // Validation
+    if (!nama) {
+        showToast('❌ Nama harus diisi!', 'error');
+        return;
+    }
+    
+    if (mapel.length === 0) {
+        showToast('❌ Pilih minimal satu mata pelajaran!', 'error');
+        return;
+    }
+    
+    // Create data object
+    const data = {
+        id: Date.now(), // Unique ID
+        nama: nama,
+        kelas: kelas,
+        mapel: mapel,
+        waktu: new Date().toISOString()
+    };
+    
+    // Save to localStorage
+    dataSiswa.push(data);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(dataSiswa));
+    
+    // Show success message
+    showToast('✔ Data berhasil dikirim!');
+    
+    // Reset form
+    form.reset();
+    document.getElementById('kelas').value = 'XI TSM B';
+}
+
+// =============================================
+// ADMIN PAGE FUNCTIONS
+// =============================================
+
+/**
+ * Initialize admin page
+ */
+function initAdminPage() {
+    // Check if user is already logged in
+    const isLoggedIn = sessionStorage.getItem('adminLoggedIn') === 'true';
+    
+    if (isLoggedIn) {
+        showDashboard();
+    } else {
+        initLogin();
+    }
+}
+
+/**
+ * Initialize login functionality
+ */
+function initLogin() {
+    const loginForm = document.getElementById('loginForm');
+    const togglePasswordBtn = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    
+    if (!loginForm) return;
+    
+    // Toggle password visibility
+    if (togglePasswordBtn) {
+        togglePasswordBtn.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
+    }
+    
+    // Handle login form submission
+    loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const password = passwordInput.value.trim();
+        
+        if (password === ADMIN_PASSWORD) {
+            sessionStorage.setItem('adminLoggedIn', 'true');
+            showDashboard();
+        } else {
+            showToast('❌ Password salah!', 'error');
+            passwordInput.value = '';
+            passwordInput.focus();
         }
     });
 }
 
-// ========== INITIALIZE ==========
-function init() {
-    console.log('Initializing application...');
+/**
+ * Show dashboard and hide login
+ */
+function showDashboard() {
+    const loginScreen = document.getElementById('loginScreen');
+    const dashboard = document.getElementById('dashboard');
     
-    // Add sample data if empty
-    if (students.length === 0) {
-        console.log('Adding sample data...');
-        students = [
-            { id: generateId(), name: 'Candra', math: true, pkn: true },
-            { id: generateId(), name: 'Daeng', math: true, pkn: false },
-            { id: generateId(), name: 'Budi', math: false, pkn: true },
-            { id: generateId(), name: 'Siti', math: true, pkn: false }
-        ];
-        saveToLocalStorage();
+    if (loginScreen) loginScreen.style.display = 'none';
+    if (dashboard) {
+        dashboard.style.display = 'block';
+        initDashboard();
     }
-    
-    // Render initial table
-    renderStudentTable();
-    
-    // Setup event listeners
-    setupEventListeners();
-    
-    // Focus on name input
-    studentNameInput.focus();
-    
-    console.log('Application initialized successfully');
 }
 
-// ========== START APPLICATION ==========
-// Wait for DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', init);
+/**
+ * Initialize dashboard functionality
+ */
+function initDashboard() {
+    // Initialize event listeners
+    document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
+    document.getElementById('refreshBtn')?.addEventListener('click', refreshData);
+    document.getElementById('copyBtn')?.addEventListener('click', copyAllData);
+    document.getElementById('deleteBtn')?.addEventListener('click', deleteAllData);
+    document.getElementById('filterKelas')?.addEventListener('change', filterKelas);
+    
+    // Load initial data
+    renderTable();
+    updateStats();
+    populateClassFilter();
+}
 
-// Make deleteStudent function globally available
-window.deleteStudent = deleteStudent;
+/**
+ * Handle logout
+ */
+function handleLogout() {
+    sessionStorage.removeItem('adminLoggedIn');
+    window.location.reload();
+}
+
+/**
+ * Refresh data
+ */
+function refreshData() {
+    dataSiswa = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    renderTable();
+    updateStats();
+    showToast('✔ Data berhasil diperbarui!');
+}
+
+/**
+ * Copy all data to clipboard
+ */
+function copyAllData() {
+    if (dataSiswa.length === 0) {
+        showToast('❌ Tidak ada data untuk disalin!', 'warning');
+        return;
+    }
+    
+    const filterKelas = document.getElementById('filterKelas')?.value;
+    let filteredData = dataSiswa;
+    
+    if (filterKelas && filterKelas !== 'semua') {
+        filteredData = dataSiswa.filter(item => item.kelas === filterKelas);
+    }
+    
+    if (filteredData.length === 0) {
+        showToast('❌ Tidak ada data untuk kelas ini!', 'warning');
+        return;
+    }
+    
+    const kelas = filterKelas === 'semua' ? 'Semua Kelas' : filterKelas;
+    let text = `Daftar siswa yang belum mengerjakan ulangan (${kelas}):\n\n`;
+    
+    filteredData.forEach((item, index) => {
+        text += `${index + 1}. ${item.nama} - ${item.mapel.join(', ')}\n`;
+    });
+    
+    text += `\nTotal: ${filteredData.length} siswa\n`;
+    text += `Diakses pada: ${new Date().toLocaleDateString('id-ID')}`;
+    
+    copyToClipboard(text);
+}
+
+/**
+ * Delete all data
+ */
+function deleteAllData() {
+    if (dataSiswa.length === 0) {
+        showToast('❌ Tidak ada data untuk dihapus!', 'warning');
+        return;
+    }
+    
+    if (confirm('Apakah Anda yakin ingin menghapus semua data? Tindakan ini tidak dapat dibatalkan.')) {
+        localStorage.removeItem(STORAGE_KEY);
+        dataSiswa = [];
+        renderTable();
+        updateStats();
+        showToast('✔ Semua data berhasil dihapus!');
+    }
+}
+
+/**
+ * Filter data by class
+ */
+function filterKelas() {
+    renderTable();
+}
+
+/**
+ * Render data table
+ */
+function renderTable() {
+    const tableBody = document.getElementById('tableBody');
+    const emptyState = document.getElementById('emptyState');
+    const tableInfo = document.getElementById('tableInfo');
+    const filterKelas = document.getElementById('filterKelas')?.value;
+    
+    if (!tableBody || !emptyState) return;
+    
+    // Clear table
+    tableBody.innerHTML = '';
+    
+    // Filter data
+    let filteredData = dataSiswa;
+    if (filterKelas && filterKelas !== 'semua') {
+        filteredData = dataSiswa.filter(item => item.kelas === filterKelas);
+    }
+    
+    // Show empty state if no data
+    if (filteredData.length === 0) {
+        tableBody.style.display = 'none';
+        emptyState.style.display = 'block';
+        
+        const kelasText = filterKelas === 'semua' ? '' : ` untuk kelas ${filterKelas}`;
+        tableInfo.textContent = `0 data ditemukan${kelasText}`;
+        return;
+    }
+    
+    // Hide empty state and show table
+    emptyState.style.display = 'none';
+    tableBody.style.display = 'table-row-group';
+    
+    // Populate table
+    filteredData.forEach((item, index) => {
+        const row = document.createElement('tr');
+        
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>
+                <strong>${item.nama}</strong>
+                <div class="form-hint">${formatDate(item.waktu)}</div>
+            </td>
+            <td>${item.kelas}</td>
+            <td>
+                ${item.mapel.map(mapel => 
+                    `<span class="mapel-tag">${mapel}</span>`
+                ).join('')}
+            </td>
+        `;
+        
+        tableBody.appendChild(row);
+    });
+    
+    // Update table info
+    const kelasText = filterKelas === 'semua' ? '' : ` untuk kelas ${filterKelas}`;
+    tableInfo.textContent = `${filteredData.length} data ditemukan${kelasText}`;
+}
+
+/**
+ * Update statistics
+ */
+function updateStats() {
+    const totalSiswa = document.getElementById('totalSiswa');
+    const totalMapel = document.getElementById('totalMapel');
+    
+    if (totalSiswa) {
+        totalSiswa.textContent = dataSiswa.length;
+    }
+    
+    if (totalMapel) {
+        const total = dataSiswa.reduce((sum, item) => sum + item.mapel.length, 0);
+        totalMapel.textContent = total;
+    }
+}
+
+/**
+ * Populate class filter dropdown
+ */
+function populateClassFilter() {
+    const filterSelect = document.getElementById('filterKelas');
+    if (!filterSelect) return;
+    
+    // Keep the existing options (Semua Kelas and XI TSM B)
+    const currentOptions = Array.from(filterSelect.options).map(opt => opt.value);
+    
+    // Add unique classes from data
+    const uniqueClasses = getUniqueClasses();
+    uniqueClasses.forEach(className => {
+        if (!currentOptions.includes(className)) {
+            const option = document.createElement('option');
+            option.value = className;
+            option.textContent = className;
+            filterSelect.appendChild(option);
+        }
+    });
+}
+
+// =============================================
+// PAGE INITIALIZATION
+// =============================================
+
+/**
+ * Initialize the page based on current URL
+ */
+function initPage() {
+    const currentPage = window.location.pathname;
+    
+    if (currentPage.includes('siswa.html')) {
+        initSiswaPage();
+    } else if (currentPage.includes('admin.html')) {
+        initAdminPage();
+    }
+    
+    // Add styles for mapel tags
+    const style = document.createElement('style');
+    style.textContent = `
+        .mapel-tag {
+            display: inline-block;
+            background-color: #EFF6FF;
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            margin: 0.25rem;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', initPage);
